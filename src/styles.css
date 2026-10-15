@@ -438,7 +438,6 @@ h1,
   align-items: center;
   padding: 8px 0;
   background: var(--bg);
-  border-bottom: 1px solid var(--line);
   pointer-events: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2400,7 +2399,6 @@ button,
     padding: 8px 16px;
     color: var(--accent-ink);
     background: var(--paper);
-    border-bottom: 1px solid var(--line);
     border-radius: 18px 18px 0 0;
     pointer-events: none;
   }

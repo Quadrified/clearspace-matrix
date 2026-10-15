@@ -65,11 +65,30 @@ export function visibleTasks(state: Matrix, q: QuadrantId, f: Filters) {
         .toLowerCase()
         .includes(f.search.toLowerCase()),
   );
-  return f.sort === 'due'
-    ? tasks.sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'))
-    : f.sort === 'new'
-      ? tasks.sort((a, b) => b.created - a.created)
-      : tasks;
+  return tasks.sort((a, b) => {
+    if (f.status === 'all') {
+      const completedLast = Number(a.done) - Number(b.done);
+      if (completedLast) return completedLast;
+      // Completed tasks retain their completion/manual order below sorted active tasks.
+      if (a.done && b.done) return 0;
+    }
+    return f.sort === 'due'
+      ? (a.due || '9999').localeCompare(b.due || '9999')
+      : f.sort === 'new'
+        ? b.created - a.created
+        : 0;
+  });
+}
+export function toggleTask(state: Matrix, id: string, now: number): Matrix {
+  const task = state.tasks.find((task) => task.id === id);
+  if (!task) return state;
+  const updated = { ...task, done: !task.done, completedAt: task.done ? null : now };
+  return {
+    ...state,
+    tasks: task.done
+      ? state.tasks.map((task) => (task.id === id ? updated : task))
+      : [...state.tasks.filter((task) => task.id !== id), updated],
+  };
 }
 export function stats(state: Matrix, today = localDate()) {
   const active = state.tasks.filter((t) => !t.done),

@@ -11,6 +11,7 @@ import {
   parseBackup,
   serializeMatrix,
   stats,
+  toggleTask,
 } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
@@ -128,15 +129,7 @@ export default function App() {
     }
   }
   const updateTask = (id: string) =>
-    change(
-      (m) => ({
-        ...m,
-        tasks: m.tasks.map((t) =>
-          t.id === id ? { ...t, done: !t.done, completedAt: !t.done ? Date.now() : null } : t,
-        ),
-      }),
-      'Task updated.',
-    );
+    change((matrix) => toggleTask(matrix, id, Date.now()), 'Task updated.');
   return (
     <>
       <div className="wrap">

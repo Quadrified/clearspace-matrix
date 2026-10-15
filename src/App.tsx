@@ -1,27 +1,20 @@
 import { useHeaderHeight } from './lib/useHeaderHeight';
 import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
-import { Select, SelectOption } from './components/Select';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
-import { categories, initialFilters } from './domain/models';
-import {
-  addExamples,
-  mergeMatrix,
-  moveTask,
-  parseBackup,
-  serializeMatrix,
-  stats,
-  toggleTask,
-} from './domain/matrix';
+import { initialFilters } from './domain/models';
+import { addExamples, moveTask, stats, toggleTask } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
-import { Icon } from './components/Icon';
+import { useToday } from './lib/useToday';
 import { Modal } from './components/Modal';
-import { Popover } from './components/Popover';
-import { ThemeToggle } from './components/ThemeToggle';
-import { StatusTabs } from './features/tasks/StatusTabs';
+import { AppHeader } from './features/app/AppHeader';
+import type { Menu } from './features/app/AppHeader';
+import { Toolbar } from './features/app/Toolbar';
+import { AppFooter } from './features/app/AppFooter';
+import { useBackup } from './features/backup/useBackup';
 import { TaskOverview } from './features/tasks/TaskOverview';
 import { MatrixBoard } from './features/tasks/MatrixBoard';
 import { TaskEditor } from './features/tasks/TaskEditor';
@@ -34,31 +27,42 @@ import { TutorialDialog } from './features/tutorial/TutorialDialog';
 const DevTools = import.meta.env.DEV ? lazy(() => import('./features/dev/DevTools')) : null;
 export default function App() {
   const { toast, show, dismiss } = useToast();
-  const { matrix, change, undo, canUndo, storageError } = useMatrix(show);
+  const { matrix, change, undo, canUndo, storageError, rawStored } = useMatrix(show);
   const prefs = usePreferences(show);
   const [filters, setFilters] = useState(initialFilters),
-    [menu, setMenu] = useState<'add' | 'settings' | null>(null),
+    [menu, setMenu] = useState<Menu>(null),
     [editor, setEditor] = useState<{ q: QuadrantId; task?: Task } | null>(null),
     [dialog, setDialog] = useState<'projects' | 'labels' | 'tutorial' | 'reset' | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   useHeaderHeight(headerRef);
-  const importRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const summary = stats(matrix);
+  const today = useToday();
+  const { importRef, exportBackup, importBackup } = useBackup({
+    matrix,
+    rawStored,
+    storageError,
+    change,
+    notify: show,
+  });
+  const summary = useMemo(() => stats(matrix, today), [matrix, today]);
   const projectFilter =
     !filters.project ||
     filters.project === '__none' ||
     matrix.projects.some((project) => project.id === filters.project)
       ? filters.project
       : '';
-  function openTask(q: QuadrantId = 'do', task?: Task) {
+  const boardFilters = useMemo(
+    () => ({ ...filters, project: projectFilter }),
+    [filters, projectFilter],
+  );
+  const openTask = useCallback((q: QuadrantId = 'do', task?: Task) => {
     setMenu(null);
     setEditor({ q, task });
-  }
-  function openDialog(value: typeof dialog) {
+  }, []);
+  const openDialog = useCallback((value: typeof dialog) => {
     setMenu(null);
     setDialog(value);
-  }
+  }, []);
   function closeTutorial() {
     try {
       localStorage.setItem('clearspace.tutorial.v1', 'seen');
@@ -105,117 +109,41 @@ export default function App() {
     };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
-  }, []);
+  }, [openTask]);
   function filter<K extends keyof Filters>(key: K, value: Filters[K]) {
     setFilters((f) => ({ ...f, [key]: value }));
   }
-  function exportBackup() {
-    const url = URL.createObjectURL(
-        new Blob([serializeMatrix(matrix)], { type: 'application/json' }),
-      ),
-      a = document.createElement('a');
-    a.href = url;
-    a.download = `clearspace-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    show('Backup exported.');
-  }
-  async function importBackup(file?: File) {
-    if (!file) return;
-    try {
-      const incoming = parseBackup(await file.text());
-      change((m) => mergeMatrix(m, incoming), 'Backup imported.');
-    } catch {
-      show('This backup could not be imported. Check that it is a Clearspace JSON backup.');
-    } finally {
-      if (importRef.current) importRef.current.value = '';
-    }
-  }
-  const updateTask = (id: string) =>
-    change((matrix) => toggleTask(matrix, id, Date.now()), 'Task updated.');
+  const updateTask = useCallback(
+    (id: string) => change((matrix) => toggleTask(matrix, id, Date.now()), 'Task updated.'),
+    [change],
+  );
+  const editTask = useCallback((t: Task) => openTask(t.q, t), [openTask]);
+  const openLabels = useCallback(() => openDialog('labels'), [openDialog]);
+  const moveTaskTo = useCallback(
+    (id: string, q: QuadrantId, before?: string) =>
+      change((m) => moveTask(m, id, q, before), 'Task moved.'),
+    [change],
+  );
   return (
     <>
       <div className="wrap">
-        <header ref={headerRef}>
-          <div className="brand">
-            <span className="logo" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-            </span>
-            <div className="brand-copy">
-              <span className="brand-name">clearspace</span>
-              <span className="brand-tagline">your personal matrix</span>
-            </div>
-          </div>
-          <div className="header-right">
-            {DevTools && (
+        <AppHeader
+          headerRef={headerRef}
+          devTools={
+            DevTools && (
               <Suspense fallback={null}>
                 <DevTools matrix={matrix} change={change} notify={show} />
               </Suspense>
-            )}
-            {/* <FocusTimer tasks={matrix.tasks} notify={show} /> */}
-            <ThemeToggle night={prefs.night} onToggle={prefs.toggleNight} />
-            <div className="settings-control">
-              <button
-                id="settingsButton"
-                className="iconbtn"
-                aria-label="Settings"
-                aria-expanded={menu === 'settings'}
-                onClick={() => setMenu(menu === 'settings' ? null : 'settings')}
-              >
-                <Icon name="settings" />
-              </button>
-              <Popover
-                open={menu === 'settings'}
-                onClose={() => setMenu(null)}
-                className="settings-menu"
-              >
-                <h2>Settings</h2>
-                <div className="settings-actions">
-                  <button className="iconbtn" onClick={() => openDialog('labels')}>
-                    <Icon name="tag" />
-                    Edit labels
-                  </button>
-                  <button className="iconbtn" onClick={() => openDialog('tutorial')}>
-                    <Icon name="help" />
-                    Help
-                  </button>
-                  <button className="iconbtn danger" onClick={() => openDialog('reset')}>
-                    <Icon name="eliminate" />
-                    Reset board
-                  </button>
-                </div>
-                <div className="settings-size">
-                  <span>Text size</span>
-                  <div className="font-controls">
-                    <button
-                      aria-label="Decrease text size"
-                      disabled={prefs.size <= 90}
-                      onClick={() => prefs.setSize(prefs.size - 10)}
-                    >
-                      A−
-                    </button>
-                    <button aria-label="Reset text size" onClick={() => prefs.setSize(100)}>
-                      {prefs.size}%
-                    </button>
-                    <button
-                      aria-label="Increase text size"
-                      disabled={prefs.size >= 160}
-                      onClick={() => prefs.setSize(prefs.size + 10)}
-                    >
-                      A+
-                    </button>
-                  </div>
-                </div>
-                <span id="saveState">
-                  {storageError ? 'Storage unavailable. Export to save.' : 'Saved on this browser'}
-                </span>
-              </Popover>
-            </div>
-          </div>
-        </header>
+            )
+          }
+          prefs={prefs}
+          menu={menu}
+          setMenu={setMenu}
+          onResetBoard={() => openDialog('reset')}
+          onLabels={openLabels}
+          onHelp={() => openDialog('tutorial')}
+          storageError={storageError}
+        />
         <main>
           <section className="intro">
             <div>
@@ -225,7 +153,7 @@ export default function App() {
             </div>
             <div>
               <time className="date">
-                {new Date().toLocaleDateString(undefined, {
+                {new Date(today + 'T12:00:00').toLocaleDateString(undefined, {
                   weekday: 'long',
                   month: 'long',
                   day: 'numeric',
@@ -234,139 +162,40 @@ export default function App() {
             </div>
           </section>
           <TaskOverview summary={summary} />
-          <div className="toolbar">
-            <div className="toolbar-status">
-              <StatusTabs value={filters.status} onChange={(value) => filter('status', value)} />
-              <div className="add-control">
-                <button
-                  id="newTask"
-                  className="btn primary"
-                  aria-expanded={menu === 'add'}
-                  onClick={() => setMenu(menu === 'add' ? null : 'add')}
-                >
-                  <Icon name="plus" />
-                  Add
-                  <Icon name="chevron" className="add-chevron" />
-                </button>
-                <Popover open={menu === 'add'} onClose={() => setMenu(null)} className="add-menu">
-                  <button onClick={() => openTask()}>
-                    <Icon name="plus" />
-                    Add task<kbd>N</kbd>
-                  </button>
-                  <button onClick={() => openDialog('projects')}>
-                    <Icon name="folder" />
-                    Add project<kbd>P</kbd>
-                  </button>
-                </Popover>
-              </div>
-            </div>
-            <div className="filters">
-              <div className="search">
-                <Icon name="search" />
-                <input
-                  ref={searchRef}
-                  aria-label="Find a task"
-                  placeholder="Find a task…"
-                  enterKeyHint="search"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  value={filters.search}
-                  onChange={(e) => filter('search', e.target.value)}
-                />
-                {filters.search && (
-                  <button
-                    type="button"
-                    className="iconbtn search-clear"
-                    aria-label="Clear search"
-                    onClick={() => {
-                      filter('search', '');
-                      searchRef.current?.focus();
-                    }}
-                  >
-                    <Icon name="close" />
-                  </button>
-                )}
-              </div>
-              <Select
-                aria-label="Filter by category"
-                value={filters.category}
-                onValueChange={(value) => filter('category', value)}
-              >
-                <SelectOption value="">All categories</SelectOption>
-                {categories.map((c) => (
-                  <SelectOption key={c}>{c}</SelectOption>
-                ))}
-              </Select>
-              <Select
-                aria-label="Filter by project"
-                value={projectFilter}
-                onValueChange={(value) => filter('project', value)}
-              >
-                <SelectOption value="">All projects</SelectOption>
-                <SelectOption value="__none">No project</SelectOption>
-                {matrix.projects.map((p) => (
-                  <SelectOption key={p.id} value={p.id}>
-                    {p.name}
-                  </SelectOption>
-                ))}
-              </Select>
-              <Select
-                id="sort"
-                aria-label="Sort tasks"
-                value={filters.sort}
-                onValueChange={(value) => filter('sort', value as Filters['sort'])}
-              >
-                <SelectOption value="manual">Your order</SelectOption>
-                <SelectOption value="due">Due date</SelectOption>
-                <SelectOption value="new">Newest first</SelectOption>
-              </Select>
-            </div>
-          </div>
+          <Toolbar
+            filters={filters}
+            projectFilter={projectFilter}
+            projects={matrix.projects}
+            filter={filter}
+            menu={menu}
+            setMenu={setMenu}
+            searchRef={searchRef}
+            onAddTask={() => openTask()}
+            onProjects={() => openDialog('projects')}
+          />
           <MatrixBoard
             matrix={matrix}
             labels={prefs.labels}
-            filters={{ ...filters, project: projectFilter }}
+            filters={boardFilters}
+            today={today}
             onAdd={openTask}
-            onEdit={(t) => openTask(t.q, t)}
-            onLabels={() => openDialog('labels')}
+            onEdit={editTask}
+            onLabels={openLabels}
             onToggle={updateTask}
-            onMove={(id, q, before) => change((m) => moveTask(m, id, q, before), 'Task moved.')}
+            onMove={moveTaskTo}
           />
         </main>
-        <footer>
-          <span>
-            <Icon name="lock" /> Your tasks stay in this browser. Export a backup to keep them safe.
-          </span>
-          <div>
-            <button className="iconbtn" onClick={exportBackup}>
-              Export backup
-            </button>
-            <button className="iconbtn" onClick={() => importRef.current?.click()}>
-              Import
-            </button>
-            <input
-              type="file"
-              accept="application/json,.json"
-              ref={importRef}
-              hidden
-              onChange={(e) => {
-                void importBackup(e.target.files?.[0]);
-              }}
-            />
-            <button
-              className="iconbtn"
-              onClick={() =>
-                change(
-                  (m) => ({ ...m, tasks: m.tasks.filter((t) => !t.done) }),
-                  'Completed tasks cleared.',
-                )
-              }
-            >
-              Clear completed
-            </button>
-          </div>
-        </footer>
+        <AppFooter
+          importRef={importRef}
+          onExport={exportBackup}
+          onImport={(file) => void importBackup(file)}
+          onClearCompleted={() =>
+            change(
+              (m) => ({ ...m, tasks: m.tasks.filter((t) => !t.done) }),
+              'Completed tasks cleared.',
+            )
+          }
+        />
       </div>
       <SoftPresence>
         {editor && (
@@ -378,7 +207,7 @@ export default function App() {
             change={change}
             onClose={() => setEditor(null)}
           />
-        )}{' '}
+        )}
         {dialog === 'projects' && (
           <ProjectsDialog
             key="projects"
@@ -386,7 +215,7 @@ export default function App() {
             change={change}
             onClose={() => setDialog(null)}
           />
-        )}{' '}
+        )}
         {dialog === 'labels' && (
           <LabelsDialog
             key="labels"
@@ -397,7 +226,7 @@ export default function App() {
             }}
             onClose={() => setDialog(null)}
           />
-        )}{' '}
+        )}
         {dialog === 'tutorial' && (
           <TutorialDialog
             key="tutorial"
@@ -408,7 +237,7 @@ export default function App() {
               closeTutorial();
             }}
           />
-        )}{' '}
+        )}
         {dialog === 'reset' && (
           <Modal
             key="reset"
@@ -439,7 +268,7 @@ export default function App() {
               </button>
             </div>
           </Modal>
-        )}{' '}
+        )}
       </SoftPresence>
       <SoftPresence>
         {toast && (

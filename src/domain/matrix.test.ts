@@ -101,7 +101,7 @@ describe('matrix operations', () => {
   it('Undo restores tasks and projects together after reset', () => {
     const before = { tasks: [task], projects: [{ id: 'p', name: 'Launch' }] };
     const changed = matrixReducer(
-      { present: before, previous: null, dirty: false, error: '' },
+      { present: before, previous: null, dirty: false, error: '', rawStored: '' },
       { type: 'change', update: (m) => ({ ...m, tasks: [] }) },
     );
     expect(matrixReducer(changed, { type: 'undo' }).present).toEqual(before);
@@ -125,7 +125,7 @@ describe('completed task ordering', () => {
       const result = visibleTasks(next, 'do', { ...initialFilters, status: 'all', sort });
       expect(result.map((task) => task.id)).toEqual(['second', 'old-done', 'first']);
       expect(next.tasks.find((task) => task.id === 'first')?.completedAt).toBe(20);
-      expect(state.tasks[0].done).toBe(false);
+      expect(state.tasks[0]!.done).toBe(false);
       expect(
         visibleTasks(next, 'schedule', { ...initialFilters, status: 'all' }).map((task) => task.id),
       ).toEqual(['other-quadrant']);

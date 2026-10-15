@@ -8,7 +8,7 @@
     "start": "vite --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && node --test tests/worker.mjs",
-    "build": "tsc --noEmit && vite build && node scripts/build.mjs && node scripts/validate-artifact.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/check-size.mjs && node scripts/build.mjs && node scripts/validate-artifact.mjs",
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "serve:worker": "node scripts/serve.mjs",
@@ -16,7 +16,8 @@
     "lint:fix": "npm run lint -- --fix",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "test:e2e": "playwright test"
   },
   "engines": {
     "node": ">=22.12"
@@ -31,7 +32,9 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.0.0",
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.0.0",

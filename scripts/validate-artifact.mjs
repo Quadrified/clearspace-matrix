@@ -45,3 +45,19 @@ for (const path of ['/dev', '/dev/', '/api/dev/status', '/api/dev/tasks']) {
   assert.equal(response.status, 404, `${path} must not be exposed in production`);
 }
 console.log('Production excludes Dev tools, sample data, and former Dev endpoints.');
+
+// Hashed assets must cache for a year, and the page must stay revalidated and hardened.
+const page = await workerModule.default.fetch(new Request('https://example.test/'));
+assert.equal(page.headers.get('cache-control'), 'no-cache');
+assert.match(page.headers.get('content-security-policy') ?? '', /frame-ancestors 'none'/);
+const html = await page.text();
+const scripts = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map((match) => match[1]);
+assert.ok(scripts.length > 0, 'The page must load its application script');
+for (const path of scripts) {
+  const asset = await workerModule.default.fetch(new Request('https://example.test' + path));
+  assert.equal(asset.status, 200, `${path} must be served`);
+  assert.match(asset.headers.get('cache-control') ?? '', /immutable/, `${path} must be cacheable`);
+}
+console.log(
+  'Page revalidates; hashed assets are immutable; CSP and hardening headers are present.',
+);

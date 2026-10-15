@@ -10,5 +10,6 @@ export function useToast() {
     const timeout = setTimeout(() => setToast(null), 10000);
     return () => clearTimeout(timeout);
   }, [toast]);
-  return { toast, show, dismiss: () => setToast(null) };
+  const dismiss = useCallback(() => setToast(null), []);
+  return { toast, show, dismiss };
 }

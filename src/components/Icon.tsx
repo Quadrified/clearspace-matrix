@@ -79,7 +79,9 @@ export const iconLabels: Record<IconName, string> = {
   clock: 'Clock',
 };
 
-export function Icon({ name, ...props }: { name: string } & SVGProps<SVGSVGElement>) {
-  const Component = icons[name as keyof typeof icons] ?? TagIcon;
+export type IconKey = keyof typeof icons;
+
+export function Icon({ name, ...props }: { name: IconKey } & SVGProps<SVGSVGElement>) {
+  const Component = icons[name];
   return <Component aria-hidden="true" focusable="false" {...props} />;
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Icon } from './Icon';
+import { useMotionSettings } from '../lib/motion';
 
 export function ThemeToggle({ night, onToggle }: { night: boolean; onToggle: () => void }) {
-  const [keyboard, setKeyboard] = useState(false);
+  const { instant } = useMotionSettings();
   return (
     <button
       type="button"
@@ -11,9 +11,7 @@ export function ThemeToggle({ night, onToggle }: { night: boolean; onToggle: () 
       aria-label="Dark mode"
       aria-checked={night}
       title={night ? 'Switch to light mode' : 'Switch to dark mode'}
-      data-keyboard={keyboard || undefined}
-      onPointerDown={() => setKeyboard(false)}
-      onKeyDown={() => setKeyboard(true)}
+      data-keyboard={instant || undefined}
       onClick={onToggle}
     >
       <span className="theme-track" aria-hidden="true">

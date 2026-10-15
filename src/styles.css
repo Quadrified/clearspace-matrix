@@ -2136,8 +2136,8 @@ div.field {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--selected);
-  box-shadow: 0 1px 4px #10281d0d;
+  background: var(--green);
+  box-shadow: 0 2px 6px #10281d33;
 }
 .tab-label {
   position: relative;
@@ -2480,25 +2480,6 @@ button,
   flex-wrap: wrap;
   gap: 8px;
 }
-.empty-add {
-  display: grid;
-  gap: 2px;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: calc(0.875rem * var(--text-scale, 1));
-  line-height: 1.5;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 10px;
-}
-.empty-add span {
-  color: var(--accent-ink);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 .overdue {
   font-weight: 650;
 }
@@ -2649,4 +2630,29 @@ button,
   footer {
     padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* The active status tab is a solid, high-contrast pill so the current view is obvious. */
+.tabs .active,
+.tabs .active .tab-label {
+  color: #fff;
+  font-weight: 650;
+}
+.tabs .active .tab-count {
+  background: #ffffff33;
+  color: #fff;
+}
+
+/* Keep the destructive confirm readable on hover: the generic .btn hover would turn it pale. */
+.btn.reset-confirm:hover,
+.btn.reset-confirm:focus-visible {
+  background: #8f2c25;
+  border-color: #8f2c25;
+  color: #fff;
+}
+.night .btn.reset-confirm:hover,
+.night .btn.reset-confirm:focus-visible {
+  background: #a84a3f;
+  border-color: #a84a3f;
+  color: #fff;
 }

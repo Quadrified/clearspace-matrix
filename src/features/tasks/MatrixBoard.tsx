@@ -202,20 +202,15 @@ export function MatrixBoard({
                         transition={{ duration: instant ? 0 : 0.16, ease: softEase }}
                       >
                         <EmptyIllustration q={q.id} />
-                        {filtered || filters.status === 'done' || hasTasks(q.id) ? (
-                          <strong>
-                            {filtered
-                              ? 'No matching tasks.'
-                              : filters.status === 'done'
-                                ? 'Nothing completed here yet.'
-                                : 'All clear here.'}
-                          </strong>
-                        ) : (
-                          <button type="button" className="empty-add" onClick={() => onAdd(q.id)}>
-                            {q.empty}
-                            <span>Add a task</span>
-                          </button>
-                        )}
+                        <strong>
+                          {filtered
+                            ? 'No matching tasks.'
+                            : filters.status === 'done'
+                              ? 'Nothing completed here yet.'
+                              : filters.status === 'active' && hasTasks(q.id)
+                                ? 'All clear here.'
+                                : q.empty}
+                        </strong>
                       </motion.div>
                     )}
                   </TaskPresence>

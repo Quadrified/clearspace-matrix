@@ -223,3 +223,14 @@ test('toast auto-dismisses and can be dismissed manually', async ({ page }) => {
   await toast(page).getByRole('button', { name: 'Dismiss notification' }).click();
   await expect(toast(page)).toHaveCount(0);
 });
+
+test('Reset board confirm stays readable on hover', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'Hover needs a pointer');
+  await open(page, { matrix: seedMatrix });
+  await openSettings(page);
+  await page.getByRole('button', { name: 'Reset board' }).click();
+  const confirm = page.getByRole('dialog').getByRole('button', { name: 'Reset board' });
+  await confirm.hover();
+  await expect(confirm).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(confirm).toHaveCSS('background-color', 'rgb(143, 44, 37)');
+});

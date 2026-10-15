@@ -1,6 +1,6 @@
 /* UX pass: one-click add, tab counts, filter summary, first-task prompt, date chips, backup state. */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, editorDialog, storedMatrix, openFilters, quadrant } from './helpers';
+import { open, seedMatrix, editorDialog, storedMatrix, openFilters } from './helpers';
 
 test('Add task opens the editor in one click and Projects opens the projects dialog', async ({
   page,
@@ -17,6 +17,20 @@ test('Add task opens the editor in one click and Projects opens the projects dia
 test('status tabs show how many tasks each holds', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   await expect(page.locator('.tabs .tab-count')).toHaveText(['7', '1', '8']);
+});
+
+test('the active status tab is a solid highlighted pill', async ({ page }) => {
+  await open(page, { matrix: seedMatrix });
+  const active = page.locator('.tabs button.active');
+  await expect(active).toContainText('Active');
+  await expect(active.locator('.tab-indicator')).toHaveCSS('background-color', 'rgb(49, 94, 67)');
+  await expect(active).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await page.getByRole('button', { name: 'Completed', exact: true }).click();
+  await expect(page.locator('.tabs button.active')).toContainText('Completed');
+  await expect(page.getByRole('button', { name: 'Active', exact: true })).not.toHaveCSS(
+    'color',
+    'rgb(255, 255, 255)',
+  );
 });
 
 test('filtering shows a result count and Clear filters resets it', async ({ page }) => {
@@ -38,18 +52,6 @@ test('an empty board offers a first task and examples, and hides the zero stats'
   await page.getByRole('button', { name: 'Try example tasks' }).click();
   await expect(page.locator('.task')).toHaveCount(4);
   await expect(page.getByRole('region', { name: 'Task overview' })).toBeVisible();
-});
-
-test('the empty quadrant text adds a task to that quadrant', async ({ page }) => {
-  await open(page, { matrix: { tasks: [], projects: [] } });
-  await quadrant(page, 'Schedule')
-    .getByRole('button', { name: /Add a task/ })
-    .first()
-    .click();
-  await editorDialog(page).getByRole('combobox', { name: 'Where does it belong?' }).waitFor();
-  await expect(
-    editorDialog(page).getByRole('combobox', { name: 'Where does it belong?' }),
-  ).toContainText('Schedule');
 });
 
 test('date chips fill the due date', async ({ page }) => {

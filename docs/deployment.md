@@ -1,34 +1,35 @@
 # Deployment and maintenance
 
-## Current status
-
-The live public site is https://clearspace-matrix.fastring19.chatgpt.site.
-
-The owner-only Dev upgrade is deployed as Sites version 23, from source commit `3032ef5e7a05a673d09401f4b349aee60bb951dc`. The deployment succeeded with the owner secret configured. Public visitors keep anonymous access to the regular app.
-
-The existing Site ID remains in `.openai/hosting.json`. The new configuration removes `static.directory` because the deployment now has a server adapter. Keep the Site identity unchanged when publishing future updates.
-
-## Secrets and identity
-
-Set `DEV_OWNER_EMAIL` as a secret in the Site's runtime environment. It must be the current Site owner's account email. The key is listed without a value in `.env.example`; never commit its value.
-
-Dev authorization depends on identity headers supplied by ChatGPT Sites. Do not deploy the adapter behind arbitrary client-supplied headers. If moving to another host, implement verified authentication there or serve only `app/` without Dev mode.
+The public site is https://clearspace-matrix.fastring19.chatgpt.site. The Site identity in `.openai/hosting.json` stays unchanged through the React migration. The manifest omits `static.directory` because a Worker serves the app and protects Dev endpoints.
 
 ## Build and verify
 
+Use Node.js 22.12 or newer, with Node.js 24 used in CI.
+
 ```sh
+npm ci
+npm run typecheck
+npm run lint
 npm test
 npm run build
 ```
 
-The build embeds `app/index.html`, `app/favicon.svg`, and `worker/handler.mjs` into `dist/server/index.js`. It copies the hosting manifest to `dist/.openai/hosting.json`. The generated `dist/` is ignored by Git.
+Vite emits the React frontend in `client-dist/`. The packaging script embeds its JavaScript and CSS alongside `worker/handler.mjs` in `dist/server/index.js`, copies the manifest into `dist/.openai/hosting.json`, and regenerates `standalone/clearspace.html`. Build outputs in `dist/` and `client-dist/` are ignored. Do not edit the generated standalone file directly.
 
-Use the supported Sites workflow to synchronize source, package this artifact, save a version, and deploy it to the existing public audience. GitHub pushes do not deploy automatically.
+Use the supported Sites workflow to synchronize source, package the exact checked source, save a version, and publish to the existing public audience. GitHub pushes run checks but do not automatically deploy to Sites.
 
-After publishing, open `/` while logged out and confirm normal public access. Open `/dev`, sign in as the owner, and check the Dev button. Another signed-in account must be denied Dev access. Browser authentication remains a separate integration check from the automated server tests.
+## Secrets and identity
 
-## Source maintenance
+`DEV_OWNER_EMAIL` is a secret in the Site runtime environment. Its value must never be committed or put into a Vite environment variable. `VITE_` variables are public frontend configuration.
 
-Keep `standalone/clearspace.html` synchronized with `app/index.html`. Its favicon is embedded so the page works as a single file. Dev controls stay hidden in the standalone file because it has no server authorization.
+Dev authorization depends on identity headers supplied by ChatGPT Sites. Do not trust arbitrary client-provided headers on another host. To move hosts, serve `client-dist/` with Dev hidden or implement verified authentication on the new server.
 
-Changing origins creates a different browser-storage location. Export task data from the old origin and import it on the new one.
+The ordinary homepage stays anonymous. `/dev` starts owner sign-in. Other signed-in accounts must be denied access. Automated tests verify these server decisions; actual platform sign-in requires a browser integration check.
+
+## Recovery and data
+
+The pre-React source is preserved at Git tag `backup/pre-react-migration`. Deploying an older source version also requires building and publishing that version. Reverting Git alone does not change the live Site.
+
+Existing localStorage keys and JSON backup formats remain compatible. Deploying at the same origin preserves browser data. Moving to a different origin requires exporting from the old site and importing into the new one.
+
+Browser visual verification was unavailable during this migration. Validate native dialog focus, drag-and-drop, small screens, and real owner sign-in in a browser before treating those integration checks as complete.

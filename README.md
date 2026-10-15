@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/favicon.svg" width="64" height="64" alt="Clearspace logo">
+  <img src="public/favicon.svg" width="64" height="64" alt="Clearspace logo">
 </p>
 <h1 align="center">Clearspace</h1>
 <p align="center"><strong>Make room for what matters.</strong></p>
@@ -12,7 +12,7 @@
 
 ## A calmer way to plan
 
-Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects, due dates, and a focus timer. It saves your work in your browser. A small server adapter adds protected, owner-only Dev controls while the regular app stays public.
+Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects, due dates, and a focus timer. It saves your work in your browser. The React frontend keeps tasks on your device. A small server adapter adds protected, owner-only Dev controls while the regular app stays public.
 
 | Quadrant | What belongs here | What to do |
 | --- | --- | --- |
@@ -33,25 +33,31 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 
 The interface uses system typography, custom SVG illustrations, a translucent header, and responsive layouts. Motion respects reduced-motion preferences, with additional support for reduced transparency and increased contrast.
 
+## Built with React
+
+The app uses React 19, TypeScript in strict mode, and Vite. Feature components own task editing, projects, focus sessions, customization, onboarding, and Dev tools. Pure domain functions handle filtering, moving tasks, backup merging, and metrics. Zod validates data at storage, import, and API boundaries.
+
+Vitest and React Testing Library exercise actual React components. A separate Node test suite checks server authorization. ESLint, Prettier, a committed dependency lockfile, and GitHub Actions keep changes reviewable.
+
 ## Run locally
 
-No dependency installation is needed. Node.js 20 or newer runs the local server, tests, and deployment build.
-
-### Open the standalone file
-
-Open [`standalone/clearspace.html`](standalone/clearspace.html) in a modern browser. The file contains its own favicon and works without a server. Browser support for persistent storage on `file:` URLs varies; use the local server below for a consistent origin.
-
-### Serve the site
-
-From the repository root, run:
+Use Node.js 22.12 or newer. Node.js 24 is used in CI.
 
 ```sh
-npm start
-# Or, without npm:
-node scripts/serve.mjs
+npm ci
+npm run dev
 ```
 
-Open [127.0.0.1:8000](http://127.0.0.1:8000). The local server intentionally has no Dev authorization. Owner sign-in uses the hosted ChatGPT Sites integration.
+Open the localhost URL printed by Vite. Changes reload automatically. Dev controls stay hidden locally because owner sign-in is provided by the hosted Site.
+
+For a production build:
+
+```sh
+npm run build
+npm run serve:worker
+```
+
+Open [127.0.0.1:8000](http://127.0.0.1:8000). The build also generates [`standalone/clearspace.html`](standalone/clearspace.html), with React, styles, artwork, and favicon embedded. It can be opened without a server. Storage behavior for `file:` URLs varies by browser, so use localhost for a consistent origin.
 
 ## Owner-only Dev mode
 
@@ -91,43 +97,43 @@ Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal
 ## Project structure
 
 ```text
-clearspace-matrix/
-├── app/
-│   ├── index.html          # App markup, styles, and browser JavaScript
-│   └── favicon.svg
-├── worker/
-│   └── handler.mjs         # Public routes and owner-only Dev endpoints
-├── scripts/
-│   ├── build.mjs           # Packages app and adapter into a single Worker
-│   ├── serve.mjs           # Local anonymous preview server
-│   └── validate-artifact.mjs
-├── standalone/clearspace.html
-├── tests/
-│   ├── smoke.cjs           # Browser-state checks with a mock DOM
-│   ├── dev-client.cjs      # Generation, cleanup, and Undo checks
-│   └── dev-server.mjs      # Authorization and endpoint tests
-├── docs/
-├── .openai/hosting.json
-├── .env.example            # Secret key name, without a value
-└── package.json
+src/
+├── App.tsx                  # Screen composition and cross-feature actions
+├── components/              # Dialog, popover, icons, and illustrations
+├── domain/                  # Typed models, schemas, and pure matrix operations
+├── features/
+│   ├── tasks/               # Task editor and matrix board
+│   ├── projects/            # Project creation and editing
+│   ├── focus/               # Timer UI and time calculations
+│   ├── settings/            # Quadrant labels and icon picker
+│   ├── tutorial/            # Seven-step introduction
+│   └── dev/                 # Owner-authorized sample-data client
+├── lib/                     # Persistence, preferences, and notifications
+└── styles.css               # Responsive design and appearance preferences
+worker/handler.mjs           # Public routes and protected Dev API
+scripts/                     # Worker packaging, artifact checks, local server
+public/favicon.svg
+standalone/clearspace.html   # Generated offline build
+.github/workflows/checks.yml # Type-check, lint, test, and production build
 ```
 
 ## Validation
 
-With Node.js 20 or newer:
-
 ```sh
+npm run typecheck
+npm run lint
 npm test
-# Or, without npm:
-node tests/smoke.cjs
-node --test tests/dev-server.mjs
-node tests/dev-client.cjs
+npm run build
 ```
 
-The checks exercise task changes, Undo, projects, import compatibility, custom labels and icons, settings, tutorial navigation, focus controls, direct countdown editing, and matrix reset. The server suite also checks owner authorization, anonymous public access, sign-in routing, CSRF checks, and sample data. The client checks use a small mock DOM, so they do not verify browser layout, native drag-and-drop, real-time countdown accuracy, or device accessibility. Visual browser testing remains a separate check.
+The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, tutorial examples, Dev generation and cleanup, reset, ten-second toast dismissal, and timer editing and countdown behavior. The server suite checks public access, owner authorization, sign-in routing, request-origin protection, and sample data.
+
+These are automated DOM and server checks. Native dialog focus, drag-and-drop, responsive layout, and real platform sign-in still need browser and device testing. Browser visual verification was unavailable during the React migration.
+
+The original implementation is preserved in the Git tag `backup/pre-react-migration`. The React migration retains the existing localStorage keys and backup formats.
 
 ## Hosting
 
-[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. The browser app can be served statically from `app/`, without Dev authorization. The protected Dev feature requires the server adapter and trusted platform identity. This repository does not automatically deploy on push.
+[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. Vite emits a static frontend in `client-dist/` that can be hosted without Dev authorization. The protected Dev feature requires the server adapter and trusted platform identity. This repository does not automatically deploy on push.
 
 See [deployment notes](docs/deployment.md) before changing the existing hosted page.

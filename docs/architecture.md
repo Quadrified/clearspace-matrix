@@ -1,45 +1,47 @@
 # How Clearspace works
 
-The browser app lives in `app/index.html`. It uses browser APIs and plain JavaScript without a framework. `worker/handler.mjs` serves the app and adds a small owner-authorized Dev API. The dependency-free build embeds app assets in a single Worker module.
+Clearspace is a React and TypeScript app built with Vite. The frontend owns task data in the browser. The Sites Worker serves the built app and authorizes the small Dev API. It never stores visitor tasks.
 
-## State and rendering
+## Components and state
 
-`tasks` and `projects` are arrays in memory. Rendering derives the four quadrants, search and category/project filters, task counts, and completion percentage from those arrays. Card content uses DOM creation and text content rather than interpolating task text into HTML.
+`App.tsx` composes the screen and coordinates editor and settings actions. Feature folders contain task, project, focus, label, tutorial, and Dev components. Shared dialogs use native HTML dialog behavior; popovers handle outside clicks and Escape. React renders task content as text.
 
-Task IDs stay stable when a task is moved, completed, or edited. Project assignments use project IDs, so renaming a project updates every task's displayed project name.
+`useMatrix` owns the current matrix and its previous snapshot with a reducer. Mutations create new task and project arrays. Pure domain functions implement filtering, moving, metrics, project removal, example tasks, and backup merging. A mutation validates its next matrix before dispatch; storage writes happen in an effect, outside the reducer. Undo restores tasks and projects together, once.
 
-## Storage
+Zod schemas define TypeScript models and validate localStorage, imported backups, and Dev API results. IDs remain stable when editing or moving tasks. Project assignments reference project IDs, so renaming a project updates every associated task.
+
+## Persistence and compatibility
 
 | Key | Contents |
 | --- | --- |
-| `clearspace.matrix.v1` | A version-2 object containing `tasks` and `projects`. Legacy task arrays are also accepted. |
-| `clearspace.labels.v1` | Custom quadrant titles, subtitles, and icon choices. Page branding stays fixed. |
-| `clearspace.theme` | Light or dark appearance. |
-| `clearspace.fontSize.v1` | Text-size percentage. |
-| `clearspace.tutorial.v1` | Whether the introduction has been seen. |
+| `clearspace.matrix.v1` | Version-2 tasks and projects. Legacy task arrays are accepted. |
+| `clearspace.labels.v1` | Quadrant titles, subtitles, and icons. Marketing text is fixed. |
+| `clearspace.theme` | `night` selects dark mode. |
+| `clearspace.fontSize.v1` | Text-size percentage, 90 to 160. |
+| `clearspace.tutorial.v1` | First-visit introduction dismissal. |
 
-Changes save to localStorage. If storage is unavailable, the app keeps the current in-memory work and prompts the user to export it. A storage event can refresh task and project state from another tab when no dialog is open.
+The migration preserves these keys. Older stock subtitles map to the current urgency and importance labels; custom labels remain. Legacy owner fields are preserved without adding a delegation field to the editor. Version-one task backups and version-two project backups remain importable.
 
-Undo stores the previous task and project state in memory. It is a single-step recovery mechanism and is not a persistent history. Clearing or resetting tasks leaves project definitions and quadrant customization saved.
+If saved data cannot be read, it is left untouched. The user can work in memory and export a backup. A failed storage write displays a warning. Storage events refresh task and project state across tabs when no dialog is open.
+
+Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project removes its assignments, not its tasks. Reset removes all tasks while retaining projects and preferences. All notifications, including Undo, dismiss after ten seconds.
 
 ## Focus timer
 
-A running timer stores its target end time and derives remaining seconds from `Date.now()`. A polling callback updates the view, but the countdown does not depend on counting interval ticks. Background-tab throttling can delay UI updates and the completion sound.
+The focus feature owns its state independently of the matrix, so a timer tick does not re-render the task board. A running session uses a target timestamp. Remaining seconds are derived from the wall clock; intervals only refresh the UI.
 
-Starting or resuming closes the dialog and updates the Focus button. Opening the controls leaves the session running. Direct countdown editing temporarily pauses the timer, validates the input, then resumes if it was running. Editing remaining time leaves the selected session length unchanged. Reset uses that selected length.
+Start and resume close the controls and show a header countdown. Closing the popup leaves the session running. Direct clock editing pauses temporarily, accepts minutes or MM:SS, and resumes if it was running. Editing remaining time preserves the selected session length. Reset uses that selection. Completion sound is optional, and background-tab throttling can delay visual updates or sound.
 
-The timer is not persisted across page reloads.
+Sessions last only for the current page and do not survive reloads.
 
-## Backup behavior
+## Dev authorization
 
-Export creates a version-2 JSON file with tasks, projects, and an export timestamp. Import validates the data before mutation and supports version-1 task-only files. Imported project names are reconciled with existing project names. Custom labels and appearance settings are stored separately and are not included in task backups.
+The frontend asks `/api/dev/status` whether it may show Dev controls. Authorization lives in `worker/handler.mjs`, using trusted Sites identity headers and the `DEV_OWNER_EMAIL` runtime secret. `/dev` starts platform sign-in. Anonymous visitors can use `/` without sign-in.
 
-## Owner Dev authorization
+Generation requires an owner POST, same-origin request, and JSON body. It returns 24 sample tasks with `isDevSample: true` and stable Dev project definitions. Cleanup removes only those marked tasks. Neither endpoint stores user task data. Client-side hiding is not the security boundary.
 
-Public routes work without identity. `/dev` redirects anonymous callers to the platform-owned `/signin-with-chatgpt` route. The server checks both platform identity headers and compares the signed-in email with `DEV_OWNER_EMAIL`, supplied as a secret. Missing configuration fails closed. Other accounts receive a denial.
+## Build outputs
 
-`GET /api/dev/status` only returns whether the current visitor is authorized. `POST /api/dev/tasks` requires owner identity, the same Origin, and JSON. It returns 24 generated tasks without writing to a database. Authorization responses are not cacheable.
+Vite compiles React and TypeScript into `client-dist/`. The packaging script embeds the compiled JS and CSS into a single HTML page, then combines it with the Worker handler in `dist/server/index.js`. This avoids separate asset routing on Sites. The same build generates the offline HTML with an embedded favicon. Server secrets never enter the frontend bundle.
 
-The client stores generated tasks with `isDevSample: true`, so cleanup can distinguish them from real tasks. The marker survives task edits and task backup import/export. Generated project names are reused on subsequent runs. Undo restores both tasks and projects.
-
-The identity headers are trusted only behind ChatGPT Sites dispatch. A different host must verify identity itself before populating them. The local server passes no owner secret, so Dev controls remain disabled there.
+Tests live beside React and domain code; server tests live under `tests/`. CI runs type checking, lint, both test suites, and the production build. DOM tests cannot verify device layout, native focus behavior, or real platform authentication.

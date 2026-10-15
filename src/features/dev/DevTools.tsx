@@ -1,3 +1,4 @@
+import { SoftPresence } from '../../components/SoftPresence';
 import { useState } from 'react';
 import { Modal } from '../../components/Modal';
 import { localDate, mergeMatrix } from '../../domain/matrix';
@@ -28,32 +29,34 @@ export default function DevTools({ matrix, change, notify }: Props) {
       <button className="btn" id="devButton" onClick={() => setOpen(true)}>
         Dev
       </button>
-      {open && (
-        <Modal id="devDialog" title="Local development tools" onClose={() => setOpen(false)}>
-          <p className="quiet">
-            Only available during local development. Adds six tasks each for Work, Personal, Health,
-            and Learning. Sample tasks save in this browser.
-          </p>
-          <button className="btn primary" onClick={generate}>
-            Add 24 sample tasks
-          </button>
-          <button
-            className="btn"
-            disabled={!matrix.tasks.some((task) => task.isDevSample)}
-            onClick={() =>
-              change(
-                (current) => ({
-                  ...current,
-                  tasks: current.tasks.filter((task) => !task.isDevSample),
-                }),
-                'Dev sample tasks removed.',
-              )
-            }
-          >
-            Remove Dev samples
-          </button>
-        </Modal>
-      )}
+      <SoftPresence>
+        {open && (
+          <Modal id="devDialog" title="Local development tools" onClose={() => setOpen(false)}>
+            <p className="quiet">
+              Only available during local development. Adds six tasks each for Work, Personal,
+              Health, and Learning. Sample tasks save in this browser.
+            </p>
+            <button className="btn primary" onClick={generate}>
+              Add 24 sample tasks
+            </button>
+            <button
+              className="btn"
+              disabled={!matrix.tasks.some((task) => task.isDevSample)}
+              onClick={() =>
+                change(
+                  (current) => ({
+                    ...current,
+                    tasks: current.tasks.filter((task) => !task.isDevSample),
+                  }),
+                  'Dev sample tasks removed.',
+                )
+              }
+            >
+              Remove Dev samples
+            </button>
+          </Modal>
+        )}
+      </SoftPresence>
     </>
   );
 }

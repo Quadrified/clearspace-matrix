@@ -22,6 +22,7 @@ export function Select({
   id?: string;
   'aria-label': string;
 }) {
+  const [keyboard, setKeyboard] = useState(false);
   const [container, setContainer] = useState<HTMLElement | null>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const items = Children.toArray(children).flatMap((child) => {
@@ -40,7 +41,14 @@ export function Select({
       }}
       disabled={disabled}
     >
-      <Primitive.Trigger ref={trigger} id={id} className="select-trigger" aria-label={label}>
+      <Primitive.Trigger
+        ref={trigger}
+        id={id}
+        className="select-trigger"
+        aria-label={label}
+        onPointerDown={() => setKeyboard(false)}
+        onKeyDown={() => setKeyboard(true)}
+      >
         <Primitive.Value className="select-value" />
         <Primitive.Icon className="select-chevron">
           <Icon name="chevron" />
@@ -54,7 +62,7 @@ export function Select({
           positionMethod="fixed"
           alignItemWithTrigger={false}
         >
-          <Primitive.Popup className="select-popup">
+          <Primitive.Popup className="select-popup" data-instant={keyboard || undefined}>
             <Primitive.List className="select-list">
               {items.map((item) => (
                 <Primitive.Item

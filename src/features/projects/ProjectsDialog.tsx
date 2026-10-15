@@ -1,3 +1,4 @@
+import { SoftPresence } from '../../components/SoftPresence';
 import { useState } from 'react';
 import type { Matrix, Project } from '../../domain/models';
 import { projectNameError, removeProject } from '../../domain/matrix';
@@ -102,60 +103,62 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
           ))}
         </div>
       </Modal>
-      {pending && (
-        <Modal
-          id="deleteProjectDialog"
-          title="Delete this project?"
-          onClose={() => setPending(null)}
-        >
-          <p className="project-delete-summary">
-            <strong>{pending.name}</strong> contains <strong>{taskCount}</strong>.
-            {affected.length
-              ? ' Deleting this project will also delete all of these tasks, including completed tasks.'
-              : ' This project has no tasks to delete.'}
-          </p>
-          {examples.length > 0 && (
-            <>
-              <p className="quiet">Tasks that will be deleted include:</p>
-              <ul className="project-delete-tasks">
-                {examples.map((task) => (
-                  <li key={task.id}>
-                    <span>{task.title}</span>
-                    {task.done && <small>Completed</small>}
-                  </li>
-                ))}
-              </ul>
-              {affected.length > examples.length && (
-                <p className="quiet">
-                  And {affected.length - examples.length} more{' '}
-                  {affected.length - examples.length === 1 ? 'task' : 'tasks'}.
-                </p>
-              )}
-            </>
-          )}
-          <p className="quiet">You can undo this deletion.</p>
-          <div className="dialog-actions">
-            <button type="button" className="btn" autoFocus onClick={() => setPending(null)}>
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn reset-confirm"
-              onClick={() => {
-                const id = pending.id;
-                change(
-                  (m) => removeProject(m, id),
-                  affected.length ? `Project and ${taskCount} deleted.` : 'Project deleted.',
-                );
-                setPending(null);
-                onDeleted?.(id);
-              }}
-            >
-              {affected.length ? `Delete project and ${taskCount}` : 'Delete project'}
-            </button>
-          </div>
-        </Modal>
-      )}
+      <SoftPresence>
+        {pending && (
+          <Modal
+            id="deleteProjectDialog"
+            title="Delete this project?"
+            onClose={() => setPending(null)}
+          >
+            <p className="project-delete-summary">
+              <strong>{pending.name}</strong> contains <strong>{taskCount}</strong>.
+              {affected.length
+                ? ' Deleting this project will also delete all of these tasks, including completed tasks.'
+                : ' This project has no tasks to delete.'}
+            </p>
+            {examples.length > 0 && (
+              <>
+                <p className="quiet">Tasks that will be deleted include:</p>
+                <ul className="project-delete-tasks">
+                  {examples.map((task) => (
+                    <li key={task.id}>
+                      <span>{task.title}</span>
+                      {task.done && <small>Completed</small>}
+                    </li>
+                  ))}
+                </ul>
+                {affected.length > examples.length && (
+                  <p className="quiet">
+                    And {affected.length - examples.length} more{' '}
+                    {affected.length - examples.length === 1 ? 'task' : 'tasks'}.
+                  </p>
+                )}
+              </>
+            )}
+            <p className="quiet">You can undo this deletion.</p>
+            <div className="dialog-actions">
+              <button type="button" className="btn" autoFocus onClick={() => setPending(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn reset-confirm"
+                onClick={() => {
+                  const id = pending.id;
+                  change(
+                    (m) => removeProject(m, id),
+                    affected.length ? `Project and ${taskCount} deleted.` : 'Project deleted.',
+                  );
+                  setPending(null);
+                  onDeleted?.(id);
+                }}
+              >
+                {affected.length ? `Delete project and ${taskCount}` : 'Delete project'}
+              </button>
+            </div>
+          </Modal>
+        )}
+      </SoftPresence>
     </>
   );
 }

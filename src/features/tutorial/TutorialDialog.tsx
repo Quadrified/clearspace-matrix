@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+import { softEase, useMotionSettings } from '../../lib/motion';
 import { useState } from 'react';
 import { tutorialSteps } from './content';
 import { Modal } from '../../components/Modal';
@@ -12,6 +14,7 @@ export function TutorialDialog({
   onClose: () => void;
   onExamples: () => void;
 }) {
+  const { instant } = useMotionSettings();
   const [index, setIndex] = useState(0);
   const step = tutorialSteps[index]!,
     last = index === tutorialSteps.length - 1;
@@ -21,7 +24,13 @@ export function TutorialDialog({
       title={`Getting started · ${index + 1} of ${tutorialSteps.length}`}
       onClose={onClose}
     >
-      <div id="tutorialContent">
+      <motion.div
+        key={index}
+        id="tutorialContent"
+        initial={instant ? false : { opacity: 0, transform: 'translateY(4px)' }}
+        animate={{ opacity: 1, transform: 'translateY(0)' }}
+        transition={{ duration: instant ? 0 : 0.18, ease: softEase }}
+      >
         <div className="tutorial-icon">
           <Icon name={'q' in step ? (labels[step.q].icon ?? step.icon) : step.icon} />
         </div>
@@ -31,7 +40,7 @@ export function TutorialDialog({
           <strong>{step.exampleTitle}</strong>
           {step.example}
         </div>
-      </div>
+      </motion.div>
       <div className="tutorial-progress">
         {tutorialSteps.map((_, i) => (
           <button

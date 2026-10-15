@@ -56,8 +56,8 @@ afterEach(() => {
   vi.restoreAllMocks();
   delete (HTMLElement.prototype as Partial<HTMLElement>).animate;
 });
-it('highlights the destination, animates the move, saves it, and supports Undo', () => {
-  const { source, destination, dataTransfer, animate } = setup();
+it('highlights the destination, saves the move, and supports Undo', () => {
+  const { source, destination, dataTransfer } = setup();
   fireEvent.dragStart(source, { dataTransfer });
   expect(source).toHaveClass('is-dragging');
   fireEvent.dragOver(destination, { dataTransfer });
@@ -65,7 +65,6 @@ it('highlights the destination, animates the move, saves it, and supports Undo',
   fireEvent.drop(destination, { dataTransfer });
   expect(destination).not.toHaveClass('dragover');
   expect(destination).toContainElement(screen.getByRole('button', { name: 'Edit Move this task' }));
-  expect(animate).toHaveBeenCalledOnce();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('schedule');
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('do');

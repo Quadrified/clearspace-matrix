@@ -1,3 +1,4 @@
+import { SoftPresence } from '../../components/SoftPresence';
 import { Select, SelectOption } from '../../components/Select';
 import { useState } from 'react';
 import type { Task, Matrix, Labels, QuadrantId } from '../../domain/models';
@@ -166,21 +167,23 @@ export function TaskEditor({
           </div>
         </form>
       </Modal>
-      {projects && (
-        <ProjectsDialog
-          matrix={matrix}
-          change={change}
-          onClose={() => setProjects(false)}
-          onDeleted={(id) => {
-            if (task?.projectId === id) onClose();
-            else if (draft.projectId === id) patch('projectId', '');
-          }}
-          onCreated={(id) => {
-            patch('projectId', id);
-            setProjects(false);
-          }}
-        />
-      )}
+      <SoftPresence>
+        {projects && (
+          <ProjectsDialog
+            matrix={matrix}
+            change={change}
+            onClose={() => setProjects(false)}
+            onDeleted={(id) => {
+              if (task?.projectId === id) onClose();
+              else if (draft.projectId === id) patch('projectId', '');
+            }}
+            onCreated={(id) => {
+              patch('projectId', id);
+              setProjects(false);
+            }}
+          />
+        )}
+      </SoftPresence>
     </>
   );
 }

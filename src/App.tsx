@@ -1,3 +1,5 @@
+import { Toast } from './components/Toast';
+import { SoftPresence } from './components/SoftPresence';
 import { Select, SelectOption } from './components/Select';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
@@ -17,6 +19,7 @@ import { Icon } from './components/Icon';
 import { Modal } from './components/Modal';
 import { Popover } from './components/Popover';
 import { ThemeToggle } from './components/ThemeToggle';
+import { StatusTabs } from './features/tasks/StatusTabs';
 import { TaskOverview } from './features/tasks/TaskOverview';
 import { MatrixBoard } from './features/tasks/MatrixBoard';
 import { TaskEditor } from './features/tasks/TaskEditor';
@@ -237,24 +240,7 @@ export default function App() {
           <TaskOverview summary={summary} />
           <div className="toolbar">
             <div className="toolbar-status">
-              <div className="tabs" aria-label="Task status">
-                {(
-                  [
-                    ['active', 'Active'],
-                    ['done', 'Completed'],
-                    ['all', 'All tasks'],
-                  ] as const
-                ).map(([value, label]) => (
-                  <button
-                    key={value}
-                    aria-pressed={filters.status === value}
-                    className={filters.status === value ? 'active' : ''}
-                    onClick={() => filter('status', value)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
+              <StatusTabs value={filters.status} onChange={(value) => filter('status', value)} />
               <div className="add-control">
                 <button
                   id="newTask"
@@ -382,83 +368,93 @@ export default function App() {
           </div>
         </footer>
       </div>
-      {editor && (
-        <TaskEditor
-          {...editor}
-          matrix={matrix}
-          labels={prefs.labels}
-          change={change}
-          onClose={() => setEditor(null)}
-        />
-      )}{' '}
-      {dialog === 'projects' && (
-        <ProjectsDialog matrix={matrix} change={change} onClose={() => setDialog(null)} />
-      )}{' '}
-      {dialog === 'labels' && (
-        <LabelsDialog
-          labels={prefs.labels}
-          onSave={(v) => {
-            prefs.setLabels(v);
-            show('Labels updated.');
-          }}
-          onClose={() => setDialog(null)}
-        />
-      )}{' '}
-      {dialog === 'tutorial' && (
-        <TutorialDialog
-          labels={prefs.labels}
-          onClose={closeTutorial}
-          onExamples={() => {
-            change(addExamples, 'Example tasks added.');
-            closeTutorial();
-          }}
-        />
-      )}{' '}
-      {dialog === 'reset' && (
-        <Modal id="resetDialog" title="Reset your board?" onClose={() => setDialog(null)}>
-          <p>
-            All tasks and projects will be cleared. Your labels and appearance preferences will
-            stay. You can undo this reset.
-          </p>
-          <div className="dialog-actions">
-            <button className="btn" autoFocus onClick={() => setDialog(null)}>
-              Cancel
-            </button>
-            <button
-              className="btn reset-confirm"
-              onClick={() => {
-                change(
-                  () => ({ tasks: [], projects: [] }),
-                  'Board reset. All tasks and projects cleared.',
-                );
-                setFilters(initialFilters);
-                setDialog(null);
-              }}
-            >
-              Reset board
-            </button>
-          </div>
-        </Modal>
-      )}{' '}
-      {toast && (
-        <div id="toast" className="toast" role="status">
-          <span>{toast.text}</span>
-          {toast.undo && canUndo && (
-            <button
-              id="undo"
-              onClick={() => {
-                undo();
-                show('Undone.');
-              }}
-            >
-              Undo
-            </button>
-          )}
-          <button aria-label="Dismiss notification" onClick={dismiss}>
-            <Icon name="close" />
-          </button>
-        </div>
-      )}
+      <SoftPresence>
+        {editor && (
+          <TaskEditor
+            key="task"
+            {...editor}
+            matrix={matrix}
+            labels={prefs.labels}
+            change={change}
+            onClose={() => setEditor(null)}
+          />
+        )}{' '}
+        {dialog === 'projects' && (
+          <ProjectsDialog
+            key="projects"
+            matrix={matrix}
+            change={change}
+            onClose={() => setDialog(null)}
+          />
+        )}{' '}
+        {dialog === 'labels' && (
+          <LabelsDialog
+            key="labels"
+            labels={prefs.labels}
+            onSave={(v) => {
+              prefs.setLabels(v);
+              show('Labels updated.');
+            }}
+            onClose={() => setDialog(null)}
+          />
+        )}{' '}
+        {dialog === 'tutorial' && (
+          <TutorialDialog
+            key="tutorial"
+            labels={prefs.labels}
+            onClose={closeTutorial}
+            onExamples={() => {
+              change(addExamples, 'Example tasks added.');
+              closeTutorial();
+            }}
+          />
+        )}{' '}
+        {dialog === 'reset' && (
+          <Modal
+            key="reset"
+            id="resetDialog"
+            title="Reset your board?"
+            onClose={() => setDialog(null)}
+          >
+            <p>
+              All tasks and projects will be cleared. Your labels and appearance preferences will
+              stay. You can undo this reset.
+            </p>
+            <div className="dialog-actions">
+              <button className="btn" autoFocus onClick={() => setDialog(null)}>
+                Cancel
+              </button>
+              <button
+                className="btn reset-confirm"
+                onClick={() => {
+                  change(
+                    () => ({ tasks: [], projects: [] }),
+                    'Board reset. All tasks and projects cleared.',
+                  );
+                  setFilters(initialFilters);
+                  setDialog(null);
+                }}
+              >
+                Reset board
+              </button>
+            </div>
+          </Modal>
+        )}{' '}
+      </SoftPresence>
+      <SoftPresence>
+        {toast && (
+          <Toast
+            key="notification"
+            text={toast.text}
+            undo={toast.undo && canUndo}
+            onUndo={() => {
+              undo();
+              show('Undone.');
+            }}
+            onDismiss={dismiss}
+          />
+        )}
+      </SoftPresence>
     </>
   );
 }

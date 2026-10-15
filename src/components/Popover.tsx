@@ -1,4 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { motion, useIsPresent } from 'motion/react';
+import { SoftPresence } from './SoftPresence';
+import { softEase, useMotionSettings } from '../lib/motion';
+import { forwardRef, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 export function Popover({
   open,
@@ -30,9 +33,33 @@ export function Popover({
       document.removeEventListener('keydown', key);
     };
   }, [open, onClose]);
-  return open ? (
-    <div ref={ref} className={className}>
-      {children}
-    </div>
-  ) : null;
+  return (
+    <SoftPresence>
+      {open && (
+        <PopoverSurface key="surface" ref={ref} className={className}>
+          {children}
+        </PopoverSurface>
+      )}
+    </SoftPresence>
+  );
 }
+const PopoverSurface = forwardRef<HTMLDivElement, { className: string; children: ReactNode }>(
+  function PopoverSurface({ className, children }, ref) {
+    const present = useIsPresent();
+    const { instant } = useMotionSettings();
+    return (
+      <motion.div
+        ref={ref}
+        className={className}
+        initial={instant ? false : { opacity: 0, transform: 'translateY(-4px) scale(.97)' }}
+        animate={{ opacity: 1, transform: 'translateY(0) scale(1)' }}
+        exit={{ opacity: 0, transform: 'translateY(-4px) scale(.97)' }}
+        transition={{ duration: instant ? 0 : 0.16, ease: softEase }}
+        aria-hidden={!present || undefined}
+        inert={!present || undefined}
+      >
+        {children}
+      </motion.div>
+    );
+  },
+);

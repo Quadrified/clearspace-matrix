@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { Select, SelectOption } from './Select';
 import { Modal } from './Modal';
 function Example({ disabled = false }) {
@@ -26,8 +26,9 @@ it('opens a custom list, chooses an option, and restores trigger focus', async (
 });
 it('supports keyboard navigation and Escape without closing its parent dialog', async () => {
   const user = userEvent.setup();
+  const onClose = vi.fn();
   render(
-    <Modal id="testDialog" title="Task" onClose={() => {}}>
+    <Modal id="testDialog" title="Task" onClose={onClose}>
       <Example />
     </Modal>,
   );
@@ -38,9 +39,12 @@ it('supports keyboard navigation and Escape without closing its parent dialog', 
   expect(screen.getByRole('dialog')).toContainElement(list);
   await user.keyboard('{End}{Enter}');
   expect(trigger).toHaveTextContent('Health');
+  await waitFor(() => expect(screen.queryByRole('listbox')).not.toBeInTheDocument());
   await user.click(trigger);
+  await screen.findByRole('listbox');
   await user.keyboard('{Escape}');
-  expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  await waitFor(() => expect(screen.queryByRole('listbox')).not.toBeInTheDocument());
+  expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByRole('dialog')).toBeInTheDocument();
 });
 it('keeps a disabled select closed', async () => {

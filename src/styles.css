@@ -12,7 +12,7 @@
   --soft: #e4eddf;
   --glass: rgba(244, 246, 239, 0.9);
   --shadow: 0 3px 18px #24482d0a;
-  --out: cubic-bezier(0.22, 1, 0.36, 1);
+  --out: cubic-bezier(0.23, 1, 0.32, 1);
   font:
     100%/1.5 -apple-system,
     BlinkMacSystemFont,
@@ -287,7 +287,6 @@ h1,
     0 12px 36px #0000001a,
     0 1px 4px #00000008;
   transform-origin: top right;
-  animation: menu-in 160ms var(--out);
   max-width: calc(100vw - 24px);
 }
 .add-menu {
@@ -738,9 +737,6 @@ dialog::backdrop {
   background: #15151b42;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-}
-dialog[open] {
-  animation: dialog-in 200ms var(--out);
 }
 dialog h2 {
   font-family: inherit;
@@ -1970,7 +1966,7 @@ label.field {
   display: flex;
 }
 .task.is-dragging {
-  opacity: 0.4;
+  opacity: 1;
   transform: scale(0.98);
 }
 .task.drop-before {
@@ -2063,5 +2059,175 @@ label.field {
   to {
     opacity: 1;
     transform: rotate(0) scale(1);
+  }
+}
+/* Motion connects changes without delaying the underlying action. */
+.tabs button {
+  position: relative;
+  isolation: isolate;
+}
+.tabs .active {
+  background: transparent;
+  box-shadow: none;
+}
+.tab-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--selected);
+  box-shadow: 0 1px 4px #10281d0d;
+}
+.tab-label {
+  position: relative;
+}
+.tasklist {
+  position: relative;
+}
+.task-shell {
+  width: 100%;
+  display: flow-root;
+}
+.select-chevron {
+  transition: transform 180ms var(--out);
+}
+.select-trigger[aria-expanded='true'] .select-chevron {
+  transform: rotate(180deg);
+}
+.select-popup {
+  transition:
+    opacity 160ms var(--out),
+    transform 180ms var(--out);
+}
+.select-popup[data-starting-style],
+.select-popup[data-ending-style] {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.97);
+}
+.select-popup[data-instant] {
+  transition: none;
+}
+.theme-thumb {
+  transition:
+    transform 260ms var(--out),
+    background-color 200ms ease;
+}
+.theme-track {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+.theme-track svg {
+  transition:
+    opacity 180ms ease,
+    transform 260ms var(--out),
+    color 180ms ease;
+}
+.theme-toggle[aria-checked='true'] .theme-sun {
+  opacity: 0.5;
+  transform: rotate(35deg) scale(0.85);
+}
+.theme-toggle:not([aria-checked='true']) .theme-moon {
+  opacity: 0.5;
+  transform: rotate(-25deg) scale(0.85);
+}
+.theme-toggle[data-keyboard] .theme-track,
+.theme-toggle[data-keyboard] svg {
+  transition: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  header,
+  .quad,
+  .overview,
+  .task,
+  .tabs,
+  .select-trigger,
+  .search,
+  dialog,
+  .settings-menu,
+  .add-menu,
+  .stat {
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+  .task-fab {
+    transition:
+      transform 160ms var(--out),
+      background-color 200ms ease;
+  }
+  .ring-fill {
+    transition: stroke-dasharray 260ms var(--out);
+  }
+  .iconbtn,
+  .select-item {
+    transition:
+      background-color 140ms ease,
+      color 140ms ease;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .select-trigger:hover {
+    border-color: var(--accent-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task.is-dragging {
+    transform: none;
+  }
+}
+
+/* Release the native modal immediately while its inert visual fades. */
+dialog[data-closing] {
+  display: block;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  z-index: 101;
+  pointer-events: none;
+}
+.dialog-exit-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #15151b42;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  animation: backdrop-out 180ms var(--out) forwards;
+}
+@keyframes backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .dialog-exit-backdrop {
+    backdrop-filter: none;
+  }
+}
+
+dialog::backdrop {
+  animation: backdrop-in 180ms var(--out);
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.keyboard-input dialog::backdrop {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog::backdrop {
+    animation: none;
   }
 }

@@ -55,9 +55,9 @@ Open [127.0.0.1:8000](http://127.0.0.1:8000). The local server intentionally has
 
 ## Owner-only Dev mode
 
-**The Dev upgrade is implemented and tested in this source snapshot, but awaits publication to the live site.**
+**Owner-only Dev mode is deployed on the live site.**
 
-After it is published, open `/dev` on the hosted site and sign in as the Site owner. A **Dev** button then appears in the header. Regular visitors do not see it and can keep using the public app without signing in.
+Open [Clearspace Dev](https://clearspace-matrix.fastring19.chatgpt.site/dev) and sign in as the Site owner. A **Dev** button then appears in the header. Regular visitors do not see it and can keep using the public app without signing in.
 
 - **Add 24 test tasks** creates six tasks per quadrant, three reusable test projects, varied dates and notes, and some completed tasks.
 - **Remove test tasks** removes only tasks marked as Dev samples. Your own tasks and project definitions stay saved.

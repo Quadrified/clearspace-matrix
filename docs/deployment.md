@@ -4,9 +4,9 @@
 
 The live public site is https://clearspace-matrix.fastring19.chatgpt.site.
 
-The owner-only Dev upgrade in this repository is prepared and tested but has not yet been deployed. Sites source upload was blocked by the session's execution approval policy. The live site still serves the previous static version.
+The owner-only Dev upgrade is deployed as Sites version 23, from source commit `3032ef5e7a05a673d09401f4b349aee60bb951dc`. The deployment succeeded with the owner secret configured. Public visitors keep anonymous access to the regular app.
 
-The existing Site ID remains in `.openai/hosting.json`. The new configuration removes `static.directory` because the deployment now has a server adapter. Keep the Site identity unchanged when publishing this upgrade.
+The existing Site ID remains in `.openai/hosting.json`. The new configuration removes `static.directory` because the deployment now has a server adapter. Keep the Site identity unchanged when publishing future updates.
 
 ## Secrets and identity
 

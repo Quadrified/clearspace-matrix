@@ -1,3 +1,4 @@
+import { useHeaderHeight } from './lib/useHeaderHeight';
 import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
 import { Select, SelectOption } from './components/Select';
@@ -39,6 +40,8 @@ export default function App() {
     [menu, setMenu] = useState<'add' | 'settings' | null>(null),
     [editor, setEditor] = useState<{ q: QuadrantId; task?: Task } | null>(null),
     [dialog, setDialog] = useState<'projects' | 'labels' | 'tutorial' | 'reset' | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  useHeaderHeight(headerRef);
   const importRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const summary = stats(matrix);
@@ -133,7 +136,7 @@ export default function App() {
   return (
     <>
       <div className="wrap">
-        <header>
+        <header ref={headerRef}>
           <div className="brand">
             <span className="logo" aria-hidden="true">
               <i />

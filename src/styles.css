@@ -1,4 +1,6 @@
 :root {
+  --header-height-fallback: calc(88px + env(safe-area-inset-top, 0px));
+  --matrix-axis-height: calc(36px * var(--text-scale, 1));
   --bg: #f4f6ef;
   --paper: #fcfdf8;
   --card: #ffffff;
@@ -420,7 +422,8 @@ h1,
   margin-left: 30px;
 }
 .axis-top,
-.axis-side {
+.axis-side,
+.axis-mobile {
   font-size: calc(12px * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.2;
@@ -428,6 +431,15 @@ h1,
   text-transform: uppercase;
 }
 .axis-top {
+  position: sticky;
+  top: var(--app-header-height, var(--header-height-fallback));
+  z-index: 8;
+  min-height: var(--matrix-axis-height);
+  align-items: center;
+  padding: 8px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  pointer-events: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -435,18 +447,36 @@ h1,
   margin-bottom: 11px;
   color: var(--muted);
 }
-.axis-side {
+.axis-rail {
   position: absolute;
-  display: block;
+  top: 0;
+  bottom: 0;
   left: -30px;
-  top: 50%;
+  width: 24px;
+  pointer-events: none;
+}
+.axis-side {
+  position: sticky;
+  display: block;
+  top: calc(
+    var(--app-header-height, var(--header-height-fallback)) + var(--matrix-axis-height) + 16px
+  );
+  margin-top: 24px;
+  width: max-content;
+  height: max-content;
   writing-mode: vertical-rl;
-  transform: translateY(-50%) rotate(180deg);
+  transform: rotate(180deg);
   color: var(--accent-ink);
+  background: var(--bg);
+  padding: 6px 3px;
+  border-radius: 6px;
   white-space: nowrap;
   pointer-events: none;
 }
-.quad:nth-child(even) > .axis-side {
+.axis-mobile {
+  display: none;
+}
+.quad:nth-child(even) > .axis-rail {
   display: none;
 }
 .matrix {
@@ -1282,6 +1312,9 @@ label.field {
   }
 }
 @media (max-width: 760px) {
+  :root {
+    --header-height-fallback: calc(80px + env(safe-area-inset-top, 0px));
+  }
   .wrap {
     --page-gutter: 20px;
   }
@@ -1900,7 +1933,7 @@ label.field {
   }
 }
 @media (max-width: 760px) {
-  .quad:nth-child(even) > .axis-side {
+  .quad:nth-child(even) > .axis-rail {
     display: block;
   }
 }
@@ -2351,5 +2384,24 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle:active .theme-track {
     transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  /* A single column needs each quadrant's own urgency, not a two-column legend. */
+  .axis-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: var(--app-header-height, var(--header-height-fallback));
+    z-index: 2;
+    min-height: var(--matrix-axis-height);
+    padding: 8px 16px;
+    color: var(--accent-ink);
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    border-radius: 18px 18px 0 0;
+    pointer-events: none;
   }
 }

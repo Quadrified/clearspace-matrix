@@ -83,9 +83,14 @@ export function MatrixBoard({
                   drop(e.dataTransfer.getData('text/plain'), q.id);
                 }}
               >
-                <span className="axis-side" aria-hidden="true">
-                  {q.id === 'do' || q.id === 'schedule' ? 'Important' : 'Not important'}
-                </span>
+                <div className="axis-rail" aria-hidden="true">
+                  <span className="axis-side">
+                    {q.id === 'do' || q.id === 'schedule' ? 'Important' : 'Not important'}
+                  </span>
+                </div>
+                <div className="axis-mobile" aria-hidden="true">
+                  {q.id === 'do' || q.id === 'delegate' ? 'Urgent' : 'Not urgent'}
+                </div>
                 <div className="qhead">
                   <span className="qicon">
                     <Icon name={label.icon ?? q.id} />

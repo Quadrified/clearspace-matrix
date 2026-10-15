@@ -1,19 +1,19 @@
+import { useState } from 'react';
 import type { RefObject } from 'react';
 import { Icon } from '../../components/Icon';
-import { Popover } from '../../components/Popover';
 import { Select, SelectOption } from '../../components/Select';
 import { categories } from '../../domain/models';
 import type { Filters, Project } from '../../domain/models';
 import { StatusTabs } from '../tasks/StatusTabs';
-import type { Menu } from './AppHeader';
 
 export function Toolbar({
   filters,
   projectFilter,
   projects,
   filter,
-  menu,
-  setMenu,
+  counts,
+  resultCount,
+  onClearFilters,
   searchRef,
   onAddTask,
   onProjects,
@@ -22,46 +22,49 @@ export function Toolbar({
   projectFilter: string;
   projects: Project[];
   filter: <K extends keyof Filters>(key: K, value: Filters[K]) => void;
-  menu: Menu;
-  setMenu: (menu: Menu) => void;
+  counts: { active: number; done: number; all: number };
+  resultCount: number;
+  onClearFilters: () => void;
   searchRef: RefObject<HTMLInputElement | null>;
   onAddTask: () => void;
   onProjects: () => void;
 }) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filtering = !!(filters.search || filters.category || projectFilter);
   return (
     <div className="toolbar">
       <div className="toolbar-status">
-        <StatusTabs value={filters.status} onChange={(value) => filter('status', value)} />
+        <StatusTabs
+          counts={counts}
+          value={filters.status}
+          onChange={(value) => filter('status', value)}
+        />
         <div className="add-control">
-          <button
-            id="newTask"
-            className="btn primary"
-            aria-expanded={menu === 'add'}
-            aria-controls="addMenu"
-            onClick={() => setMenu(menu === 'add' ? null : 'add')}
-          >
+          <button id="newTask" className="btn primary" onClick={() => onAddTask()}>
             <Icon name="plus" />
-            Add
-            <Icon name="chevron" className="add-chevron" />
+            Add task
           </button>
-          <Popover
-            id="addMenu"
-            open={menu === 'add'}
-            onClose={() => setMenu(null)}
-            className="add-menu"
-          >
-            <button onClick={() => onAddTask()}>
-              <Icon name="plus" />
-              Add task<kbd>N</kbd>
-            </button>
-            <button onClick={() => onProjects()}>
-              <Icon name="folder" />
-              Add project<kbd>P</kbd>
-            </button>
-          </Popover>
+          <button id="projectsButton" className="btn" onClick={() => onProjects()}>
+            <Icon name="folder" />
+            Projects
+          </button>
         </div>
       </div>
-      <div className="filters">
+      <button
+        type="button"
+        className="btn filters-toggle"
+        aria-expanded={filtersOpen}
+        aria-controls="filters"
+        onClick={() => setFiltersOpen((open) => !open)}
+      >
+        <Icon name="search" />
+        {filtersOpen
+          ? 'Hide search and filters'
+          : filtering
+            ? 'Search and filters (on)'
+            : 'Search and filters'}
+      </button>
+      <div className={`filters${filtersOpen ? ' is-open' : ''}`} id="filters">
         <div className="search">
           <Icon name="search" />
           <input
@@ -123,6 +126,14 @@ export function Toolbar({
           <SelectOption value="new">Newest first</SelectOption>
         </Select>
       </div>
+      {filtering && (
+        <p className="filter-summary" role="status">
+          {resultCount} {resultCount === 1 ? 'task matches' : 'tasks match'}
+          <button type="button" className="iconbtn" onClick={onClearFilters}>
+            Clear filters
+          </button>
+        </p>
+      )}
     </div>
   );
 }

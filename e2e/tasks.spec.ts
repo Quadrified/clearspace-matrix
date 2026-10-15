@@ -24,15 +24,15 @@ import {
   storedMatrix,
   choose,
   editorDialog,
+  openFilters,
 } from './helpers';
 
 test.describe('adding tasks', () => {
-  test('Add menu creates a task in the Do first quadrant', async ({ page }) => {
+  test('Add task creates a task in the Do first quadrant', async ({ page }) => {
     await open(page, { matrix: { tasks: [], projects: [] } });
     await expect(page.getByText('Start with what needs your attention.')).toBeVisible();
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
-    await expect(page.getByRole('button', { name: /^Add project/ })).toBeVisible();
-    await page.getByRole('button', { name: /^Add task/ }).click();
+    await expect(page.getByRole('button', { name: 'Add your first task' })).toBeVisible();
+    await page.getByRole('button', { name: 'Add task', exact: true }).click();
     const dialog = editorDialog(page);
     await expect(dialog).toBeVisible();
     await dialog.getByPlaceholder('What do you need to do?').fill('Write the report');
@@ -256,6 +256,7 @@ test.describe('drag and drop', () => {
   test('tasks are not draggable when sorted by due date', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
     await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'true');
+    await openFilters(page);
     await choose(page, 'Sort tasks', 'Due date');
     await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'false');
   });

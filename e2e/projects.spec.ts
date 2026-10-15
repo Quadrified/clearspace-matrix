@@ -1,13 +1,20 @@
 /* Projects dialog: create, rename, delete (with the destructive-confirm text), plus the editor link. */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, storedMatrix, toast, editorDialog, choose } from './helpers';
+import {
+  open,
+  seedMatrix,
+  storedMatrix,
+  toast,
+  editorDialog,
+  choose,
+  openFilters,
+} from './helpers';
 
 const projectsDialog = (page: import('@playwright/test').Page) =>
   page.getByRole('dialog', { name: 'A place for your projects.' });
 
 async function openProjects(page: import('@playwright/test').Page) {
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
-  await page.getByRole('button', { name: /^Add project/ }).click();
+  await page.getByRole('button', { name: 'Projects', exact: true }).click();
   await expect(projectsDialog(page)).toBeVisible();
 }
 
@@ -45,6 +52,7 @@ test('rename a project and see it on tasks and in the filter', async ({ page }) 
   await expect(page.locator('[data-task-id="t-proposal"] .project-tag')).toHaveText(
     'Product launch',
   );
+  await openFilters(page);
   await choose(page, 'Filter by project', 'Product launch');
   await expect(page.locator('.task-title')).toHaveText(['Send proposal']);
 });

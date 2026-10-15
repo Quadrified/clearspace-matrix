@@ -1,9 +1,10 @@
 /* Search, category / project / sort Selects and the Active / Completed / All tabs. */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, quadrant, titles, choose } from './helpers';
+import { open, seedMatrix, quadrant, titles, choose, openFilters } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await open(page, { matrix: seedMatrix });
+  await openFilters(page);
 });
 
 test('search filters by title, notes, owner, category and project name', async ({ page }) => {

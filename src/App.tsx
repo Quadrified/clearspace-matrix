@@ -3,18 +3,20 @@ import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
-import { initialFilters } from './domain/models';
-import { addExamples, moveTask, stats, toggleTask } from './domain/matrix';
+import { initialFilters, quadrants } from './domain/models';
+import { addExamples, moveTask, stats, toggleTask, visibleTasks } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
+import { Icon } from './components/Icon';
 import { Modal } from './components/Modal';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
 import { Toolbar } from './features/app/Toolbar';
 import { AppFooter } from './features/app/AppFooter';
 import { useBackup } from './features/backup/useBackup';
+import { FirstTask } from './features/tasks/FirstTask';
 import { TaskOverview } from './features/tasks/TaskOverview';
 import { MatrixBoard } from './features/tasks/MatrixBoard';
 import { TaskEditor } from './features/tasks/TaskEditor';
@@ -26,7 +28,7 @@ import { TutorialDialog } from './features/tutorial/TutorialDialog';
 // Vite removes this import and its sample data from production builds.
 const DevTools = import.meta.env.DEV ? lazy(() => import('./features/dev/DevTools')) : null;
 export default function App() {
-  const { toast, show, dismiss } = useToast();
+  const { toast, show, dismiss, setPaused } = useToast();
   const { matrix, change, undo, canUndo, storageError, rawStored } = useMatrix(show);
   const prefs = usePreferences(show);
   const [filters, setFilters] = useState(initialFilters),
@@ -37,7 +39,7 @@ export default function App() {
   useHeaderHeight(headerRef);
   const searchRef = useRef<HTMLInputElement>(null);
   const today = useToday();
-  const { importRef, exportBackup, importBackup } = useBackup({
+  const { importRef, exportBackup, importBackup, lastBackup } = useBackup({
     matrix,
     rawStored,
     storageError,
@@ -54,6 +56,22 @@ export default function App() {
   const boardFilters = useMemo(
     () => ({ ...filters, project: projectFilter }),
     [filters, projectFilter],
+  );
+  const counts = useMemo(
+    () => ({
+      active: summary.active,
+      done: summary.done,
+      all: matrix.tasks.length,
+    }),
+    [summary, matrix.tasks.length],
+  );
+  const resultCount = useMemo(
+    () => quadrants.reduce((n, q) => n + visibleTasks(matrix, q.id, boardFilters).length, 0),
+    [matrix, boardFilters],
+  );
+  const clearFilters = useCallback(
+    () => setFilters((f) => ({ ...f, search: '', category: '', project: '' })),
+    [],
   );
   const openTask = useCallback((q: QuadrantId = 'do', task?: Task) => {
     setMenu(null);
@@ -161,14 +179,21 @@ export default function App() {
               </time>
             </div>
           </section>
-          <TaskOverview summary={summary} />
+          {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
+          {matrix.tasks.length === 0 && (
+            <FirstTask
+              onAdd={() => openTask()}
+              onExamples={() => change(addExamples, 'Example tasks added.')}
+            />
+          )}
           <Toolbar
             filters={filters}
             projectFilter={projectFilter}
             projects={matrix.projects}
             filter={filter}
-            menu={menu}
-            setMenu={setMenu}
+            counts={counts}
+            resultCount={resultCount}
+            onClearFilters={clearFilters}
             searchRef={searchRef}
             onAddTask={() => openTask()}
             onProjects={() => openDialog('projects')}
@@ -187,6 +212,8 @@ export default function App() {
         </main>
         <AppFooter
           importRef={importRef}
+          lastBackup={lastBackup}
+          taskCount={matrix.tasks.length}
           onExport={exportBackup}
           onImport={(file) => void importBackup(file)}
           onClearCompleted={() =>
@@ -197,6 +224,14 @@ export default function App() {
           }
         />
       </div>
+      <button
+        type="button"
+        className="add-floating"
+        aria-label="Quick add task"
+        onClick={() => openTask()}
+      >
+        <Icon name="plus" />
+      </button>
       <SoftPresence>
         {editor && (
           <TaskEditor
@@ -281,6 +316,7 @@ export default function App() {
               show('Undone.');
             }}
             onDismiss={dismiss}
+            onPause={setPaused}
           />
         )}
       </SoftPresence>

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import type { Task, Matrix, Labels, QuadrantId } from '../../domain/models';
 import { taskSchema, categories, quadrants } from '../../domain/models';
 import { Modal } from '../../components/Modal';
+import { localDate } from '../../domain/matrix';
 import { ProjectsDialog } from '../projects/ProjectsDialog';
 export function TaskEditor({
   task,
@@ -44,11 +45,7 @@ export function TaskEditor({
   }
   return (
     <>
-      <Modal
-        id="taskDialog"
-        title={task ? 'A little less on your mind.' : 'A little less on your mind.'}
-        onClose={onClose}
-      >
+      <Modal id="taskDialog" title={task ? 'Edit task' : 'New task'} onClose={onClose}>
         <form
           id="taskForm"
           onSubmit={(e) => {
@@ -118,12 +115,46 @@ export function TaskEditor({
             </Select>
           </label>
           <div className="row">
+            <div className="field due-field">
+              <label htmlFor="taskDue">
+                Due date <small>(optional)</small>
+              </label>
+              <input
+                id="taskDue"
+                type="date"
+                value={draft.due}
+                onChange={(e) => patch('due', e.target.value)}
+              />
+              <div className="date-chips" role="group" aria-label="Pick a day">
+                {(
+                  [
+                    ['Today', 0],
+                    ['Tomorrow', 1],
+                    ['Next week', 7],
+                  ] as const
+                ).map(([label, days]) => (
+                  <button
+                    key={label}
+                    type="button"
+                    className="chip"
+                    onClick={() => {
+                      const date = new Date();
+                      date.setDate(date.getDate() + days);
+                      patch('due', localDate(date));
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+                {draft.due && (
+                  <button type="button" className="chip" onClick={() => patch('due', '')}>
+                    No date
+                  </button>
+                )}
+              </div>
+            </div>
             <label className="field">
-              Due date
-              <input type="date" value={draft.due} onChange={(e) => patch('due', e.target.value)} />
-            </label>
-            <label className="field">
-              Category
+              Category <small>(optional)</small>
               <Select
                 aria-label="Category"
                 value={draft.category}
@@ -137,7 +168,9 @@ export function TaskEditor({
             </label>
           </div>
           <label className="field">
-            Notes
+            <span>
+              Notes <small>(optional)</small>
+            </span>
             <textarea
               maxLength={3000}
               placeholder="A first step, a link, anything helpful…"
@@ -150,7 +183,7 @@ export function TaskEditor({
             {task && (
               <button
                 type="button"
-                className="btn danger push-left"
+                className="btn danger ghost push-left"
                 onClick={() => {
                   change(
                     (m) => ({ ...m, tasks: m.tasks.filter((t) => t.id !== task.id) }),

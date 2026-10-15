@@ -20,7 +20,9 @@
     <!-- Apply the saved theme before first paint so dark mode never flashes light. -->
     <script>
       try {
-        if (localStorage.getItem('clearspace.theme') === 'night') {
+        var saved = localStorage.getItem('clearspace.theme');
+        var dark = saved ? saved === 'night' : matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) {
           document.body.classList.add('night');
           document.documentElement.style.colorScheme = 'dark';
           document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {

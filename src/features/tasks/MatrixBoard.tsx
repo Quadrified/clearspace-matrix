@@ -96,6 +96,8 @@ export function MatrixBoard({
     () => quadrants.map((q) => visibleTasks(matrix, q.id, filters)),
     [matrix, filters],
   );
+  const filtered = !!(filters.search || filters.category || filters.project);
+  const hasTasks = (q: QuadrantId) => matrix.tasks.some((t) => t.q === q);
   const activeCount = useMemo(() => {
     const counts: Record<QuadrantId, number> = { do: 0, schedule: 0, delegate: 0, eliminate: 0 };
     for (const t of matrix.tasks) if (!t.done) counts[t.q]++;
@@ -200,16 +202,20 @@ export function MatrixBoard({
                         transition={{ duration: instant ? 0 : 0.16, ease: softEase }}
                       >
                         <EmptyIllustration q={q.id} />
-                        <strong>
-                          {filters.search || filters.category || filters.project
-                            ? 'No matching tasks.'
-                            : filters.status === 'done'
-                              ? 'Nothing completed here yet.'
-                              : filters.status === 'active' &&
-                                  matrix.tasks.some((t) => t.q === q.id)
-                                ? 'All clear here.'
-                                : q.empty}
-                        </strong>
+                        {filtered || filters.status === 'done' || hasTasks(q.id) ? (
+                          <strong>
+                            {filtered
+                              ? 'No matching tasks.'
+                              : filters.status === 'done'
+                                ? 'Nothing completed here yet.'
+                                : 'All clear here.'}
+                          </strong>
+                        ) : (
+                          <button type="button" className="empty-add" onClick={() => onAdd(q.id)}>
+                            {q.empty}
+                            <span>Add a task</span>
+                          </button>
+                        )}
                       </motion.div>
                     )}
                   </TaskPresence>

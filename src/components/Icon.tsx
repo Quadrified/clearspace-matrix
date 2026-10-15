@@ -27,6 +27,7 @@ import {
   TagIcon,
   FolderIcon,
   ChevronDownIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import type { IconName } from '../domain/models';
 
@@ -59,6 +60,7 @@ const icons = {
   tag: TagIcon,
   folder: FolderIcon,
   chevron: ChevronDownIcon,
+  alert: ExclamationTriangleIcon,
 } as const;
 
 export const iconLabels: Record<IconName, string> = {

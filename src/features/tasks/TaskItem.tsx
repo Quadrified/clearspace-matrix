@@ -1,5 +1,6 @@
 import { forwardRef, memo, useId } from 'react';
 import type { DragEvent } from 'react';
+import { Icon } from '../../components/Icon';
 import { TaskCardMotion } from './TaskCardMotion';
 import type { QuadrantId, Task } from '../../domain/models';
 
@@ -93,6 +94,7 @@ export const TaskItem = memo(
               {task.projectId && <span className="tag project-tag">{projectName}</span>}
               {task.due && (
                 <span className={`duedate${overdue ? ' overdue' : ''}`}>
+                  {overdue && <Icon name="alert" className="overdue-icon" />}
                   {overdue ? 'Overdue · ' : ''}
                   {task.due === today
                     ? 'Today'

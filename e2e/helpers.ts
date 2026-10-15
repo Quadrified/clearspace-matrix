@@ -166,5 +166,10 @@ export async function choose(
   await page.getByRole('option', { name: option, exact: true }).click();
 }
 
-export const editorDialog = (page: Page) =>
-  page.getByRole('dialog', { name: 'A little less on your mind.' });
+export const editorDialog = (page: Page) => page.getByRole('dialog', { name: /^(New|Edit) task$/ });
+
+/** On phones the search and filters sit behind a toggle; on desktop they are always shown. */
+export async function openFilters(page: Page) {
+  const toggle = page.getByRole('button', { name: /^Search and filters/ });
+  if (await toggle.isVisible()) await toggle.click();
+}

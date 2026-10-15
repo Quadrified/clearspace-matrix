@@ -4,7 +4,7 @@ import { Popover } from '../../components/Popover';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import type { usePreferences } from '../../lib/usePreferences';
 
-export type Menu = 'add' | 'settings' | null;
+export type Menu = 'settings' | null;
 
 export function AppHeader({
   headerRef,
@@ -99,6 +99,9 @@ export function AppHeader({
                 </button>
               </div>
             </div>
+            <p className="settings-shortcuts">
+              Shortcuts: <kbd>N</kbd> new task · <kbd>P</kbd> projects
+            </p>
             <span id="saveState">
               {storageError ? 'Storage unavailable. Export to save.' : 'Saved on this browser'}
             </span>

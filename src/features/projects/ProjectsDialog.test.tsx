@@ -35,8 +35,7 @@ beforeEach(() => {
   localStorage.setItem(MATRIX_KEY, JSON.stringify({ version: 2, ...matrix }));
 });
 function openProjects() {
-  fireEvent.click(screen.getByRole('button', { name: 'Add' }));
-  fireEvent.click(screen.getByRole('button', { name: /^Add project/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'Projects' }));
 }
 function confirmDeletion() {
   fireEvent.click(screen.getByRole('button', { name: 'Delete Launch' }));

@@ -86,10 +86,9 @@ it('reset confirms and clears tasks and projects, and Undo restores both', () =>
   expect(screen.queryByText('Task to clear')).not.toBeInTheDocument();
   expect(screen.queryByRole('option', { name: 'Keep me' })).not.toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!)).toMatchObject({ tasks: [], projects: [] });
-  expect(screen.getByRole('progressbar', { name: 'Completion' })).toHaveAttribute(
-    'aria-valuenow',
-    '0',
-  );
+  // With no tasks left the overview gives way to the first-task prompt.
+  expect(screen.queryByRole('progressbar', { name: 'Completion' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Add your first task' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getByText('Task to clear')).toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects[0].name).toBe('Keep me');

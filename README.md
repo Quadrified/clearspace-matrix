@@ -156,3 +156,9 @@ Credentials, local deployment identity, private keys, and task backup files are 
 [The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. Vite emits a static frontend in `client-dist/` that can be hosted without authentication. Dev tools are compiled out of production. This repository does not automatically deploy on push.
 
 See [deployment notes](docs/deployment.md) before changing the existing hosted page.
+
+## Ownership and review
+
+Maintained by [Omer Quadri, @Quadrified](https://github.com/Quadrified). Every path is assigned to him in [CODEOWNERS](.github/CODEOWNERS). The [PR template](.github/pull_request_template.md) covers the problem, changes, verification, UI evidence, data compatibility, and recovery.
+
+See [change and access guidelines](CONTRIBUTING.md). GitHub repository permissions control who can push; CODEOWNERS alone does not block commits. Deployment remains a separate, explicitly requested action.

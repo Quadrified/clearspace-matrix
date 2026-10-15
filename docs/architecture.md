@@ -1,6 +1,6 @@
 # How Clearspace works
 
-The app lives in `dist/index.html`. It uses browser APIs and plain JavaScript, with no framework or build system.
+The browser app lives in `app/index.html`. It uses browser APIs and plain JavaScript without a framework. `worker/handler.mjs` serves the app and adds a small owner-authorized Dev API. The dependency-free build embeds app assets in a single Worker module.
 
 ## State and rendering
 
@@ -33,3 +33,13 @@ The timer is not persisted across page reloads.
 ## Backup behavior
 
 Export creates a version-2 JSON file with tasks, projects, and an export timestamp. Import validates the data before mutation and supports version-1 task-only files. Imported project names are reconciled with existing project names. Custom labels and appearance settings are stored separately and are not included in task backups.
+
+## Owner Dev authorization
+
+Public routes work without identity. `/dev` redirects anonymous callers to the platform-owned `/signin-with-chatgpt` route. The server checks both platform identity headers and compares the signed-in email with `DEV_OWNER_EMAIL`, supplied as a secret. Missing configuration fails closed. Other accounts receive a denial.
+
+`GET /api/dev/status` only returns whether the current visitor is authorized. `POST /api/dev/tasks` requires owner identity, the same Origin, and JSON. It returns 24 generated tasks without writing to a database. Authorization responses are not cacheable.
+
+The client stores generated tasks with `isDevSample: true`, so cleanup can distinguish them from real tasks. The marker survives task edits and task backup import/export. Generated project names are reused on subsequent runs. Undo restores both tasks and projects.
+
+The identity headers are trusted only behind ChatGPT Sites dispatch. A different host must verify identity itself before populating them. The local server passes no owner secret, so Dev controls remain disabled there.

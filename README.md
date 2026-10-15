@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="dist/favicon.svg" width="64" height="64" alt="Clearspace logo">
+  <img src="app/favicon.svg" width="64" height="64" alt="Clearspace logo">
 </p>
 <h1 align="center">Clearspace</h1>
 <p align="center"><strong>Make room for what matters.</strong></p>
@@ -12,7 +12,7 @@
 
 ## A calmer way to plan
 
-Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects, due dates, and a focus timer. It runs as a static page and saves your work in your browser.
+Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects, due dates, and a focus timer. It saves your work in your browser. A small server adapter adds protected, owner-only Dev controls while the regular app stays public.
 
 | Quadrant | What belongs here | What to do |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ The interface uses system typography, custom SVG illustrations, a translucent he
 
 ## Run locally
 
-No dependency installation or build step is needed.
+No dependency installation is needed. Node.js 20 or newer runs the local server, tests, and deployment build.
 
 ### Open the standalone file
 
@@ -46,10 +46,24 @@ Open [`standalone/clearspace.html`](standalone/clearspace.html) in a modern brow
 From the repository root, run:
 
 ```sh
-python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
+npm start
+# Or, without npm:
+node scripts/serve.mjs
 ```
 
-Open [localhost:8000](http://localhost:8000). If you have npm available, `npm start` runs the same command. Python 3 is required for this optional server.
+Open [127.0.0.1:8000](http://127.0.0.1:8000). The local server intentionally has no Dev authorization. Owner sign-in uses the hosted ChatGPT Sites integration.
+
+## Owner-only Dev mode
+
+**The Dev upgrade is implemented and tested in this source snapshot, but awaits publication to the live site.**
+
+After it is published, open `/dev` on the hosted site and sign in as the Site owner. A **Dev** button then appears in the header. Regular visitors do not see it and can keep using the public app without signing in.
+
+- **Add 24 test tasks** creates six tasks per quadrant, three reusable test projects, varied dates and notes, and some completed tasks.
+- **Remove test tasks** removes only tasks marked as Dev samples. Your own tasks and project definitions stay saved.
+- Both actions support Undo and affect only the current browser.
+
+The server authorizes Dev access using ChatGPT Sites identity headers and the secret `DEV_OWNER_EMAIL`. This email is configured in hosted environment settings, never embedded in the client or committed to the repository. Anonymous and other signed-in accounts are rejected.
 
 ## Everyday shortcuts
 
@@ -65,7 +79,7 @@ Task and project shortcuts are inactive while typing or while a dialog is open. 
 
 ## Your data
 
-Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal are stored in `localStorage`. The app has no task database, analytics service, or third-party runtime scripts.
+Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal are stored in `localStorage`. The app has no task database, analytics service, or third-party runtime scripts. The server only serves the app, authorizes Dev access, and returns sample task data; it does not store visitor tasks.
 
 - Every browser and site origin has its own data. Local files, localhost, and the hosted site do not share storage.
 - Tasks do not sync across devices or people. Sharing the website shares the tool, not your tasks.
@@ -78,19 +92,23 @@ Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal
 
 ```text
 clearspace-matrix/
-├── dist/
-│   ├── index.html          # Complete app: markup, styles, and JavaScript
-│   └── favicon.svg         # Clearspace's four-square mark
-├── standalone/
-│   └── clearspace.html     # Offline copy with an embedded favicon
+├── app/
+│   ├── index.html          # App markup, styles, and browser JavaScript
+│   └── favicon.svg
+├── worker/
+│   └── handler.mjs         # Public routes and owner-only Dev endpoints
+├── scripts/
+│   ├── build.mjs           # Packages app and adapter into a single Worker
+│   ├── serve.mjs           # Local anonymous preview server
+│   └── validate-artifact.mjs
+├── standalone/clearspace.html
 ├── tests/
-│   └── smoke.cjs           # Dependency-free runtime smoke checks
+│   ├── smoke.cjs           # Browser-state checks with a mock DOM
+│   ├── dev-client.cjs      # Generation, cleanup, and Undo checks
+│   └── dev-server.mjs      # Authorization and endpoint tests
 ├── docs/
-│   ├── preview.svg         # README design overview
-│   ├── architecture.md     # State, storage, and timer behavior
-│   └── deployment.md       # Hosting and maintenance notes
-├── .openai/
-│   └── hosting.json        # Existing ChatGPT Sites deployment identity
+├── .openai/hosting.json
+├── .env.example            # Secret key name, without a value
 └── package.json
 ```
 
@@ -102,12 +120,14 @@ With Node.js 20 or newer:
 npm test
 # Or, without npm:
 node tests/smoke.cjs
+node --test tests/dev-server.mjs
+node tests/dev-client.cjs
 ```
 
-The checks exercise task changes, Undo, projects, import compatibility, custom labels and icons, settings, tutorial navigation, focus controls, direct countdown editing, and matrix reset. They use a small mock DOM, so they do not verify browser layout, native drag-and-drop, real-time countdown accuracy, or device accessibility. Visual browser testing remains a separate check.
+The checks exercise task changes, Undo, projects, import compatibility, custom labels and icons, settings, tutorial navigation, focus controls, direct countdown editing, and matrix reset. The server suite also checks owner authorization, anonymous public access, sign-in routing, CSRF checks, and sample data. The client checks use a small mock DOM, so they do not verify browser layout, native drag-and-drop, real-time countdown accuracy, or device accessibility. Visual browser testing remains a separate check.
 
 ## Hosting
 
-[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. The app itself is static, so `dist/` can also be served by a static host. This repository does not automatically deploy on push.
+[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. The browser app can be served statically from `app/`, without Dev authorization. The protected Dev feature requires the server adapter and trusted platform identity. This repository does not automatically deploy on push.
 
 See [deployment notes](docs/deployment.md) before changing the existing hosted page.

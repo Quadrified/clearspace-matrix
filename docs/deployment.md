@@ -1,26 +1,34 @@
 # Deployment and maintenance
 
-## Current deployment
+## Current status
 
-- Live URL: https://clearspace-matrix.fastring19.chatgpt.site
-- Audience: public.
-- Static directory: `dist`.
-- Source snapshot for this GitHub export: `5088be4b7f19f94af6c7a8480de24df0c7cce50d` in the existing Sites source repository.
+The live public site is https://clearspace-matrix.fastring19.chatgpt.site.
 
-`.openai/hosting.json` records the existing Site ID. It contains no authentication credentials. Keep the ID when updating that Site; create a different Site only when intentionally deploying a separate copy.
+The owner-only Dev upgrade in this repository is prepared and tested but has not yet been deployed. Sites source upload was blocked by the session's execution approval policy. The live site still serves the previous static version.
 
-The GitHub repository is a source copy. A GitHub push alone does not publish to ChatGPT Sites. Use the supported Sites source-sync, version-save, and deploy flow when publishing changes there.
+The existing Site ID remains in `.openai/hosting.json`. The new configuration removes `static.directory` because the deployment now has a server adapter. Keep the Site identity unchanged when publishing this upgrade.
 
-## Editing
+## Secrets and identity
 
-1. Edit `dist/index.html` and any assets in `dist/`.
-2. Keep `standalone/clearspace.html` synchronized. Its application markup, styles, and script should match `dist/index.html`; its favicon uses a data URL so it works as a single file.
-3. Run `npm test` or `node tests/smoke.cjs`.
-4. Check the page in a browser at desktop and phone widths, in both themes and at the largest text size.
-5. Publish the exact checked source state and verify the resulting deployment.
+Set `DEV_OWNER_EMAIL` as a secret in the Site's runtime environment. It must be the current Site owner's account email. The key is listed without a value in `.env.example`; never commit its value.
 
-## Other static hosts
+Dev authorization depends on identity headers supplied by ChatGPT Sites. Do not deploy the adapter behind arbitrary client-supplied headers. If moving to another host, implement verified authentication there or serve only `app/` without Dev mode.
 
-Serve the contents of `dist/` from the root of a static site. `index.html` references `/favicon.svg`. If deploying under a subdirectory, update that favicon path for the deployment base.
+## Build and verify
 
-Changing origins creates a new browser-storage location. Export task data from the old origin and import it on the new one. No hosted database or authentication service is required by the application code.
+```sh
+npm test
+npm run build
+```
+
+The build embeds `app/index.html`, `app/favicon.svg`, and `worker/handler.mjs` into `dist/server/index.js`. It copies the hosting manifest to `dist/.openai/hosting.json`. The generated `dist/` is ignored by Git.
+
+Use the supported Sites workflow to synchronize source, package this artifact, save a version, and deploy it to the existing public audience. GitHub pushes do not deploy automatically.
+
+After publishing, open `/` while logged out and confirm normal public access. Open `/dev`, sign in as the owner, and check the Dev button. Another signed-in account must be denied Dev access. Browser authentication remains a separate integration check from the automated server tests.
+
+## Source maintenance
+
+Keep `standalone/clearspace.html` synchronized with `app/index.html`. Its favicon is embedded so the page works as a single file. Dev controls stay hidden in the standalone file because it has no server authorization.
+
+Changing origins creates a different browser-storage location. Export task data from the old origin and import it on the new one.

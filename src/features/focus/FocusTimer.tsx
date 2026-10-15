@@ -175,6 +175,8 @@ export function FocusTimer({ tasks, notify }: { tasks: Task[]; notify: (s: strin
               </label>
             )}
             {editing ? (
+              // Escape is handled on the form so every editor control can cancel.
+              // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
               <form
                 id="clockEditor"
                 onSubmit={(e) => {
@@ -220,15 +222,8 @@ export function FocusTimer({ tasks, notify }: { tasks: Task[]; notify: (s: strin
                   id="clock"
                   className="timer-number"
                   role="timer"
-                  tabIndex={0}
-                  aria-label="Remaining time. Double-click or press Enter to edit."
+                  aria-label="Remaining time. Double-click to edit, or use the Edit time button."
                   onDoubleClick={beginEdit}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      beginEdit();
-                    }
-                  }}
                 >
                   {formatTime(Number.isFinite(remaining) ? remaining : 0)}
                 </div>

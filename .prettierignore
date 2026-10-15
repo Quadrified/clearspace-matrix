@@ -1,0 +1,8 @@
+node_modules/
+dist/
+client-dist/
+coverage/
+.openai/hosting.json
+THIRD_PARTY_NOTICES.md
+# Illustration assets retain their existing vector formatting.
+**/*.svg

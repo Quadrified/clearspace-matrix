@@ -9,11 +9,10 @@ Use a focused branch and the [PR template](.github/pull_request_template.md). De
 For code changes, run the relevant checks:
 
 ```sh
-npm run typecheck
-npm run lint
-npm test
-npm run build
+npm run check
 ```
+
+Install dependencies with `npm ci` to enable the pre-commit hook. It formats staged files, lints staged code, then checks types and runs tests. See the [README](README.md#commit-and-pull-request-checks) for hook behavior and CI jobs.
 
 A documentation-only change does not need application tests. Check links, formatting, and the diff. For interface changes, distinguish automated DOM checks from browser and real-phone verification. See the [README](README.md) for local and phone testing.
 
@@ -25,7 +24,7 @@ Commit and push completed changes. Publish the site only when explicitly request
 
 CODEOWNERS is not an access-control mechanism. Keep other users out of **Settings → Collaborators** to prevent their direct pushes. Review invitations and deploy keys before granting access. Do not rely on a commit's author name or email to establish who pushed it.
 
-Where the GitHub plan supports private-repository protection, configure required checks and owner review through **Settings → Rules** or **Settings → Branches**. Required checks should include the `verify` and `secrets` jobs from the Checks workflow. Account for the owner's ability to land their own PRs: GitHub does not let authors approve their own PRs. Keep force pushes and branch deletion disabled on `main`.
+Where the GitHub plan supports private-repository protection, configure required checks and owner review through **Settings → Rules** or **Settings → Branches**. Required checks should include the `verify`, `secrets`, and `dependencies` jobs from the Checks workflow. Account for the owner's ability to land their own PRs: GitHub does not let authors approve their own PRs. Keep force pushes and branch deletion disabled on `main`.
 
 Feature availability depends on the GitHub plan. Adding repository files does not enable unavailable protection settings. Keep the repository private unless the owner explicitly requests otherwise.
 

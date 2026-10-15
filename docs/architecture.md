@@ -12,13 +12,13 @@ Zod schemas define TypeScript models and validate localStorage and imported back
 
 ## Persistence and compatibility
 
-| Key | Contents |
-| --- | --- |
-| `clearspace.matrix.v1` | Version-2 tasks and projects. Legacy task arrays are accepted. |
-| `clearspace.labels.v1` | Quadrant titles, subtitles, and icons. Marketing text is fixed. |
-| `clearspace.theme` | `night` selects dark mode. |
-| `clearspace.fontSize.v1` | Text-size percentage, 90 to 160. |
-| `clearspace.tutorial.v1` | First-visit introduction dismissal. |
+| Key                      | Contents                                                        |
+| ------------------------ | --------------------------------------------------------------- |
+| `clearspace.matrix.v1`   | Version-2 tasks and projects. Legacy task arrays are accepted.  |
+| `clearspace.labels.v1`   | Quadrant titles, subtitles, and icons. Marketing text is fixed. |
+| `clearspace.theme`       | `night` selects dark mode.                                      |
+| `clearspace.fontSize.v1` | Text-size percentage, 90 to 160.                                |
+| `clearspace.tutorial.v1` | First-visit introduction dismissal.                             |
 
 The migration preserves these keys. Older stock subtitles map to the current urgency and importance labels; custom labels remain. Legacy owner fields are preserved without adding a delegation field to the editor. Version-one task backups and version-two project backups remain importable.
 

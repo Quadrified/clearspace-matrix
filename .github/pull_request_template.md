@@ -1,10 +1,18 @@
 ## Summary
 
-<!-- Describe the problem and the resulting behavior. Include an issue link if one exists. -->
+<!-- Describe the problem and the resulting behavior. Include an issue link if one exists.
+For larger changes, use short "Before:" and "After:" paragraphs. -->
 
 ## Changes
 
-<!-- List the changes a reviewer needs to understand. Explain meaningful tradeoffs. -->
+<!-- List the changes a reviewer needs to understand, grouped by area. Explain meaningful tradeoffs. -->
+
+-
+
+### Behavior changes
+
+<!-- Call out anything an existing user will notice: removed or hidden features, new confirmations,
+destructive actions, changed defaults, or new dependencies. Write "None" if nothing changes. -->
 
 -
 
@@ -12,14 +20,19 @@
 
 <!-- Record the checks actually run and their results. Name skipped checks and limitations.
 For code changes, relevant commands are:
-  npm run typecheck
-  npm run lint
-  npm test
-  npm run build
+  npm run check
 For UI changes, include the browser, viewport, and real phone checks performed.
 Do not describe automated DOM tests as visual or device verification. -->
 
 -
+
+## How to test
+
+<!-- Steps a reviewer can follow to see the change, including setup such as `npm run dev`
+or `npm run dev:mobile`. Name the expected result for each step. Remove this section for
+changes without runtime impact. -->
+
+1.
 
 ## UI evidence
 

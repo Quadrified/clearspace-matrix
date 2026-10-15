@@ -10,6 +10,7 @@ import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
 import { Icon } from './components/Icon';
+import { Mascot } from './components/Mascot';
 import { Modal } from './components/Modal';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
@@ -165,11 +166,6 @@ export default function App() {
         <main>
           <section className="intro">
             <div>
-              <span className="eyebrow">A little clarity. A little breathing room.</span>
-              <h1 id="matrixTitle">Make room for what matters.</h1>
-              <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
-            </div>
-            <div>
               <time className="date">
                 {new Date(today + 'T12:00:00').toLocaleDateString(undefined, {
                   weekday: 'long',
@@ -177,7 +173,11 @@ export default function App() {
                   day: 'numeric',
                 })}
               </time>
+              <span className="eyebrow">A little clarity. A little breathing room.</span>
+              <h1 id="matrixTitle">Make room for what matters.</h1>
+              <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
             </div>
+            <Mascot />
           </section>
           {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
           {matrix.tasks.length === 0 && (

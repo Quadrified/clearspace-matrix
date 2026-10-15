@@ -2656,3 +2656,117 @@ button,
   border-color: #a84a3f;
   color: #fff;
 }
+
+/* Header: the date leads on the left, the mascot waves from the right. */
+.intro .date {
+  display: block;
+  margin-bottom: 14px;
+  font-size: calc(1.5rem * var(--text-scale, 1));
+  text-align: left;
+}
+.intro .eyebrow {
+  display: block;
+}
+.mascot {
+  flex-shrink: 0;
+  width: clamp(120px, 15vw, 176px);
+  height: auto;
+  overflow: visible;
+}
+.mascot :where(rect, ellipse, circle) {
+  stroke: none;
+}
+.mascot-shadow {
+  fill: #1f3a2a;
+  opacity: 0.12;
+}
+.mascot-leaf {
+  fill: #6fa27c;
+}
+.mascot-leaf-2 {
+  fill: #8fbb97;
+}
+.mascot-stem {
+  fill: #4f7f5c;
+}
+@media (max-width: 760px) {
+  .mascot {
+    display: none;
+  }
+  .intro .date {
+    flex: none;
+    font-size: calc(1.375rem * var(--text-scale, 1));
+    margin-bottom: 10px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mascot-body {
+    animation: mascot-bob 4.2s ease-in-out infinite;
+    transform-origin: 100px 190px;
+  }
+  .mascot-eyes {
+    animation: mascot-blink 5.5s infinite;
+    transform-origin: 100px 88px;
+    transform-box: view-box;
+  }
+  .mascot-wave {
+    animation: mascot-wave 2.6s ease-in-out infinite;
+    transform-origin: 160px 112px;
+    transform-box: view-box;
+  }
+}
+@keyframes mascot-bob {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes mascot-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes mascot-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-9deg);
+  }
+}
+
+/* Status tabs: a saturated active pill against quieter inactive tabs. */
+.tabs {
+  background: color-mix(in srgb, var(--ink) 9%, var(--bg));
+  padding: 4px;
+}
+.tabs button {
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+.tab-indicator {
+  background: linear-gradient(180deg, #2f8456, #1f6240);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, #2f8456 30%, transparent),
+    0 3px 8px #1f624055;
+}
+.night .tab-indicator {
+  background: linear-gradient(180deg, #46a572, #2f7f55);
+}
+.tabs .active .tab-count {
+  background: #ffffff38;
+}
+.night .mascot-limb {
+  stroke: #cfe5d3;
+}
+.night .mascot-foot {
+  fill: #cfe5d3;
+}
+.night .mascot-shadow {
+  fill: #000;
+  opacity: 0.25;
+}

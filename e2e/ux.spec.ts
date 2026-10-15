@@ -23,7 +23,10 @@ test('the active status tab is a solid highlighted pill', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   const active = page.locator('.tabs button.active');
   await expect(active).toContainText('Active');
-  await expect(active.locator('.tab-indicator')).toHaveCSS('background-color', 'rgb(49, 94, 67)');
+  await expect(active.locator('.tab-indicator')).toHaveCSS(
+    'background-image',
+    'linear-gradient(rgb(47, 132, 86), rgb(31, 98, 64))',
+  );
   await expect(active).toHaveCSS('color', 'rgb(255, 255, 255)');
   await page.getByRole('button', { name: 'Completed', exact: true }).click();
   await expect(page.locator('.tabs button.active')).toContainText('Completed');
@@ -104,4 +107,14 @@ test('phones get a floating add button and collapsed filters', async ({ page, is
   await expect(page.getByRole('textbox', { name: 'Find a task' })).toBeVisible();
   await page.getByRole('button', { name: 'Quick add task' }).click();
   await expect(editorDialog(page)).toBeVisible();
+});
+
+test('the date leads on the left and the mascot sits on the right', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'The mascot is hidden on phones');
+  await open(page, { matrix: seedMatrix });
+  const date = await page.locator('.intro .date').boundingBox();
+  const mascot = await page.locator('.intro .mascot').boundingBox();
+  expect(date!.x).toBeLessThan(100);
+  expect(mascot!.x).toBeGreaterThan(900);
+  await expect(page.locator('.mascot')).toHaveAttribute('aria-hidden', 'true');
 });

@@ -26,7 +26,7 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 - **Manage tasks.** Create, edit, complete, delete, and move tasks between quadrants. Add notes, categories, projects, and optional due dates. In All tasks, completed tasks sit below active tasks, and newly completed tasks move to the bottom of their quadrant.
 - **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
 - **Focus timer, paused for now.** The control is temporarily hidden. Its implementation and tests remain in the codebase for later use.
-- **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%.
+- **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%. At 100%, body text is 16px, desktop task titles are 15px, and task notes are 14px.
 - **Celebrate quadrant zero.** Completing the last active task in a quadrant shows a brief checkmark and sparkle celebration. Filters, moves, deletion, and resets do not trigger it. Keyboard completion and reduced-motion preferences keep the celebration still.
 - **Stay oriented while scrolling.** Urgent and Not urgent stay below the header on wide screens. Importance labels stay beside their own rows. On phones, each quadrant keeps its own urgency label visible.
 - **See your progress.** Compact cards show active tasks, tasks due today, completed tasks, and completion percentage.

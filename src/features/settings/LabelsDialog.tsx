@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { defaultLabels, iconNames, quadrants, labelsSchema } from '../../domain/models';
 import type { Labels, QuadrantId } from '../../domain/models';
 import { Modal } from '../../components/Modal';
-import { Icon } from '../../components/Icon';
+import { Icon, iconLabels } from '../../components/Icon';
 export function LabelsDialog({
   labels,
   onSave,
@@ -63,7 +63,8 @@ export function LabelsDialog({
                       type="button"
                       key={icon}
                       className="icon-choice"
-                      aria-label={icon}
+                      aria-label={iconLabels[icon]}
+                      title={iconLabels[icon]}
                       aria-pressed={draft[q.id].icon === icon}
                       onClick={() => {
                         setDraft((d) => ({ ...d, [q.id]: { ...d[q.id], icon } }));

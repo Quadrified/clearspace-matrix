@@ -1,13 +1,5 @@
 import http from 'node:http';
-import { readFile } from 'node:fs/promises';
-import { createHandler } from '../worker/handler.mjs';
-const root = new URL('../', import.meta.url),
-  [page, favicon] = await Promise.all(
-    ['standalone/clearspace.html', 'public/favicon.svg'].map((path) =>
-      readFile(new URL(path, root), 'utf8'),
-    ),
-  );
-const app = createHandler(page, favicon);
+import app from '../dist/server/index.js';
 http
   .createServer(async (req, res) => {
     try {
@@ -28,7 +20,7 @@ http
           headers: req.headers,
           body: ['GET', 'HEAD'].includes(method) ? undefined : Buffer.concat(chunks),
         });
-      const response = await app.fetch(request, {});
+      const response = await app.fetch(request);
       res.writeHead(response.status, Object.fromEntries(response.headers));
       res.end(Buffer.from(await response.arrayBuffer()));
     } catch {
@@ -38,6 +30,6 @@ http
   })
   .listen(8000, '127.0.0.1', () =>
     console.log(
-      'Clearspace: http://127.0.0.1:8000\nDev sign-in is available on the hosted Site only.',
+      'Clearspace: http://127.0.0.1:8000\nProduction preview. Run npm run dev for local Dev tools.',
     ),
   );

@@ -55,7 +55,7 @@ export const tutorialSteps = [
       'Use the circular + button in a quadrant to add a task. Add a category, project, and optional due date. Click a task to edit it, and check its box when it is done.',
     exampleTitle: 'Start small',
     example:
-      'Write down three tasks. Decide where each belongs, then choose one Do first task to begin. Drag tasks between quadrants, or change the quadrant in the editor on a phone. Use Focus when you want a timed work session.',
+      'Write down three tasks. Decide where each belongs, then choose one Do first task to begin. Drag tasks between quadrants, or change the quadrant in the editor on a phone.',
   },
   {
     title: 'Keep your space useful.',

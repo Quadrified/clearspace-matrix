@@ -9,6 +9,7 @@ import {
   serializeMatrix,
   stats,
   visibleTasks,
+  toggleTask,
 } from './matrix';
 import { emptyMatrix, initialFilters } from './models';
 import { matrixReducer } from '../lib/useMatrix';
@@ -57,13 +58,20 @@ describe('storage and backups', () => {
   });
 });
 describe('matrix operations', () => {
-  it('removes a project without removing its tasks', () => {
+  it('removes a project and its tasks, keeping unrelated tasks', () => {
     expect(
       removeProject(
-        { projects: [{ id: 'p', name: 'Launch' }], tasks: [{ ...task, projectId: 'p' }] },
+        {
+          projects: [{ id: 'p', name: 'Launch' }],
+          tasks: [
+            { ...task, projectId: 'p' },
+            { ...task, id: 'done', projectId: 'p', done: true },
+            { ...task, id: 'unrelated' },
+          ],
+        },
         'p',
       ),
-    ).toEqual({ projects: [], tasks: [{ ...task, projectId: '' }] });
+    ).toEqual({ projects: [], tasks: [{ ...task, id: 'unrelated' }] });
   });
   it('moves and reorders using stable IDs', () => {
     const state = { projects: [], tasks: [task, { ...task, id: 'two' }] };
@@ -97,5 +105,42 @@ describe('matrix operations', () => {
       { type: 'change', update: (m) => ({ ...m, tasks: [] }) },
     );
     expect(matrixReducer(changed, { type: 'undo' }).present).toEqual(before);
+  });
+});
+
+describe('completed task ordering', () => {
+  const state = {
+    projects: [],
+    tasks: [
+      { ...task, id: 'first', created: 1, due: '2026-10-20' },
+      { ...task, id: 'old-done', done: true, created: 9, due: '2026-10-10', completedAt: 10 },
+      { ...task, id: 'second', created: 2, due: '2026-10-19' },
+      { ...task, id: 'other-quadrant', q: 'schedule' as const },
+    ],
+  };
+  it.each(['manual', 'due', 'new'] as const)(
+    'puts a newly completed task last in All tasks with %s sorting',
+    (sort) => {
+      const next = toggleTask(state, 'first', 20);
+      const result = visibleTasks(next, 'do', { ...initialFilters, status: 'all', sort });
+      expect(result.map((task) => task.id)).toEqual(['second', 'old-done', 'first']);
+      expect(next.tasks.find((task) => task.id === 'first')?.completedAt).toBe(20);
+      expect(state.tasks[0].done).toBe(false);
+      expect(
+        visibleTasks(next, 'schedule', { ...initialFilters, status: 'all' }).map((task) => task.id),
+      ).toEqual(['other-quadrant']);
+    },
+  );
+  it('keeps active sorting and returns reopened tasks to the active group', () => {
+    expect(
+      visibleTasks(state, 'do', { ...initialFilters, status: 'all', sort: 'due' }).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['second', 'first', 'old-done']);
+    const reopened = toggleTask(toggleTask(state, 'first', 20), 'first', 30);
+    expect(
+      visibleTasks(reopened, 'do', { ...initialFilters, status: 'all' }).map((task) => task.id),
+    ).toEqual(['second', 'first', 'old-done']);
+    expect(reopened.tasks.find((task) => task.id === 'first')?.completedAt).toBeNull();
   });
 });

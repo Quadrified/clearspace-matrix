@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useHeaderHeight } from './lib/useHeaderHeight';
+import { Toast } from './components/Toast';
+import { SoftPresence } from './components/SoftPresence';
+import { Select, SelectOption } from './components/Select';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
 import { categories, initialFilters } from './domain/models';
 import {
@@ -8,6 +12,7 @@ import {
   parseBackup,
   serializeMatrix,
   stats,
+  toggleTask,
 } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
@@ -15,26 +20,37 @@ import { usePreferences } from './lib/usePreferences';
 import { Icon } from './components/Icon';
 import { Modal } from './components/Modal';
 import { Popover } from './components/Popover';
+import { ThemeToggle } from './components/ThemeToggle';
+import { StatusTabs } from './features/tasks/StatusTabs';
+import { TaskOverview } from './features/tasks/TaskOverview';
 import { MatrixBoard } from './features/tasks/MatrixBoard';
 import { TaskEditor } from './features/tasks/TaskEditor';
 import { ProjectsDialog } from './features/projects/ProjectsDialog';
 import { LabelsDialog } from './features/settings/LabelsDialog';
-import { FocusTimer } from './features/focus/FocusTimer';
+// Temporarily hidden. Uncomment this import and the header control to restore Focus.
+// import { FocusTimer } from './features/focus/FocusTimer';
 import { TutorialDialog } from './features/tutorial/TutorialDialog';
-import { useDev } from './features/dev/useDev';
+// Vite removes this import and its sample data from production builds.
+const DevTools = import.meta.env.DEV ? lazy(() => import('./features/dev/DevTools')) : null;
 export default function App() {
   const { toast, show, dismiss } = useToast();
   const { matrix, change, undo, canUndo, storageError } = useMatrix(show);
-  const prefs = usePreferences(show),
-    dev = useDev(change, show);
+  const prefs = usePreferences(show);
   const [filters, setFilters] = useState(initialFilters),
     [menu, setMenu] = useState<'add' | 'settings' | null>(null),
     [editor, setEditor] = useState<{ q: QuadrantId; task?: Task } | null>(null),
-    [dialog, setDialog] = useState<'projects' | 'labels' | 'tutorial' | 'reset' | 'dev' | null>(
-      null,
-    );
+    [dialog, setDialog] = useState<'projects' | 'labels' | 'tutorial' | 'reset' | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  useHeaderHeight(headerRef);
   const importRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const summary = stats(matrix);
+  const projectFilter =
+    !filters.project ||
+    filters.project === '__none' ||
+    matrix.projects.some((project) => project.id === filters.project)
+      ? filters.project
+      : '';
   function openTask(q: QuadrantId = 'do', task?: Task) {
     setMenu(null);
     setEditor({ q, task });
@@ -71,8 +87,10 @@ export default function App() {
         e.metaKey ||
         e.ctrlKey ||
         e.altKey ||
-        target.closest('input,select,textarea,[contenteditable=true]') ||
-        document.querySelector('dialog[open]')
+        target.closest(
+          'input,select,textarea,[contenteditable=true],[role=combobox],[role=listbox]',
+        ) ||
+        document.querySelector('dialog[open], [role=listbox]')
       )
         return;
       if (e.key.toLowerCase() === 'n') {
@@ -114,19 +132,11 @@ export default function App() {
     }
   }
   const updateTask = (id: string) =>
-    change(
-      (m) => ({
-        ...m,
-        tasks: m.tasks.map((t) =>
-          t.id === id ? { ...t, done: !t.done, completedAt: !t.done ? Date.now() : null } : t,
-        ),
-      }),
-      'Task updated.',
-    );
+    change((matrix) => toggleTask(matrix, id, Date.now()), 'Task updated.');
   return (
     <>
       <div className="wrap">
-        <header>
+        <header ref={headerRef}>
           <div className="brand">
             <span className="logo" aria-hidden="true">
               <i />
@@ -140,12 +150,13 @@ export default function App() {
             </div>
           </div>
           <div className="header-right">
-            {dev.authorized && (
-              <button className="btn" id="devButton" onClick={() => openDialog('dev')}>
-                Dev
-              </button>
+            {DevTools && (
+              <Suspense fallback={null}>
+                <DevTools matrix={matrix} change={change} notify={show} />
+              </Suspense>
             )}
-            <FocusTimer tasks={matrix.tasks} notify={show} />
+            {/* <FocusTimer tasks={matrix.tasks} notify={show} /> */}
+            <ThemeToggle night={prefs.night} onToggle={prefs.toggleNight} />
             <div className="settings-control">
               <button
                 id="settingsButton"
@@ -163,10 +174,6 @@ export default function App() {
               >
                 <h2>Settings</h2>
                 <div className="settings-actions">
-                  <button className="iconbtn" onClick={prefs.toggleNight}>
-                    <Icon name="moon" />
-                    {prefs.night ? 'Use light mode' : 'Toggle dark mode'}
-                  </button>
                   <button className="iconbtn" onClick={() => openDialog('labels')}>
                     <Icon name="tag" />
                     Edit labels
@@ -177,7 +184,7 @@ export default function App() {
                   </button>
                   <button className="iconbtn danger" onClick={() => openDialog('reset')}>
                     <Icon name="eliminate" />
-                    Reset matrix
+                    Reset board
                   </button>
                 </div>
                 <div className="settings-size">
@@ -224,6 +231,12 @@ export default function App() {
                   day: 'numeric',
                 })}
               </time>
+            </div>
+          </section>
+          <TaskOverview summary={summary} />
+          <div className="toolbar">
+            <div className="toolbar-status">
+              <StatusTabs value={filters.status} onChange={(value) => filter('status', value)} />
               <div className="add-control">
                 <button
                   id="newTask"
@@ -247,100 +260,73 @@ export default function App() {
                 </Popover>
               </div>
             </div>
-          </section>
-          <section className="overview" aria-label="Task overview">
-            {[
-              [summary.active, 'Active tasks'],
-              [summary.today, 'Due today'],
-              [summary.done, 'Completed'],
-              [`${summary.percent}%`, 'Completion'],
-            ].map(([value, label]) => (
-              <div className="stat" key={label}>
-                <strong>{value}</strong>
-                <span>{label}</span>
-                {label === 'Completion' && (
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Completion"
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuenow={summary.percent}
-                  >
-                    <i style={{ width: `${summary.percent}%` }} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </section>
-          <div className="toolbar">
-            <div className="tabs" aria-label="Task status">
-              {(
-                [
-                  ['active', 'Active'],
-                  ['done', 'Completed'],
-                  ['all', 'All tasks'],
-                ] as const
-              ).map(([value, label]) => (
-                <button
-                  key={value}
-                  aria-pressed={filters.status === value}
-                  className={filters.status === value ? 'active' : ''}
-                  onClick={() => filter('status', value)}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
             <div className="filters">
-              <label className="search">
+              <div className="search">
                 <Icon name="search" />
                 <input
+                  ref={searchRef}
                   aria-label="Find a task"
                   placeholder="Find a task…"
+                  enterKeyHint="search"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   value={filters.search}
                   onChange={(e) => filter('search', e.target.value)}
                 />
-              </label>
-              <select
+                {filters.search && (
+                  <button
+                    type="button"
+                    className="iconbtn search-clear"
+                    aria-label="Clear search"
+                    onClick={() => {
+                      filter('search', '');
+                      searchRef.current?.focus();
+                    }}
+                  >
+                    <Icon name="close" />
+                  </button>
+                )}
+              </div>
+              <Select
                 aria-label="Filter by category"
                 value={filters.category}
-                onChange={(e) => filter('category', e.target.value)}
+                onValueChange={(value) => filter('category', value)}
               >
-                <option value="">All categories</option>
+                <SelectOption value="">All categories</SelectOption>
                 {categories.map((c) => (
-                  <option key={c}>{c}</option>
+                  <SelectOption key={c}>{c}</SelectOption>
                 ))}
-              </select>
-              <select
+              </Select>
+              <Select
                 aria-label="Filter by project"
-                value={filters.project}
-                onChange={(e) => filter('project', e.target.value)}
+                value={projectFilter}
+                onValueChange={(value) => filter('project', value)}
               >
-                <option value="">All projects</option>
-                <option value="__none">No project</option>
+                <SelectOption value="">All projects</SelectOption>
+                <SelectOption value="__none">No project</SelectOption>
                 {matrix.projects.map((p) => (
-                  <option key={p.id} value={p.id}>
+                  <SelectOption key={p.id} value={p.id}>
                     {p.name}
-                  </option>
+                  </SelectOption>
                 ))}
-              </select>
-              <select
+              </Select>
+              <Select
                 id="sort"
                 aria-label="Sort tasks"
                 value={filters.sort}
-                onChange={(e) => filter('sort', e.target.value as Filters['sort'])}
+                onValueChange={(value) => filter('sort', value as Filters['sort'])}
               >
-                <option value="manual">Your order</option>
-                <option value="due">Due date</option>
-                <option value="new">Newest first</option>
-              </select>
+                <SelectOption value="manual">Your order</SelectOption>
+                <SelectOption value="due">Due date</SelectOption>
+                <SelectOption value="new">Newest first</SelectOption>
+              </Select>
             </div>
           </div>
           <MatrixBoard
             matrix={matrix}
             labels={prefs.labels}
-            filters={filters}
+            filters={{ ...filters, project: projectFilter }}
             onAdd={openTask}
             onEdit={(t) => openTask(t.q, t)}
             onLabels={() => openDialog('labels')}
@@ -382,101 +368,93 @@ export default function App() {
           </div>
         </footer>
       </div>
-      {editor && (
-        <TaskEditor
-          {...editor}
-          matrix={matrix}
-          labels={prefs.labels}
-          change={change}
-          onClose={() => setEditor(null)}
-        />
-      )}{' '}
-      {dialog === 'projects' && (
-        <ProjectsDialog matrix={matrix} change={change} onClose={() => setDialog(null)} />
-      )}{' '}
-      {dialog === 'labels' && (
-        <LabelsDialog
-          labels={prefs.labels}
-          onSave={(v) => {
-            prefs.setLabels(v);
-            show('Labels updated.');
-          }}
-          onClose={() => setDialog(null)}
-        />
-      )}{' '}
-      {dialog === 'tutorial' && (
-        <TutorialDialog
-          labels={prefs.labels}
-          onClose={closeTutorial}
-          onExamples={() => {
-            change(addExamples, 'Example tasks added.');
-            closeTutorial();
-          }}
-        />
-      )}{' '}
-      {dialog === 'reset' && (
-        <Modal id="resetDialog" title="Start with a clear matrix?" onClose={() => setDialog(null)}>
-          <p>
-            All tasks will be cleared. Your projects, labels, and preferences stay. You can undo
-            this action.
-          </p>
-          <div className="dialog-actions">
-            <button className="btn" autoFocus onClick={() => setDialog(null)}>
-              Cancel
-            </button>
-            <button
-              className="btn reset-confirm"
-              onClick={() => {
-                change((m) => ({ ...m, tasks: [] }), 'Matrix reset. All tasks cleared.');
-                setFilters(initialFilters);
-                setDialog(null);
-              }}
-            >
-              Reset matrix
-            </button>
-          </div>
-        </Modal>
-      )}{' '}
-      {dialog === 'dev' && dev.authorized && (
-        <Modal id="devDialog" title="Dev tools" onClose={() => setDialog(null)}>
-          <p className="quiet">Owner-only tools. Samples are saved only in this browser.</p>
-          <button
-            className="btn primary"
-            disabled={dev.busy}
-            onClick={() => {
-              void dev.generate();
+      <SoftPresence>
+        {editor && (
+          <TaskEditor
+            key="task"
+            {...editor}
+            matrix={matrix}
+            labels={prefs.labels}
+            change={change}
+            onClose={() => setEditor(null)}
+          />
+        )}{' '}
+        {dialog === 'projects' && (
+          <ProjectsDialog
+            key="projects"
+            matrix={matrix}
+            change={change}
+            onClose={() => setDialog(null)}
+          />
+        )}{' '}
+        {dialog === 'labels' && (
+          <LabelsDialog
+            key="labels"
+            labels={prefs.labels}
+            onSave={(v) => {
+              prefs.setLabels(v);
+              show('Labels updated.');
             }}
+            onClose={() => setDialog(null)}
+          />
+        )}{' '}
+        {dialog === 'tutorial' && (
+          <TutorialDialog
+            key="tutorial"
+            labels={prefs.labels}
+            onClose={closeTutorial}
+            onExamples={() => {
+              change(addExamples, 'Example tasks added.');
+              closeTutorial();
+            }}
+          />
+        )}{' '}
+        {dialog === 'reset' && (
+          <Modal
+            key="reset"
+            id="resetDialog"
+            title="Reset your board?"
+            onClose={() => setDialog(null)}
           >
-            {dev.busy ? 'Adding samples…' : 'Add 24 sample tasks'}
-          </button>
-          <button
-            className="btn"
-            disabled={dev.busy || !matrix.tasks.some((t) => t.isDevSample)}
-            onClick={dev.cleanup}
-          >
-            Remove Dev samples
-          </button>
-        </Modal>
-      )}{' '}
-      {toast && (
-        <div id="toast" className="toast" role="status">
-          <span>{toast.text}</span>
-          {toast.undo && canUndo && (
-            <button
-              id="undo"
-              onClick={() => {
-                undo();
-                show('Undone.');
-              }}
-            >
-              Undo
-            </button>
-          )}
-          <button aria-label="Dismiss notification" onClick={dismiss}>
-            <Icon name="close" />
-          </button>
-        </div>
-      )}
+            <p>
+              All tasks and projects will be cleared. Your labels and appearance preferences will
+              stay. You can undo this reset.
+            </p>
+            <div className="dialog-actions">
+              <button className="btn" autoFocus onClick={() => setDialog(null)}>
+                Cancel
+              </button>
+              <button
+                className="btn reset-confirm"
+                onClick={() => {
+                  change(
+                    () => ({ tasks: [], projects: [] }),
+                    'Board reset. All tasks and projects cleared.',
+                  );
+                  setFilters(initialFilters);
+                  setDialog(null);
+                }}
+              >
+                Reset board
+              </button>
+            </div>
+          </Modal>
+        )}{' '}
+      </SoftPresence>
+      <SoftPresence>
+        {toast && (
+          <Toast
+            key="notification"
+            text={toast.text}
+            undo={toast.undo && canUndo}
+            onUndo={() => {
+              undo();
+              show('Undone.');
+            }}
+            onDismiss={dismiss}
+          />
+        )}
+      </SoftPresence>
     </>
   );
 }

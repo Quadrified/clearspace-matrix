@@ -1,0 +1,6 @@
+# Omer Quadri's GitHub account owns the entire repository.
+# Review ownership does not grant or restrict push access; GitHub permissions do that.
+* @Quadrified
+
+# Keep workflow and ownership changes under the same owner.
+/.github/ @Quadrified

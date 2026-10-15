@@ -93,6 +93,8 @@ export function TaskEditor({
             Task
             <input
               autoFocus
+              autoCapitalize="sentences"
+              enterKeyHint="done"
               required
               maxLength={200}
               placeholder="What do you need to do?"

@@ -271,6 +271,10 @@ export default function App() {
                   ref={searchRef}
                   aria-label="Find a task"
                   placeholder="Find a task…"
+                  enterKeyHint="search"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   value={filters.search}
                   onChange={(e) => filter('search', e.target.value)}
                 />

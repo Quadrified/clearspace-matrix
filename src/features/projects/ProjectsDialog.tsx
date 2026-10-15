@@ -25,6 +25,8 @@ function ProjectRow({
   return (
     <div className="project-row">
       <input
+        autoCapitalize="words"
+        enterKeyHint="done"
         aria-label={`Project name: ${project.name}`}
         maxLength={80}
         value={name}
@@ -70,6 +72,8 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
             New project
             <input
               autoFocus
+              autoCapitalize="words"
+              enterKeyHint="done"
               maxLength={80}
               placeholder="Project name"
               value={name}

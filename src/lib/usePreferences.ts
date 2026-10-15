@@ -36,6 +36,11 @@ export function usePreferences(notify: (s: string) => void) {
   });
   useEffect(() => {
     document.body.classList.toggle('night', night);
+    document.documentElement.style.colorScheme = night ? 'dark' : 'light';
+    // Match browser chrome to the app's explicit preference, even if the OS differs.
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
+      meta.content = night ? '#12271e' : '#f4f6ef';
+    });
     document.documentElement.style.setProperty('--text-scale', String(size / 100));
   }, [night, size]);
   function save(key: string, value: string) {

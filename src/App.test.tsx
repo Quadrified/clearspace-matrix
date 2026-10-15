@@ -203,3 +203,24 @@ it('lets dropdown typeahead use shortcut letters without opening another feature
   );
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 });
+
+it('keeps browser chrome and native controls aligned with the app theme rather than the OS', () => {
+  const tags = ['light', 'dark'].map((scheme) => {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.media = `(prefers-color-scheme: ${scheme})`;
+    meta.content = scheme === 'light' ? '#f4f6ef' : '#12271e';
+    document.head.append(meta);
+    return meta;
+  });
+  try {
+    render(<App />);
+    expect(tags.map((meta) => meta.content)).toEqual(['#f4f6ef', '#f4f6ef']);
+    expect(document.documentElement.style.colorScheme).toBe('light');
+    fireEvent.click(screen.getByRole('switch', { name: 'Dark mode' }));
+    expect(tags.map((meta) => meta.content)).toEqual(['#12271e', '#12271e']);
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+  } finally {
+    tags.forEach((meta) => meta.remove());
+  }
+});

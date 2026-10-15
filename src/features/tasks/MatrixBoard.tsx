@@ -134,32 +134,35 @@ export function MatrixBoard({
                               drop(e.dataTransfer.getData('text/plain'), q.id, task.id);
                             }}
                           >
-                            <input
-                              type="checkbox"
-                              className="check"
-                              checked={task.done}
-                              aria-label={`${task.done ? 'Reopen' : 'Complete'} ${task.title}`}
-                              onChange={(event) => {
-                                const isLastActive =
-                                  !task.done &&
-                                  matrix.tasks.filter((t) => t.q === q.id && !t.done).length === 1;
-                                onToggle(task.id);
-                                if (isLastActive) {
-                                  const animated =
-                                    event.nativeEvent instanceof MouseEvent &&
-                                    event.nativeEvent.detail > 0;
-                                  const sequence = ++celebrationSequence.current;
-                                  setCelebrations((current) => ({
-                                    ...current,
-                                    [q.id]: {
-                                      taskId: task.id,
-                                      sequence,
-                                      animated,
-                                    },
-                                  }));
-                                }
-                              }}
-                            />
+                            <label className="task-check-target">
+                              <input
+                                type="checkbox"
+                                className="check"
+                                checked={task.done}
+                                aria-label={`${task.done ? 'Reopen' : 'Complete'} ${task.title}`}
+                                onChange={(event) => {
+                                  const isLastActive =
+                                    !task.done &&
+                                    matrix.tasks.filter((t) => t.q === q.id && !t.done).length ===
+                                      1;
+                                  onToggle(task.id);
+                                  if (isLastActive) {
+                                    const animated =
+                                      event.nativeEvent instanceof MouseEvent &&
+                                      event.nativeEvent.detail > 0;
+                                    const sequence = ++celebrationSequence.current;
+                                    setCelebrations((current) => ({
+                                      ...current,
+                                      [q.id]: {
+                                        taskId: task.id,
+                                        sequence,
+                                        animated,
+                                      },
+                                    }));
+                                  }
+                                }}
+                              />
+                            </label>
                             <button
                               className="task-main"
                               aria-label={`Edit ${task.title}`}

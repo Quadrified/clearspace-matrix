@@ -60,6 +60,18 @@ npm run serve:worker
 
 Open [127.0.0.1:8000](http://127.0.0.1:8000) to preview the compiled React app through its production Worker. Run `npm run build` again after changing source files. No standalone HTML version is generated.
 
+## Test on your phone
+
+```sh
+npm run dev:mobile
+```
+
+This exposes the local Vite server on your network for phone testing. Connect your phone to the same Wi-Fi and open the Network URL printed by Vite. Dev tools remain available in this development build. Your phone has its own browser storage.
+
+The app uses dynamic viewport height, safe-area padding, touch-friendly targets, and inputs of at least 16px on touch-capable devices. Browser-bar colors follow the app's selected theme. Pinch zoom and copying task text remain available.
+
+Check on real hardware with the keyboard open, in landscape, and while the browser address bar expands or collapses. Confirm that taps do not leave hover styles behind, dialogs and notifications avoid the notch and home indicator, and switching themes updates browser chrome. Automated tests cannot verify those behaviors. Dragging tasks still uses desktop HTML drag-and-drop; on a phone, move tasks through the task editor's quadrant picker.
+
 ## Local development tools
 
 Run `npm run dev` or `npm start`, then use the **Dev** button in the header. It is available only in the Vite development server. There is no owner sign-in or `/dev` entrypoint.

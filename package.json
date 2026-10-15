@@ -11,7 +11,8 @@
     "build": "tsc --noEmit && vite build && node scripts/build.mjs && node scripts/validate-artifact.mjs",
     "lint": "eslint .",
     "format": "prettier --write src tests scripts worker *.json *.ts *.html .github/workflows/*.yml",
-    "serve:worker": "node scripts/serve.mjs"
+    "serve:worker": "node scripts/serve.mjs",
+    "dev:mobile": "vite --host 0.0.0.0"
   },
   "engines": {
     "node": ">=22.12"

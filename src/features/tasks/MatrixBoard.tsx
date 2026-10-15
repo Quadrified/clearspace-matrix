@@ -105,7 +105,7 @@ export function MatrixBoard({
                     {tasks.length}
                   </span>
                 </div>
-                <div className="tasklist">
+                <div className={`tasklist${tasks.length === 0 ? ' is-empty' : ''}`}>
                   <TaskPresence>
                     {tasks.length ? (
                       tasks.map((task) => (

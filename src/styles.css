@@ -549,7 +549,8 @@ h1,
   min-height: 125px;
   flex: 1;
 }
-.tasklist:has(.empty) {
+/* Outgoing empty states remain mounted during fades; current data owns layout. */
+.tasklist.is-empty {
   display: flex;
   align-items: center;
   justify-content: center;

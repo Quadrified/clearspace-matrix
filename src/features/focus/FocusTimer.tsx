@@ -1,3 +1,4 @@
+import { Select, SelectOption } from '../../components/Select';
 import { useEffect, useRef, useState } from 'react';
 import type { Task } from '../../domain/models';
 import { Modal } from '../../components/Modal';
@@ -116,41 +117,41 @@ export function FocusTimer({ tasks, notify }: { tasks: Task[]; notify: (s: strin
           <p className="quiet">Choose a task, give it your attention, and let the rest wait.</p>
           <label className="field">
             Focus on
-            <select
+            <Select
+              aria-label="Focus on"
               value={selected}
               disabled={running || editing}
-              onChange={(e) => setSelected(e.target.value)}
+              onValueChange={(value) => setSelected(value)}
             >
-              <option value="">An uninterrupted work session</option>
+              <SelectOption value="">An uninterrupted work session</SelectOption>
               {tasks
                 .filter((t) => !t.done)
                 .map((t) => (
-                  <option key={t.id} value={t.id}>
+                  <SelectOption key={t.id} value={t.id}>
                     {t.title}
-                  </option>
+                  </SelectOption>
                 ))}
-            </select>
+            </Select>
           </label>
           <label className="field">
             Session length
-            <select
+            <Select
+              aria-label="Session length"
               value={duration}
               disabled={running || editing}
-              onChange={(e) => {
-                setDuration(e.target.value);
-                setRemaining(
-                  (e.target.value === 'custom' ? Number(custom) : Number(e.target.value)) * 60,
-                );
+              onValueChange={(value) => {
+                setDuration(value);
+                setRemaining((value === 'custom' ? Number(custom) : Number(value)) * 60);
                 setStarted(false);
                 setError('');
               }}
             >
-              <option value="25">25 minutes</option>
-              <option value="15">15 minutes</option>
-              <option value="50">50 minutes</option>
-              <option value="5">5 minute break</option>
-              <option value="custom">Custom duration</option>
-            </select>
+              <SelectOption value="25">25 minutes</SelectOption>
+              <SelectOption value="15">15 minutes</SelectOption>
+              <SelectOption value="50">50 minutes</SelectOption>
+              <SelectOption value="5">5 minute break</SelectOption>
+              <SelectOption value="custom">Custom duration</SelectOption>
+            </Select>
           </label>
           {duration === 'custom' && (
             <label className="field">

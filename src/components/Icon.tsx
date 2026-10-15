@@ -1,20 +1,85 @@
-import paths from '../lib/icons.json';
-const extra: Record<string, string[]> = {
-  settings: [
-    'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8',
-    'm9 3 6 0 1 3 3 1 2 5-2 2-1 3-5 2-2-2-3-1-2-5 2-2 1-3 2-1Z',
-  ],
-  tag: ['M20 13 13 20 3 10V3h7Z', 'M7 7h.01'],
-  folder: ['M3 7V4h6l3 3h9v13H3Z'],
-  chevron: ['m6 9 6 6 6-6'],
+import type { SVGProps } from 'react';
+import {
+  MagnifyingGlassIcon,
+  PencilSquareIcon,
+  PlusIcon,
+  ClockIcon,
+  XMarkIcon,
+  BoltIcon,
+  CalendarDaysIcon,
+  UserGroupIcon,
+  TrashIcon,
+  MoonIcon,
+  QuestionMarkCircleIcon,
+  LockClosedIcon,
+  StarIcon,
+  FlagIcon,
+  ViewfinderCircleIcon,
+  BriefcaseIcon,
+  HomeIcon,
+  HeartIcon,
+  BookOpenIcon,
+  LightBulbIcon,
+  SparklesIcon,
+  CheckIcon,
+  Cog6ToothIcon,
+  SunIcon,
+  TagIcon,
+  FolderIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/24/outline';
+import type { IconName } from '../domain/models';
+
+// Keep the persisted keys so existing quadrant customizations remain compatible.
+const icons = {
+  search: MagnifyingGlassIcon,
+  edit: PencilSquareIcon,
+  plus: PlusIcon,
+  clock: ClockIcon,
+  close: XMarkIcon,
+  do: BoltIcon,
+  schedule: CalendarDaysIcon,
+  delegate: UserGroupIcon,
+  eliminate: TrashIcon,
+  moon: MoonIcon,
+  help: QuestionMarkCircleIcon,
+  lock: LockClosedIcon,
+  star: StarIcon,
+  flag: FlagIcon,
+  target: ViewfinderCircleIcon,
+  briefcase: BriefcaseIcon,
+  home: HomeIcon,
+  heart: HeartIcon,
+  book: BookOpenIcon,
+  bulb: LightBulbIcon,
+  leaf: SparklesIcon,
+  check: CheckIcon,
+  settings: Cog6ToothIcon,
+  sun: SunIcon,
+  tag: TagIcon,
+  folder: FolderIcon,
+  chevron: ChevronDownIcon,
+} as const;
+
+export const iconLabels: Record<IconName, string> = {
+  do: 'Lightning',
+  schedule: 'Calendar',
+  delegate: 'People',
+  eliminate: 'Trash',
+  star: 'Star',
+  flag: 'Flag',
+  target: 'Target',
+  briefcase: 'Briefcase',
+  home: 'Home',
+  heart: 'Heart',
+  book: 'Book',
+  bulb: 'Lightbulb',
+  leaf: 'Sparkles',
+  check: 'Checkmark',
+  clock: 'Clock',
 };
-export function Icon({ name, ...props }: { name: string } & React.SVGProps<SVGSVGElement>) {
-  const list = (paths as Record<string, string[]>)[name] ?? extra[name] ?? extra.tag;
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      {list.map((d, i) => (
-        <path d={d} key={i} />
-      ))}
-    </svg>
-  );
+
+export function Icon({ name, ...props }: { name: string } & SVGProps<SVGSVGElement>) {
+  const Component = icons[name as keyof typeof icons] ?? TagIcon;
+  return <Component aria-hidden="true" focusable="false" {...props} />;
 }

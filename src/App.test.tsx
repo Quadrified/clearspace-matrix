@@ -1,18 +1,16 @@
+import userEvent from '@testing-library/user-event';
 import { act, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import { vi, it, expect, beforeEach } from 'vitest';
 import App from './App';
 import { MATRIX_KEY } from './domain/matrix';
 beforeEach(() => {
   localStorage.setItem('clearspace.tutorial.v1', 'seen');
-  vi.stubGlobal(
-    'fetch',
-    vi.fn().mockResolvedValue({ ok: true, json: async () => ({ authorized: false }) }),
-  );
+  vi.stubGlobal('fetch', vi.fn());
 });
 it('adds a Work task, saves it in the existing storage format, and undoes it', async () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
-  expect(screen.getByLabelText('Category')).toHaveValue('Work');
+  expect(screen.getByRole('combobox', { name: 'Category' })).toHaveTextContent('Work');
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Ship the React app' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
   expect(screen.getByText('Ship the React app')).toBeInTheDocument();
@@ -30,7 +28,7 @@ it('preserves a draft when creating its project', () => {
   fireEvent.change(screen.getByLabelText('New project'), { target: { value: 'Clearspace' } });
   fireEvent.click(screen.getByRole('button', { name: 'Add project' }));
   expect(screen.getByLabelText('Task')).toHaveValue('Launch checklist');
-  expect(screen.getByLabelText('Project')).not.toHaveValue('');
+  expect(screen.getByRole('combobox', { name: 'Project' })).toHaveTextContent('Clearspace');
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
   expect(screen.getAllByText('Clearspace').length).toBeGreaterThan(0);
 });
@@ -53,7 +51,7 @@ it('all notifications dismiss after ten seconds, including Undo', () => {
   act(() => vi.advanceTimersByTime(1));
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
-it('reset clears task metrics while preserving projects and supports Undo', () => {
+it('reset confirms and clears tasks and projects, and Undo restores both', () => {
   localStorage.setItem(
     MATRIX_KEY,
     JSON.stringify({
@@ -77,17 +75,25 @@ it('reset clears task metrics while preserving projects and supports Undo', () =
   );
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Reset matrix' }));
-  fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Reset matrix' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Reset board' }));
+  expect(screen.getByRole('dialog')).toHaveTextContent('All tasks and projects will be cleared.');
+  fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Reset board' }));
   expect(screen.queryByText('Task to clear')).not.toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Keep me' })).toBeInTheDocument();
+  expect(screen.queryByRole('option', { name: 'Keep me' })).not.toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!)).toMatchObject({ tasks: [], projects: [] });
+  expect(screen.getByRole('progressbar', { name: 'Completion' })).toHaveAttribute(
+    'aria-valuenow',
+    '0',
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getByText('Task to clear')).toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects[0].name).toBe('Keep me');
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].projectId).toBe('p');
 });
-it('does not expose Dev to anonymous visitors', async () => {
+it('shows Dev tools during local development without making an authorization request', async () => {
   render(<App />);
-  await act(async () => {});
-  expect(screen.queryByRole('button', { name: 'Dev' })).not.toBeInTheDocument();
+  expect(await screen.findByRole('button', { name: 'Dev' })).toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it('does not overwrite unreadable saved data when working in memory', async () => {
@@ -138,7 +144,7 @@ it('only offers examples at the final tutorial step and does not duplicate them 
   fireEvent.click(screen.getByRole('button', { name: 'Start with example tasks' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(4);
 });
-it('owner Dev can add and remove only marked samples, preserving personal tasks', async () => {
+it('local Dev generates samples without API calls and removes only marked tasks', async () => {
   const base = {
     id: 'mine',
     title: 'My task',
@@ -151,28 +157,47 @@ it('owner Dev can add and remove only marked samples, preserving personal tasks'
     created: 1,
   };
   localStorage.setItem(MATRIX_KEY, JSON.stringify({ tasks: [base], projects: [] }));
-  vi.stubGlobal(
-    'fetch',
-    vi
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ authorized: true }) })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          projects: [],
-          tasks: Array.from({ length: 24 }, (_, i) => ({
-            ...base,
-            id: `sample-${i}`,
-            title: `Sample ${i}`,
-            isDevSample: true,
-          })),
-        }),
-      }),
-  );
   render(<App />);
   fireEvent.click(await screen.findByRole('button', { name: 'Dev' }));
   fireEvent.click(screen.getByRole('button', { name: 'Add 24 sample tasks' }));
   await waitFor(() => expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(25));
   fireEvent.click(screen.getByRole('button', { name: 'Remove Dev samples' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toEqual([base]);
+  expect(fetch).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(25);
+});
+
+it('offers a persistent appearance switch directly in the header', () => {
+  render(<App />);
+  const toggle = screen.getByRole('switch', { name: 'Dark mode' });
+  expect(toggle.closest('header')).not.toBeNull();
+  expect(toggle).toHaveAttribute('aria-checked', 'false');
+  fireEvent.click(toggle);
+  expect(toggle).toHaveAttribute('aria-checked', 'true');
+  expect(document.body).toHaveClass('night');
+  expect(localStorage.getItem('clearspace.theme')).toBe('night');
+  fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
+  expect(screen.queryByRole('button', { name: 'Toggle dark mode' })).not.toBeInTheDocument();
+  fireEvent.click(toggle);
+  expect(toggle).toHaveAttribute('aria-checked', 'false');
+  expect(document.body).not.toHaveClass('night');
+  expect(localStorage.getItem('clearspace.theme')).toBe('light');
+});
+
+it('lets dropdown typeahead use shortcut letters without opening another feature', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  screen.getByRole('combobox', { name: 'Filter by category' }).focus();
+  await user.keyboard('{ArrowDown}');
+  await screen.findByRole('listbox');
+  await user.keyboard('p');
+  await waitFor(() =>
+    expect(screen.getByRole('option', { name: 'Personal' })).toHaveAttribute('data-highlighted'),
+  );
+  await user.keyboard('{Enter}');
+  expect(screen.getByRole('combobox', { name: 'Filter by category' })).toHaveTextContent(
+    'Personal',
+  );
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 });

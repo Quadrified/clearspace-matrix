@@ -92,7 +92,7 @@ export function moveTask(state: Matrix, id: string, q: QuadrantId, beforeId?: st
 export function removeProject(state: Matrix, id: string): Matrix {
   return {
     projects: state.projects.filter((p) => p.id !== id),
-    tasks: state.tasks.map((t) => (t.projectId === id ? { ...t, projectId: '' } : t)),
+    tasks: state.tasks.filter((task) => task.projectId !== id),
   };
 }
 export function projectNameError(state: Matrix, name: string, id?: string) {

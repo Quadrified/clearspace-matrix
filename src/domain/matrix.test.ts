@@ -57,13 +57,20 @@ describe('storage and backups', () => {
   });
 });
 describe('matrix operations', () => {
-  it('removes a project without removing its tasks', () => {
+  it('removes a project and its tasks, keeping unrelated tasks', () => {
     expect(
       removeProject(
-        { projects: [{ id: 'p', name: 'Launch' }], tasks: [{ ...task, projectId: 'p' }] },
+        {
+          projects: [{ id: 'p', name: 'Launch' }],
+          tasks: [
+            { ...task, projectId: 'p' },
+            { ...task, id: 'done', projectId: 'p', done: true },
+            { ...task, id: 'unrelated' },
+          ],
+        },
         'p',
       ),
-    ).toEqual({ projects: [], tasks: [{ ...task, projectId: '' }] });
+    ).toEqual({ projects: [], tasks: [{ ...task, id: 'unrelated' }] });
   });
   it('moves and reorders using stable IDs', () => {
     const state = { projects: [], tasks: [task, { ...task, id: 'two' }] };

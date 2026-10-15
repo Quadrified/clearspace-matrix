@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { Task, Matrix, Labels, Filters, QuadrantId } from '../../domain/models';
 import { quadrants } from '../../domain/models';
 import { visibleTasks, localDate } from '../../domain/matrix';
@@ -22,8 +23,47 @@ export function MatrixBoard({
   onToggle: (id: string) => void;
   onMove: (id: string, q: QuadrantId, before?: string) => void;
 }) {
+  const board = useRef<HTMLDivElement>(null);
+  const positions = useRef<Map<string, DOMRect> | null>(null);
+  const [dragged, setDragged] = useState<string | null>(null);
+  const [target, setTarget] = useState<{ q: QuadrantId; before?: string } | null>(null);
+  function finishDrag() {
+    setDragged(null);
+    setTarget(null);
+  }
+  function drop(id: string, q: QuadrantId, before?: string) {
+    finishDrag();
+    if (!matrix.tasks.some((task) => task.id === id) || id === before) return;
+    positions.current = new Map(
+      Array.from(board.current?.querySelectorAll<HTMLElement>('[data-task-id]') ?? []).map((el) => [
+        el.dataset.taskId!,
+        el.getBoundingClientRect(),
+      ]),
+    );
+    onMove(id, q, before);
+  }
+  useLayoutEffect(() => {
+    const previous = positions.current;
+    positions.current = null;
+    if (!previous || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    for (const el of board.current?.querySelectorAll<HTMLElement>('[data-task-id]') ?? []) {
+      const from = previous.get(el.dataset.taskId!);
+      if (!from || !el.animate) continue;
+      const to = el.getBoundingClientRect();
+      const x = from.left - to.left,
+        y = from.top - to.top;
+      if (x || y)
+        el.animate(
+          [
+            { transform: `translate(${x}px, ${y}px)`, opacity: 0.65 },
+            { transform: 'translate(0, 0)', opacity: 1 },
+          ],
+          { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
+        );
+    }
+  }, [matrix]);
   return (
-    <>
+    <div className="matrix-shell" ref={board}>
       <div className="axis-top" aria-hidden="true">
         <span>Urgent</span>
         <span>Not urgent</span>
@@ -35,15 +75,27 @@ export function MatrixBoard({
           return (
             <section
               key={q.id}
-              className="quad"
+              className={`quad${target?.q === q.id ? ' dragover' : ''}`}
               data-q={q.id}
-              aria-label={label.title}
-              onDragOver={(e) => e.preventDefault()}
+              aria-label={`${label.title}, ${q.subtitle}`}
+              onDragOver={(e) => {
+                if (dragged) {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  setTarget({ q: q.id });
+                }
+              }}
+              onDragLeave={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) setTarget(null);
+              }}
               onDrop={(e) => {
                 e.preventDefault();
-                onMove(e.dataTransfer.getData('text/plain'), q.id);
+                drop(e.dataTransfer.getData('text/plain'), q.id);
               }}
             >
+              <span className="axis-side" aria-hidden="true">
+                {q.id === 'do' || q.id === 'schedule' ? 'Important' : 'Not important'}
+              </span>
               <div className="qhead">
                 <span className="qicon">
                   <Icon name={label.icon ?? q.id} />
@@ -68,14 +120,27 @@ export function MatrixBoard({
                   tasks.map((task) => (
                     <article
                       key={task.id}
-                      className={`task task-enter${task.done ? ' done' : ''}`}
+                      data-task-id={task.id}
+                      className={`task${task.done ? ' done' : ''}${dragged === task.id ? ' is-dragging' : ''}${target?.before === task.id ? ' drop-before' : ''}`}
                       draggable={filters.sort === 'manual'}
-                      onDragStart={(e) => e.dataTransfer.setData('text/plain', task.id)}
-                      onDragOver={(e) => e.preventDefault()}
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', task.id);
+                        e.dataTransfer.effectAllowed = 'move';
+                        setDragged(task.id);
+                      }}
+                      onDragEnd={finishDrag}
+                      onDragOver={(e) => {
+                        if (dragged) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          e.dataTransfer.dropEffect = 'move';
+                          setTarget({ q: q.id, before: task.id });
+                        }
+                      }}
                       onDrop={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        onMove(e.dataTransfer.getData('text/plain'), q.id, task.id);
+                        drop(e.dataTransfer.getData('text/plain'), q.id, task.id);
                       }}
                     >
                       <input
@@ -91,6 +156,7 @@ export function MatrixBoard({
                         onClick={() => onEdit(task)}
                       >
                         <span className="task-title">{task.title}</span>
+                        {task.notes.trim() && <span className="task-notes">{task.notes}</span>}
 
                         <span className="meta">
                           {task.isDevSample && <span className="tag">Dev</span>}
@@ -113,7 +179,6 @@ export function MatrixBoard({
                                   })}
                             </span>
                           )}
-                          {task.notes && <span className="duedate">Notes</span>}
                         </span>
                       </button>
                     </article>
@@ -145,6 +210,6 @@ export function MatrixBoard({
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

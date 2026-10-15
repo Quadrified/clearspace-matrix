@@ -1,3 +1,4 @@
+import { Select, SelectOption } from '../../components/Select';
 import { useState } from 'react';
 import type { Task, Matrix, Labels, QuadrantId } from '../../domain/models';
 import { taskSchema, categories, quadrants } from '../../domain/models';
@@ -70,18 +71,18 @@ export function TaskEditor({
           <label className="field">
             Project
             <div className="project-picker">
-              <select
+              <Select
                 aria-label="Project"
                 value={draft.projectId ?? ''}
-                onChange={(e) => patch('projectId', e.target.value)}
+                onValueChange={(value) => patch('projectId', value)}
               >
-                <option value="">No project</option>
+                <SelectOption value="">No project</SelectOption>
                 {matrix.projects.map((p) => (
-                  <option key={p.id} value={p.id}>
+                  <SelectOption key={p.id} value={p.id}>
                     {p.name}
-                  </option>
+                  </SelectOption>
                 ))}
-              </select>
+              </Select>
               <button type="button" className="btn" onClick={() => setProjects(true)}>
                 Manage projects
               </button>
@@ -100,13 +101,17 @@ export function TaskEditor({
           </label>
           <label className="field">
             Where does it belong?
-            <select value={draft.q} onChange={(e) => patch('q', e.target.value as QuadrantId)}>
+            <Select
+              aria-label="Where does it belong?"
+              value={draft.q}
+              onValueChange={(value) => patch('q', value as QuadrantId)}
+            >
               {quadrants.map((q) => (
-                <option key={q.id} value={q.id}>
+                <SelectOption key={q.id} value={q.id}>
                   {labels[q.id].title} · {q.subtitle}
-                </option>
+                </SelectOption>
               ))}
-            </select>
+            </Select>
           </label>
           <div className="row">
             <label className="field">
@@ -115,15 +120,16 @@ export function TaskEditor({
             </label>
             <label className="field">
               Category
-              <select
+              <Select
+                aria-label="Category"
                 value={draft.category}
-                onChange={(e) => patch('category', e.target.value as Task['category'])}
+                onValueChange={(value) => patch('category', value as Task['category'])}
               >
-                <option value="">No category</option>
+                <SelectOption value="">No category</SelectOption>
                 {categories.map((c) => (
-                  <option key={c}>{c}</option>
+                  <SelectOption key={c}>{c}</SelectOption>
                 ))}
-              </select>
+              </Select>
             </label>
           </div>
           <label className="field">
@@ -165,6 +171,10 @@ export function TaskEditor({
           matrix={matrix}
           change={change}
           onClose={() => setProjects(false)}
+          onDeleted={(id) => {
+            if (task?.projectId === id) onClose();
+            else if (draft.projectId === id) patch('projectId', '');
+          }}
           onCreated={(id) => {
             patch('projectId', id);
             setProjects(false);

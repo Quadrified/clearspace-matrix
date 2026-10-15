@@ -1,14 +1,14 @@
 # How Clearspace works
 
-Clearspace is a React and TypeScript app built with Vite. The frontend owns task data in the browser. The Sites Worker serves the built app and authorizes the small Dev API. It never stores visitor tasks.
+Clearspace is a React and TypeScript app built with Vite. The frontend owns task data in the browser. The Sites Worker serves the built app and favicon. It never stores visitor tasks.
 
 ## Components and state
 
-`App.tsx` composes the screen and coordinates editor and settings actions. Feature folders contain task, project, focus, label, tutorial, and Dev components. Shared dialogs use native HTML dialog behavior; popovers handle outside clicks and Escape. React renders task content as text.
+`App.tsx` composes the screen and coordinates editor and settings actions. Feature folders contain task, project, focus, label, tutorial, and Dev components. Shared dialogs use native HTML dialog behavior; popovers handle outside clicks and Escape. React renders task content as text. Shared Base UI selects render custom option lists and portal into the active native dialog when needed. Task drops capture card positions before moving data, then use the Web Animations API to animate the layout change. Reduced-motion users get the same drop indicators without positional animation.
 
 `useMatrix` owns the current matrix and its previous snapshot with a reducer. Mutations create new task and project arrays. Pure domain functions implement filtering, moving, metrics, project removal, example tasks, and backup merging. A mutation validates its next matrix before dispatch; storage writes happen in an effect, outside the reducer. Undo restores tasks and projects together, once.
 
-Zod schemas define TypeScript models and validate localStorage, imported backups, and Dev API results. IDs remain stable when editing or moving tasks. Project assignments reference project IDs, so renaming a project updates every associated task.
+Zod schemas define TypeScript models and validate localStorage and imported backups. IDs remain stable when editing or moving tasks. Project assignments reference project IDs, so renaming a project updates every associated task.
 
 ## Persistence and compatibility
 
@@ -24,7 +24,7 @@ The migration preserves these keys. Older stock subtitles map to the current urg
 
 If saved data cannot be read, it is left untouched. The user can work in memory and export a backup. A failed storage write displays a warning. Storage events refresh task and project state across tabs when no dialog is open.
 
-Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project removes its assignments, not its tasks. Reset removes all tasks while retaining projects and preferences. All notifications, including Undo, dismiss after ten seconds.
+Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project asks for confirmation with the total task count and up to two task titles, then removes the project and all of its tasks. Undo restores both. A task editor closes if its persisted task was deleted; new drafts drop the deleted project assignment. Reset board removes all tasks and projects while retaining labels and appearance preferences. The confirmation explains both removals, and Undo restores tasks and projects together. All notifications, including Undo, dismiss after ten seconds.
 
 ## Focus timer
 
@@ -34,14 +34,16 @@ Start and resume close the controls and show a header countdown. Closing the pop
 
 Sessions last only for the current page and do not survive reloads.
 
-## Dev authorization
+## Local Dev tools
 
-The frontend asks `/api/dev/status` whether it may show Dev controls. Authorization lives in `worker/handler.mjs`, using trusted Sites identity headers and the `DEV_OWNER_EMAIL` runtime secret. `/dev` starts platform sign-in. Anonymous visitors can use `/` without sign-in.
+`App.tsx` conditionally imports the Dev panel using Vite's compile-time `import.meta.env.DEV` flag. The development server shows a Dev button automatically. Production builds remove that import, the panel, and the sample generator, so a URL, browser flag, or localStorage value cannot enable the tools in production.
 
-Generation requires an owner POST, same-origin request, and JSON body. It returns 24 sample tasks with `isDevSample: true` and stable Dev project definitions. Cleanup removes only those marked tasks. Neither endpoint stores user task data. Client-side hiding is not the security boundary.
+The sample generator runs in the browser and returns 24 tasks with `isDevSample: true` plus stable Dev project definitions. Cleanup removes only marked tasks; both actions use the same matrix reducer and Undo as normal edits. No API call, account identity, or owner email is involved.
+
+The old `/dev` and `/api/dev/*` server routes return 404. The sample-data marker remains in the task schema for compatibility with existing tasks and backups. Local and hosted storage stay separate because they have different origins.
 
 ## Build outputs
 
-Vite compiles React and TypeScript into `client-dist/`. The packaging script embeds the compiled JS and CSS into a single HTML page, then combines it with the Worker handler in `dist/server/index.js`. This avoids separate asset routing on Sites. The same build generates the offline HTML with an embedded favicon. Server secrets never enter the frontend bundle.
+Vite compiles React and TypeScript into `client-dist/`. The packaging script embeds the compiled JS and CSS into a single HTML page, then combines it with the Worker handler in `dist/server/index.js`. This avoids separate asset routing on Sites. The local production preview imports this generated Worker directly. There is no separate standalone version. The build validator checks that development tools and sample data are absent from the production artifact.
 
-Tests live beside React and domain code; server tests live under `tests/`. CI runs type checking, lint, both test suites, and the production build. DOM tests cannot verify device layout, native focus behavior, or real platform authentication.
+Tests live beside React and domain code; server tests live under `tests/`. CI runs type checking, lint, both test suites, and the production build. DOM tests cannot verify device layout, native focus behavior, or device rendering.

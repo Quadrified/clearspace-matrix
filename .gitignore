@@ -8,3 +8,19 @@ dist/
 
 client-dist/
 coverage/
+
+# Local deployment identity and provider credentials
+.openai/hosting.json
+.dev.vars
+.dev.vars.*
+.wrangler/
+.vercel/
+.netlify/
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+# Local task exports and secret-scanner reports
+clearspace-????-??-??.json
+gitleaks-report.*

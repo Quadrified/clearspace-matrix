@@ -24,6 +24,7 @@ export function Modal({
     };
   }, []);
   function isOutside(e: React.MouseEvent<HTMLDialogElement>) {
+    if (e.target !== e.currentTarget) return false;
     const r = e.currentTarget.getBoundingClientRect();
     return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
   }

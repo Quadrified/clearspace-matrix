@@ -30,7 +30,7 @@ it('double-click editing changes remaining time but Reset uses the selected sess
   fireEvent.change(screen.getByLabelText('Remaining time'), { target: { value: '2:30' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save time' }));
   expect(screen.getByRole('timer')).toHaveTextContent('02:30');
-  expect(screen.getByLabelText('Session length')).toHaveValue('25');
+  expect(screen.getByRole('combobox', { name: 'Session length' })).toHaveTextContent('25 minutes');
   fireEvent.click(screen.getByRole('button', { name: 'Reset' }));
   expect(screen.getByRole('timer')).toHaveTextContent('25:00');
 });

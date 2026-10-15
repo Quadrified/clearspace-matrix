@@ -12,7 +12,7 @@
 
 ## A calmer way to plan
 
-Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects, due dates, and a focus timer. It saves your work in your browser. The React frontend keeps tasks on your device. A small server adapter adds protected, owner-only Dev controls while the regular app stays public.
+Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects and due dates. It saves your work in your browser. The React frontend keeps tasks on your device. A small server adapter serves the public app. Dev tools are available only in the local development server.
 
 | Quadrant | What belongs here | What to do |
 | --- | --- | --- |
@@ -24,20 +24,20 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 ## What you can do
 
 - **Manage tasks.** Create, edit, complete, delete, and move tasks between quadrants. Add notes, categories, projects, and optional due dates.
-- **Organize projects.** Create and rename projects, filter their tasks, and delete a project without deleting its tasks.
-- **Focus.** Choose a preset or custom session, then follow the remaining time in the header. Pause, resume, reset, or double-click the countdown to edit it.
+- **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
+- **Focus timer, paused for now.** The control is temporarily hidden. Its implementation and tests remain in the codebase for later use.
 - **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%.
 - **See your progress.** Compact cards show active tasks, tasks due today, completed tasks, and completion percentage.
-- **Recover and back up.** Undo task changes, export and import JSON backups, or reset the task matrix with confirmation. Notifications dismiss after 10 seconds.
+- **Recover and back up.** Undo task changes, export and import JSON backups, or reset all tasks and projects with confirmation. Notifications dismiss after 10 seconds.
 - **Learn as you go.** A first-visit tutorial explains the matrix with examples. Replay it from Settings → Help.
 
-The interface uses system typography, custom SVG illustrations, a translucent header, and responsive layouts. Motion respects reduced-motion preferences, with additional support for reduced transparency and increased contrast.
+The interface uses sage and forest green themes, system body typography, a serif date, custom SVG illustrations, a translucent header, and responsive layouts. Motion respects reduced-motion preferences, with additional support for reduced transparency and increased contrast.
 
 ## Built with React
 
-The app uses React 19, TypeScript in strict mode, and Vite. Feature components own task editing, projects, focus sessions, customization, onboarding, and Dev tools. Pure domain functions handle filtering, moving tasks, backup merging, and metrics. Zod validates data at storage, import, and API boundaries.
+The app uses React 19, TypeScript in strict mode, and Vite. Custom dropdowns use Base UI for keyboard navigation, typeahead, and focus handling. Dragging highlights the destination and insertion point, then animates cards into place. Interface icons use the official [Heroicons](https://github.com/tailwindlabs/heroicons) React package and its 24px outline style. Feature components own task editing, projects, focus sessions, customization, onboarding, and Dev tools. Pure domain functions handle filtering, moving tasks, backup merging, and metrics. Zod validates data at storage, import, and API boundaries.
 
-Vitest and React Testing Library exercise actual React components. A separate Node test suite checks server authorization. ESLint, Prettier, a committed dependency lockfile, and GitHub Actions keep changes reviewable.
+Vitest and React Testing Library exercise actual React components. A separate Node test suite checks public server routes. ESLint, Prettier, a committed dependency lockfile, and GitHub Actions keep changes reviewable.
 
 ## Run locally
 
@@ -48,7 +48,7 @@ npm ci
 npm run dev
 ```
 
-Open the localhost URL printed by Vite. Changes reload automatically. Dev controls stay hidden locally because owner sign-in is provided by the hosted Site.
+Open the localhost URL printed by Vite. Changes reload automatically. A Dev button appears automatically in the header during local development. No sign-in or special URL is needed.
 
 For a production build:
 
@@ -57,19 +57,21 @@ npm run build
 npm run serve:worker
 ```
 
-Open [127.0.0.1:8000](http://127.0.0.1:8000). The build also generates [`standalone/clearspace.html`](standalone/clearspace.html), with React, styles, artwork, and favicon embedded. It can be opened without a server. Storage behavior for `file:` URLs varies by browser, so use localhost for a consistent origin.
+Open [127.0.0.1:8000](http://127.0.0.1:8000) to preview the compiled React app through its production Worker. Run `npm run build` again after changing source files. No standalone HTML version is generated.
 
-## Owner-only Dev mode
+## Local development tools
 
-**Owner-only Dev mode is deployed on the live site.**
+Run `npm run dev` or `npm start`, then use the **Dev** button in the header. It is available only in the Vite development server. There is no owner sign-in or `/dev` entrypoint.
 
-Open [Clearspace Dev](https://clearspace-matrix.fastring19.chatgpt.site/dev) and sign in as the Site owner. A **Dev** button then appears in the header. Regular visitors do not see it and can keep using the public app without signing in.
+- **Add 24 sample tasks** creates six tasks per quadrant and six each for Work, Personal, Health, and Learning. It includes three reusable test projects, varied dates, category-specific notes, and some completed tasks.
+- **Remove Dev samples** removes only marked sample tasks. Your own tasks and project definitions stay saved.
+- Both actions support Undo and affect only the current browser. Samples are generated locally, without API requests.
 
-- **Add 24 test tasks** creates six tasks per quadrant, three reusable test projects, varied dates and notes, and some completed tasks.
-- **Remove test tasks** removes only tasks marked as Dev samples. Your own tasks and project definitions stay saved.
-- Both actions support Undo and affect only the current browser.
+Production builds exclude the Dev panel and sample generator. `npm run serve:worker` previews that production build and has no Dev controls. The former `/dev` and `/api/dev/*` server routes return 404.
 
-The server authorizes Dev access using ChatGPT Sites identity headers and the secret `DEV_OWNER_EMAIL`. This email is configured in hosted environment settings, never embedded in the client or committed to the repository. Anonymous and other signed-in accounts are rejected.
+Development and production origins have separate browser storage. Changing code does not automatically reset your local tasks, so samples remain available across reloads until you remove them.
+
+Changes are developed and verified locally. Deployment happens only when explicitly requested.
 
 ## Everyday shortcuts
 
@@ -81,13 +83,13 @@ The server authorizes Dev access using ChatGPT Sites identity headers and the se
 | `Enter` while editing the timer | Save the new remaining time. |
 | `Escape` while editing the timer | Cancel the edit. |
 
-Task and project shortcuts are inactive while typing or while a dialog is open. Each quadrant also has its own **+** button. On a phone, use the task editor's quadrant selector to move a task.
+Task and project shortcuts are inactive while typing or while a dialog is open. The **Add** dropdown sits beside the Active, Completed, and All tasks tabs and lets you add a task or project. Each quadrant also has its own **+** button. On a phone, use the task editor's quadrant selector to move a task.
 
 ## Your data
 
-Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal are stored in `localStorage`. The app has no task database, analytics service, or third-party runtime scripts. The server only serves the app, authorizes Dev access, and returns sample task data; it does not store visitor tasks.
+Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal are stored in `localStorage`. The app has no task database, analytics service, or third-party runtime scripts. The server only serves the app and favicon; it does not store visitor tasks.
 
-- Every browser and site origin has its own data. Local files, localhost, and the hosted site do not share storage.
+- Every browser and site origin has its own data. Localhost and the hosted site do not share storage.
 - Tasks do not sync across devices or people. Sharing the website shares the tool, not your tasks.
 - Clearing browser data removes saved work. Export backups regularly.
 - JSON backups include tasks and projects. They do not include label, appearance, or timer settings.
@@ -107,13 +109,12 @@ src/
 │   ├── focus/               # Timer UI and time calculations
 │   ├── settings/            # Quadrant labels and icon picker
 │   ├── tutorial/            # Seven-step introduction
-│   └── dev/                 # Owner-authorized sample-data client
+│   └── dev/                 # Local-only sample-data tools
 ├── lib/                     # Persistence, preferences, and notifications
 └── styles.css               # Responsive design and appearance preferences
-worker/handler.mjs           # Public routes and protected Dev API
+worker/handler.mjs           # Public app and favicon routes
 scripts/                     # Worker packaging, artifact checks, local server
 public/favicon.svg
-standalone/clearspace.html   # Generated offline build
 .github/workflows/checks.yml # Type-check, lint, test, and production build
 ```
 
@@ -126,14 +127,18 @@ npm test
 npm run build
 ```
 
-The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, tutorial examples, Dev generation and cleanup, reset, ten-second toast dismissal, and timer editing and countdown behavior. The server suite checks public access, owner authorization, sign-in routing, request-origin protection, and sample data.
+The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, tutorial examples, Dev generation and cleanup, reset, ten-second toast dismissal, and timer editing and countdown behavior. The server suite checks public access and confirms that former Dev routes and APIs are unavailable. The build validator also checks that production excludes the Dev panel and sample generator.
 
-These are automated DOM and server checks. Native dialog focus, drag-and-drop, responsive layout, and real platform sign-in still need browser and device testing. Browser visual verification was unavailable during the React migration.
+These are automated DOM and server checks. Native dialog focus, drag-and-drop, responsive layout, still need browser and device testing. Browser visual verification was unavailable during the React migration.
 
 The original implementation is preserved in the Git tag `backup/pre-react-migration`. The React migration retains the existing localStorage keys and backup formats.
 
+## Source privacy
+
+Credentials, local deployment identity, private keys, and task backup files are excluded from Git. The example environment file contains only an empty secret name. GitHub Actions runs Gitleaks across Git history, with detected values redacted from logs. See [security guidance](SECURITY.md) before publishing a fork or reporting a credential leak.
+
 ## Hosting
 
-[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. Vite emits a static frontend in `client-dist/` that can be hosted without Dev authorization. The protected Dev feature requires the server adapter and trusted platform identity. This repository does not automatically deploy on push.
+[The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. Vite emits a static frontend in `client-dist/` that can be hosted without authentication. Dev tools are compiled out of production. This repository does not automatically deploy on push.
 
 See [deployment notes](docs/deployment.md) before changing the existing hosted page.

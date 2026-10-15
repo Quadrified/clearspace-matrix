@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import App from '../../App';
 import { MATRIX_KEY } from '../../domain/matrix';
@@ -85,4 +85,48 @@ it('clears feedback when a drag is cancelled', () => {
   expect(source).not.toHaveClass('is-dragging');
   expect(destination).not.toHaveClass('dragover');
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('do');
+});
+
+it('celebrates completing the last active task, dismisses after four seconds, and can celebrate again', () => {
+  vi.useFakeTimers();
+  setup();
+  expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Move this task' }), { detail: 1 });
+  const celebration = screen.getByRole('status', { name: 'Quadrant cleared' });
+  expect(celebration).toHaveTextContent('Do first cleared!');
+  expect(celebration).toHaveClass('celebrate-motion');
+  act(() => vi.advanceTimersByTime(4000));
+  expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Move this task' }));
+  expect(screen.getByRole('status', { name: 'Quadrant cleared' })).not.toHaveClass(
+    'celebrate-motion',
+  );
+});
+it('cancels a celebration when Undo reopens the task', () => {
+  setup();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Move this task' }));
+  expect(screen.getByRole('status', { name: 'Quadrant cleared' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+  expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
+});
+it('does not celebrate a quadrant cleared by moving a task', () => {
+  const { source, destination, dataTransfer } = setup();
+  fireEvent.dragStart(source, { dataTransfer });
+  fireEvent.drop(destination, { dataTransfer });
+  expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
+});
+it('does not celebrate finishing only the visible tasks while another active task is filtered out', () => {
+  setup();
+  const data = JSON.parse(localStorage.getItem(MATRIX_KEY)!);
+  data.tasks.push({ ...data.tasks[0], id: 'hidden', title: 'Hidden task', category: 'Health' });
+  fireEvent(
+    window,
+    new StorageEvent('storage', { key: MATRIX_KEY, newValue: JSON.stringify(data) }),
+  );
+  fireEvent.change(screen.getByRole('textbox', { name: 'Find a task' }), {
+    target: { value: 'Move this task' },
+  });
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Move this task' }));
+  expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
 });

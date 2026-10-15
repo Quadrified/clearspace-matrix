@@ -3,6 +3,7 @@ import type { Task, Matrix, Labels, Filters, QuadrantId } from '../../domain/mod
 import { quadrants } from '../../domain/models';
 import { visibleTasks, localDate } from '../../domain/matrix';
 import { Icon } from '../../components/Icon';
+import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
 export function MatrixBoard({
   matrix,
@@ -23,6 +24,10 @@ export function MatrixBoard({
   onToggle: (id: string) => void;
   onMove: (id: string, q: QuadrantId, before?: string) => void;
 }) {
+  const [celebrations, setCelebrations] = useState<
+    Partial<Record<QuadrantId, { taskId: string; sequence: number; animated: boolean }>>
+  >({});
+  const celebrationSequence = useRef(0);
   const board = useRef<HTMLDivElement>(null);
   const positions = useRef<Map<string, DOMRect> | null>(null);
   const [dragged, setDragged] = useState<string | null>(null);
@@ -72,6 +77,11 @@ export function MatrixBoard({
         {quadrants.map((q) => {
           const tasks = visibleTasks(matrix, q.id, filters),
             label = labels[q.id];
+          const celebration = celebrations[q.id];
+          const cleared =
+            celebration &&
+            !matrix.tasks.some((t) => t.q === q.id && !t.done) &&
+            matrix.tasks.some((t) => t.id === celebration.taskId && t.q === q.id && t.done);
           return (
             <section
               key={q.id}
@@ -148,7 +158,26 @@ export function MatrixBoard({
                         className="check"
                         checked={task.done}
                         aria-label={`${task.done ? 'Reopen' : 'Complete'} ${task.title}`}
-                        onChange={() => onToggle(task.id)}
+                        onChange={(event) => {
+                          const isLastActive =
+                            !task.done &&
+                            matrix.tasks.filter((t) => t.q === q.id && !t.done).length === 1;
+                          onToggle(task.id);
+                          if (isLastActive) {
+                            const animated =
+                              event.nativeEvent instanceof MouseEvent &&
+                              event.nativeEvent.detail > 0;
+                            const sequence = ++celebrationSequence.current;
+                            setCelebrations((current) => ({
+                              ...current,
+                              [q.id]: {
+                                taskId: task.id,
+                                sequence,
+                                animated,
+                              },
+                            }));
+                          }
+                        }}
                       />
                       <button
                         className="task-main"
@@ -198,6 +227,13 @@ export function MatrixBoard({
                   </div>
                 )}
               </div>
+              {cleared && (
+                <QuadrantCelebration
+                  key={celebration.sequence}
+                  title={label.title}
+                  animated={celebration.animated}
+                />
+              )}
               <button
                 className="task-fab"
                 aria-label={`Add a task to ${label.title}`}

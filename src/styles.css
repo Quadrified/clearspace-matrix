@@ -1984,3 +1984,80 @@ label.field {
       opacity 180ms var(--out);
   }
 }
+
+.quadrant-celebration {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 82px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--selected);
+  color: var(--ink);
+  pointer-events: none;
+  font-size: calc(12px * var(--text-scale, 1));
+  line-height: 1.4;
+}
+.quadrant-celebration > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.celebration-check {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+}
+.celebration-check svg {
+  width: 18px;
+  height: 18px;
+}
+.celebration-caption {
+  display: block;
+  font-size: calc(10px * var(--text-scale, 1));
+  color: var(--muted);
+}
+.celebration-sparkles {
+  display: flex;
+  margin-left: auto;
+  color: var(--accent-ink);
+}
+.celebration-sparkles svg {
+  width: 24px;
+  height: 24px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .celebrate-motion {
+    animation: quadrant-clear 260ms var(--out);
+  }
+  .celebrate-motion .celebration-sparkles {
+    animation: quadrant-sparkle 260ms var(--out);
+  }
+}
+@keyframes quadrant-clear {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes quadrant-sparkle {
+  from {
+    opacity: 0;
+    transform: rotate(-20deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}

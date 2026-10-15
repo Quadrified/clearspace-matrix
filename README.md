@@ -27,6 +27,7 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 - **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
 - **Focus timer, paused for now.** The control is temporarily hidden. Its implementation and tests remain in the codebase for later use.
 - **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%.
+- **Celebrate quadrant zero.** Completing the last active task in a quadrant shows a brief checkmark and sparkle celebration. Filters, moves, deletion, and resets do not trigger it. Keyboard completion and reduced-motion preferences keep the celebration still.
 - **See your progress.** Compact cards show active tasks, tasks due today, completed tasks, and completion percentage.
 - **Recover and back up.** Undo task changes, export and import JSON backups, or reset all tasks and projects with confirmation. Notifications dismiss after 10 seconds.
 - **Learn as you go.** A first-visit tutorial explains the matrix with examples. Replay it from Settings → Help.

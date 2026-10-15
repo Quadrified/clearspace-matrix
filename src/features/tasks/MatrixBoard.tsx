@@ -163,9 +163,8 @@ export function MatrixBoard({
                   >
                     <Icon name="edit" />
                   </button>
-                  <span className="count">
-                    <span aria-hidden="true">{tasks.length}</span>
-                    <span className="visually-hidden">{`${tasks.length} tasks`}</span>
+                  <span className="count" role="img" aria-label={`${tasks.length} tasks`}>
+                    {tasks.length}
                   </span>
                 </div>
                 <div className={`tasklist${tasks.length === 0 ? ' is-empty' : ''}`}>

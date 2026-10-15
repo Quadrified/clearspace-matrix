@@ -4,6 +4,7 @@ import { softEase, useMotionSettings } from '../lib/motion';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Icon } from './Icon';
+import { announceDialogClosed } from '../lib/dialogEvents';
 export function Modal({
   id,
   title,
@@ -26,11 +27,15 @@ export function Modal({
     el.showModal();
     return () => {
       if (el.open) el.close();
+      announceDialogClosed();
     };
   }, []);
   useLayoutEffect(() => {
     // Release the native focus trap immediately; the inert visual can finish fading.
-    if (!present && ref.current?.open) ref.current.close();
+    if (!present && ref.current?.open) {
+      ref.current.close();
+      announceDialogClosed();
+    }
   }, [present]);
   function isOutside(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target !== e.currentTarget) return false;

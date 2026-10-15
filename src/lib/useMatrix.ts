@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { emptyMatrix, matrixSchema } from '../domain/models';
 import type { Matrix } from '../domain/models';
+import { DIALOG_CLOSED } from './dialogEvents';
 import { MATRIX_KEY, parseStoredMatrix, serializeMatrix } from '../domain/matrix';
 type State = {
   present: Matrix;
@@ -87,7 +88,6 @@ export function useMatrix(notify: (s: string, undo?: boolean) => void) {
       }
       apply(e.newValue);
     };
-    // Dialogs do not bubble `close`, so listen in the capture phase.
     const closed = () => {
       const pending = waiting.current;
       if (!pending || document.querySelector('dialog[open]')) return;
@@ -96,10 +96,10 @@ export function useMatrix(notify: (s: string, undo?: boolean) => void) {
       if (!editedSinceWaiting.current) apply(pending.raw);
     };
     window.addEventListener('storage', listener);
-    document.addEventListener('close', closed, true);
+    window.addEventListener(DIALOG_CLOSED, closed);
     return () => {
       window.removeEventListener('storage', listener);
-      document.removeEventListener('close', closed, true);
+      window.removeEventListener(DIALOG_CLOSED, closed);
     };
   }, []);
   const change = useCallback((update: (m: Matrix) => Matrix, message: string) => {

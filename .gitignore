@@ -24,3 +24,5 @@ secrets/
 # Local task exports and secret-scanner reports
 clearspace-????-??-??.json
 gitleaks-report.*
+test-results/
+playwright-report/

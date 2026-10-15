@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { MATRIX_KEY, serializeMatrix } from '../domain/matrix';
 import type { Matrix } from '../domain/models';
+import { DIALOG_CLOSED } from './dialogEvents';
 import { useMatrix } from './useMatrix';
 
 const task = (id: string, title: string) => ({
@@ -25,10 +26,9 @@ function otherTabSaves(matrix: Matrix) {
   localStorage.setItem(MATRIX_KEY, newValue);
   window.dispatchEvent(new StorageEvent('storage', { key: MATRIX_KEY, newValue }));
 }
-// `close` does not bubble, so the hook listens in the capture phase on document.
 function closeDialog(dialog: HTMLDialogElement) {
   dialog.removeAttribute('open');
-  dialog.dispatchEvent(new Event('close'));
+  window.dispatchEvent(new Event(DIALOG_CLOSED));
 }
 
 it('keeps unreadable saved text so it can still be downloaded for recovery', () => {

@@ -64,7 +64,7 @@ Open [127.0.0.1:8000](http://127.0.0.1:8000) to preview the compiled React app t
 
 Run `npm run dev` or `npm start`, then use the **Dev** button in the header. It is available only in the Vite development server. There is no owner sign-in or `/dev` entrypoint.
 
-- **Add 24 sample tasks** creates six tasks per quadrant and six each for Work, Personal, Health, and Learning. It includes three reusable test projects, varied dates, category-specific notes, and some completed tasks.
+- **Add 24 sample tasks** creates six tasks per quadrant and six each for Work, Personal, Health, and Learning. It includes three reusable test projects, varied dates, category-specific notes, and some completed tasks. The Dev popup closes after adding samples.
 - **Remove Dev samples** removes only marked sample tasks. Your own tasks and project definitions stay saved.
 - Both actions support Undo and affect only the current browser. Samples are generated locally, without API requests.
 

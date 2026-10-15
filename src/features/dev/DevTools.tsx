@@ -16,6 +16,7 @@ export default function DevTools({ matrix, change, notify }: Props) {
     try {
       const samples = createSamples(localDate());
       change((current) => mergeMatrix(current, samples), '24 Dev sample tasks added.');
+      setOpen(false);
     } catch {
       notify(
         'Could not add samples. Export a backup and check the board size before trying again.',

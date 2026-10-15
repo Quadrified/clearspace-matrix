@@ -161,6 +161,8 @@ it('local Dev generates samples without API calls and removes only marked tasks'
   fireEvent.click(await screen.findByRole('button', { name: 'Dev' }));
   fireEvent.click(screen.getByRole('button', { name: 'Add 24 sample tasks' }));
   await waitFor(() => expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(25));
+  expect(screen.queryByRole('dialog', { name: 'Local development tools' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Dev' }));
   fireEvent.click(screen.getByRole('button', { name: 'Remove Dev samples' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toEqual([base]);
   expect(fetch).not.toHaveBeenCalled();

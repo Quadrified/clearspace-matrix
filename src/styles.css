@@ -1617,6 +1617,10 @@ label.field {
   width: 100%;
 }
 
+#devDialog > .btn + .btn {
+  margin-top: 12px;
+}
+
 /* Header appearance switch. Motion indicates state and never delays input. */
 .theme-toggle {
   display: inline-grid;

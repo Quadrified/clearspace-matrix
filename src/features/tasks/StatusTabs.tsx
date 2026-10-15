@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useId } from 'react';
 import { LayoutGroup, motion } from 'motion/react';
 import type { Filters } from '../../domain/models';
 import { softSpring, useMotionSettings } from '../../lib/motion';
@@ -12,15 +12,9 @@ export function StatusTabs({
 }) {
   const id = useId();
   const { instant } = useMotionSettings();
-  const [keyboard, setKeyboard] = useState(false);
   return (
     <LayoutGroup id={id}>
-      <div
-        className="tabs"
-        aria-label="Task status"
-        onPointerDown={() => setKeyboard(false)}
-        onKeyDown={() => setKeyboard(true)}
-      >
+      <div className="tabs" role="group" aria-label="Task status">
         {(
           [
             ['active', 'Active'],
@@ -39,7 +33,7 @@ export function StatusTabs({
                 className="tab-indicator"
                 layoutId="status-highlight"
                 aria-hidden="true"
-                transition={instant || keyboard ? { duration: 0 } : softSpring}
+                transition={instant ? { duration: 0 } : softSpring}
                 style={{ borderRadius: 7 }}
               />
             )}

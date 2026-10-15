@@ -1,4 +1,8 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
+import { en } from 'zod/locales';
+
+// zod/mini ships without messages; keep the same English wording as the full build.
+z.config(en());
 export const quadrantIds = ['do', 'schedule', 'delegate', 'eliminate'] as const;
 export type QuadrantId = (typeof quadrantIds)[number];
 export const categories = ['Work', 'Personal', 'Health', 'Learning'] as const;
@@ -53,65 +57,73 @@ export const quadrants: ReadonlyArray<{
 ];
 const dateSchema = z
   .string()
-  .refine(
-    (v) =>
-      v === '' ||
-      (/^\d{4}-\d{2}-\d{2}$/.test(v) &&
-        !Number.isNaN(Date.parse(v)) &&
-        new Date(v).toISOString().slice(0, 10) === v),
-    'Invalid due date',
+  .check(
+    z.refine(
+      (v) =>
+        v === '' ||
+        (/^\d{4}-\d{2}-\d{2}$/.test(v) &&
+          !Number.isNaN(Date.parse(v)) &&
+          new Date(v).toISOString().slice(0, 10) === v),
+      'Invalid due date',
+    ),
   );
 export const taskSchema = z.object({
-  id: z.string().min(1).max(199),
-  title: z.string().trim().min(1).max(200),
+  id: z.string().check(z.minLength(1), z.maxLength(199)),
+  title: z.string().check(z.trim(), z.minLength(1), z.maxLength(200)),
   q: z.enum(quadrantIds),
   done: z.boolean(),
-  notes: z.string().max(3000),
-  owner: z.string().max(100).default(''),
+  notes: z.string().check(z.maxLength(3000)),
+  owner: z._default(z.string().check(z.maxLength(100)), ''),
   category: z.union([z.enum(categories), z.literal('')]),
   due: dateSchema,
-  created: z.number().finite(),
-  projectId: z.string().max(199).optional(),
-  isDevSample: z.boolean().optional(),
-  completedAt: z.number().nullable().optional(),
+  created: z.number(),
+  projectId: z.optional(z.string().check(z.maxLength(199))),
+  isDevSample: z.optional(z.boolean()),
+  completedAt: z.optional(z.nullable(z.number())),
 });
 export type Task = z.infer<typeof taskSchema>;
 export const projectSchema = z.object({
-  id: z.string().min(1).max(199),
-  name: z.string().trim().min(1).max(80),
+  id: z.string().check(z.minLength(1), z.maxLength(199)),
+  name: z.string().check(z.trim(), z.minLength(1), z.maxLength(80)),
 });
 export type Project = z.infer<typeof projectSchema>;
 export const matrixSchema = z
-  .object({ tasks: z.array(taskSchema).max(10000), projects: z.array(projectSchema).max(1000) })
-  .superRefine((state, ctx) => {
-    const unique = (values: string[], path: string) => {
-      if (new Set(values).size !== values.length)
-        ctx.addIssue({ code: 'custom', path: [path], message: 'Duplicate identifiers or names' });
-    };
-    unique(
-      state.tasks.map((t) => t.id),
-      'tasks',
-    );
-    unique(
-      state.projects.map((p) => p.id),
-      'projects',
-    );
-    unique(
-      state.projects.map((p) => p.name.toLowerCase()),
-      'projects',
-    );
-    if (state.tasks.some((t) => t.projectId && !state.projects.some((p) => p.id === t.projectId)))
-      ctx.addIssue({
-        code: 'custom',
-        path: ['tasks'],
-        message: 'Task references an unknown project',
-      });
-  });
+  .object({
+    tasks: z.array(taskSchema).check(z.maxLength(10000)),
+    projects: z.array(projectSchema).check(z.maxLength(1000)),
+  })
+  .check(
+    z.superRefine((state, ctx) => {
+      const unique = (values: string[], path: string) => {
+        if (new Set(values).size !== values.length)
+          ctx.addIssue({ code: 'custom', path: [path], message: 'Duplicate identifiers or names' });
+      };
+      unique(
+        state.tasks.map((t) => t.id),
+        'tasks',
+      );
+      unique(
+        state.projects.map((p) => p.id),
+        'projects',
+      );
+      unique(
+        state.projects.map((p) => p.name.toLowerCase()),
+        'projects',
+      );
+      const projectIds = new Set(state.projects.map((p) => p.id));
+      if (state.tasks.some((t) => t.projectId && !projectIds.has(t.projectId)))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['tasks'],
+          message: 'Task references an unknown project',
+        });
+    }),
+  );
 export type Matrix = z.infer<typeof matrixSchema>;
 export const labelSchema = z.object({
-  title: z.string().trim().min(1).max(60),
-  subtitle: z.string().max(180),
-  icon: z.enum(iconNames).optional(),
+  title: z.string().check(z.trim(), z.minLength(1), z.maxLength(60)),
+  subtitle: z.string().check(z.maxLength(180)),
+  icon: z.optional(z.enum(iconNames)),
 });
 export const labelsSchema = z.object({
   do: labelSchema,

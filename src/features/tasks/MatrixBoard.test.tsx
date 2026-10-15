@@ -94,7 +94,9 @@ it('celebrates completing the last active task, dismisses after four seconds, an
   const celebration = screen.getByRole('status', { name: 'Quadrant cleared' });
   expect(celebration).toHaveTextContent('Do first cleared!');
   expect(celebration).toHaveClass('celebrate-motion');
-  act(() => vi.advanceTimersByTime(4000));
+  act(() => {
+    vi.advanceTimersByTime(4000);
+  });
   expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Move this task' }));

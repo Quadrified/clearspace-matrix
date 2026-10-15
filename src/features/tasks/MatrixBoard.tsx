@@ -1,10 +1,12 @@
-import { useId, useRef, useState } from 'react';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import type { DragEvent } from 'react';
 import { LayoutGroup, motion } from 'motion/react';
-import { TaskCardMotion, TaskPresence } from './TaskCardMotion';
+import { TaskPresence } from './TaskCardMotion';
+import { TaskItem } from './TaskItem';
 import { softEase, useMotionSettings } from '../../lib/motion';
 import type { Task, Matrix, Labels, Filters, QuadrantId } from '../../domain/models';
 import { quadrants } from '../../domain/models';
-import { visibleTasks, localDate } from '../../domain/matrix';
+import { visibleTasks } from '../../domain/matrix';
 import { Icon } from '../../components/Icon';
 import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
@@ -12,6 +14,7 @@ export function MatrixBoard({
   matrix,
   labels,
   filters,
+  today,
   onAdd,
   onEdit,
   onLabels,
@@ -21,6 +24,7 @@ export function MatrixBoard({
   matrix: Matrix;
   labels: Labels;
   filters: Filters;
+  today: string;
   onAdd: (q: QuadrantId) => void;
   onEdit: (t: Task) => void;
   onLabels: () => void;
@@ -35,15 +39,68 @@ export function MatrixBoard({
   const { instant } = useMotionSettings();
   const [dragged, setDragged] = useState<string | null>(null);
   const [target, setTarget] = useState<{ q: QuadrantId; before?: string } | null>(null);
-  function finishDrag() {
+  // Mirrors `dragged` so drag handlers stay stable and cards can stay memoized mid-drag.
+  const draggedRef = useRef<string | null>(null);
+  const taskIds = useMemo(() => new Set(matrix.tasks.map((task) => task.id)), [matrix.tasks]);
+  const finishDrag = useCallback(() => {
+    draggedRef.current = null;
     setDragged(null);
     setTarget(null);
-  }
-  function drop(id: string, q: QuadrantId, before?: string) {
-    finishDrag();
-    if (!matrix.tasks.some((task) => task.id === id) || id === before) return;
-    onMove(id, q, before);
-  }
+  }, []);
+  const aim = useCallback((q: QuadrantId, before?: string) => {
+    // Dragover fires many times a second; only re-render when the drop point really changes.
+    setTarget((t) => (t && t.q === q && t.before === before ? t : { q, before }));
+  }, []);
+  const drop = useCallback(
+    (id: string, q: QuadrantId, before?: string) => {
+      finishDrag();
+      if (!taskIds.has(id) || id === before) return;
+      onMove(id, q, before);
+    },
+    [finishDrag, onMove, taskIds],
+  );
+  const onDragStart = useCallback((e: DragEvent, id: string) => {
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+    draggedRef.current = id;
+    setDragged(id);
+  }, []);
+  const onDragOverTask = useCallback(
+    (e: DragEvent, q: QuadrantId, id: string) => {
+      if (draggedRef.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect = 'move';
+        aim(q, id);
+      }
+    },
+    [aim],
+  );
+  const onDropOnTask = useCallback(
+    (e: DragEvent, q: QuadrantId, id: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      drop(e.dataTransfer.getData('text/plain'), q, id);
+    },
+    [drop],
+  );
+  const onCelebrate = useCallback((q: QuadrantId, taskId: string, animated: boolean) => {
+    const sequence = ++celebrationSequence.current;
+    setCelebrations((current) => ({ ...current, [q]: { taskId, sequence, animated } }));
+  }, []);
+  const projectNames = useMemo(
+    () => new Map(matrix.projects.map((p) => [p.id, p.name])),
+    [matrix.projects],
+  );
+  const columns = useMemo(
+    () => quadrants.map((q) => visibleTasks(matrix, q.id, filters)),
+    [matrix, filters],
+  );
+  const activeCount = useMemo(() => {
+    const counts: Record<QuadrantId, number> = { do: 0, schedule: 0, delegate: 0, eliminate: 0 };
+    for (const t of matrix.tasks) if (!t.done) counts[t.q]++;
+    return counts;
+  }, [matrix.tasks]);
   return (
     <LayoutGroup id={boardId}>
       <div className="matrix-shell">
@@ -52,8 +109,8 @@ export function MatrixBoard({
           <span>Not urgent</span>
         </div>
         <div className="matrix" id="matrix">
-          {quadrants.map((q) => {
-            const tasks = visibleTasks(matrix, q.id, filters),
+          {quadrants.map((q, index) => {
+            const tasks = columns[index]!,
               label = labels[q.id];
             const celebration = celebrations[q.id];
             const cleared =
@@ -72,7 +129,7 @@ export function MatrixBoard({
                   if (dragged) {
                     e.preventDefault();
                     e.dataTransfer.dropEffect = 'move';
-                    setTarget({ q: q.id });
+                    aim(q.id);
                   }
                 }}
                 onDragLeave={(e) => {
@@ -106,106 +163,33 @@ export function MatrixBoard({
                   >
                     <Icon name="edit" />
                   </button>
-                  <span className="count" aria-label={`${tasks.length} tasks`}>
-                    {tasks.length}
+                  <span className="count">
+                    <span aria-hidden="true">{tasks.length}</span>
+                    <span className="visually-hidden">{`${tasks.length} tasks`}</span>
                   </span>
                 </div>
                 <div className={`tasklist${tasks.length === 0 ? ' is-empty' : ''}`}>
                   <TaskPresence>
                     {tasks.length ? (
                       tasks.map((task) => (
-                        <TaskCardMotion key={task.id} id={task.id} dragging={dragged === task.id}>
-                          <article
-                            data-task-id={task.id}
-                            className={`task${task.done ? ' done' : ''}${dragged === task.id ? ' is-dragging' : ''}${target?.before === task.id ? ' drop-before' : ''}`}
-                            draggable={filters.sort === 'manual'}
-                            onDragStart={(e) => {
-                              e.dataTransfer.setData('text/plain', task.id);
-                              e.dataTransfer.effectAllowed = 'move';
-                              setDragged(task.id);
-                            }}
-                            onDragEnd={finishDrag}
-                            onDragOver={(e) => {
-                              if (dragged) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                e.dataTransfer.dropEffect = 'move';
-                                setTarget({ q: q.id, before: task.id });
-                              }
-                            }}
-                            onDrop={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              drop(e.dataTransfer.getData('text/plain'), q.id, task.id);
-                            }}
-                          >
-                            <label className="task-check-target">
-                              <input
-                                type="checkbox"
-                                className="check"
-                                checked={task.done}
-                                aria-label={`${task.done ? 'Reopen' : 'Complete'} ${task.title}`}
-                                onChange={(event) => {
-                                  const isLastActive =
-                                    !task.done &&
-                                    matrix.tasks.filter((t) => t.q === q.id && !t.done).length ===
-                                      1;
-                                  onToggle(task.id);
-                                  if (isLastActive) {
-                                    const animated =
-                                      event.nativeEvent instanceof MouseEvent &&
-                                      event.nativeEvent.detail > 0;
-                                    const sequence = ++celebrationSequence.current;
-                                    setCelebrations((current) => ({
-                                      ...current,
-                                      [q.id]: {
-                                        taskId: task.id,
-                                        sequence,
-                                        animated,
-                                      },
-                                    }));
-                                  }
-                                }}
-                              />
-                            </label>
-                            <button
-                              className="task-main"
-                              aria-label={`Edit ${task.title}`}
-                              onClick={() => onEdit(task)}
-                            >
-                              <span className="task-title">{task.title}</span>
-                              {task.notes.trim() && (
-                                <span className="task-notes">{task.notes}</span>
-                              )}
-
-                              <span className="meta">
-                                {task.isDevSample && <span className="tag">Dev</span>}
-                                {task.category && <span className="tag">{task.category}</span>}
-                                {task.projectId && (
-                                  <span className="tag project-tag">
-                                    {matrix.projects.find((p) => p.id === task.projectId)?.name}
-                                  </span>
-                                )}
-                                {task.due && (
-                                  <span
-                                    className={`duedate${task.due < localDate() && !task.done ? ' overdue' : ''}`}
-                                  >
-                                    {task.due < localDate() && !task.done ? 'Overdue · ' : ''}
-                                    {task.due === localDate()
-                                      ? 'Today'
-                                      : new Date(task.due + 'T12:00:00').toLocaleDateString(
-                                          undefined,
-                                          {
-                                            month: 'short',
-                                            day: 'numeric',
-                                          },
-                                        )}
-                                  </span>
-                                )}
-                              </span>
-                            </button>
-                          </article>
-                        </TaskCardMotion>
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          q={q.id}
+                          projectName={projectNames.get(task.projectId ?? '')}
+                          today={today}
+                          dragging={dragged === task.id}
+                          dropBefore={target?.before === task.id}
+                          draggable={filters.sort === 'manual'}
+                          isLastActive={!task.done && activeCount[q.id] === 1}
+                          onEdit={onEdit}
+                          onToggle={onToggle}
+                          onCelebrate={onCelebrate}
+                          onDragStart={onDragStart}
+                          onDragEnd={finishDrag}
+                          onDragOverTask={onDragOverTask}
+                          onDropOnTask={onDropOnTask}
+                        />
                       ))
                     ) : (
                       <motion.div

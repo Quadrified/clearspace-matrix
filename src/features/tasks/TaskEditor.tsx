@@ -1,3 +1,4 @@
+import { newId } from '../../lib/id';
 import { SoftPresence } from '../../components/SoftPresence';
 import { Select, SelectOption } from '../../components/Select';
 import { useState } from 'react';
@@ -24,7 +25,7 @@ export function TaskEditor({
     task
       ? { ...task }
       : {
-          id: crypto.randomUUID(),
+          id: newId(),
           title: '',
           q,
           done: false,
@@ -69,8 +70,8 @@ export function TaskEditor({
             onClose();
           }}
         >
-          <label className="field">
-            Project
+          <div className="field">
+            <span>Project</span>
             <div className="project-picker">
               <Select
                 aria-label="Project"
@@ -88,7 +89,7 @@ export function TaskEditor({
                 Manage projects
               </button>
             </div>
-          </label>
+          </div>
           <label className="field">
             Task
             <input
@@ -149,8 +150,7 @@ export function TaskEditor({
             {task && (
               <button
                 type="button"
-                className="btn danger"
-                style={{ marginRight: 'auto' }}
+                className="btn danger push-left"
                 onClick={() => {
                   change(
                     (m) => ({ ...m, tasks: m.tasks.filter((t) => t.id !== task.id) }),

@@ -3,8 +3,9 @@ import { defaultLabels, labelsSchema, quadrants } from '../domain/models';
 import type { Labels } from '../domain/models';
 export function readLabels(): Labels {
   try {
-    const raw = JSON.parse(localStorage.getItem('clearspace.labels.v1') ?? 'null');
-    const parsed = labelsSchema.safeParse(raw?.quadrants ?? raw);
+    const raw = JSON.parse(localStorage.getItem('clearspace.labels.v1') ?? 'null') as unknown;
+    const saved = raw as { quadrants?: unknown } | null;
+    const parsed = labelsSchema.safeParse(saved?.quadrants ?? raw);
     if (!parsed.success) return structuredClone(defaultLabels);
     const old = [
       'Handle what needs you now.',

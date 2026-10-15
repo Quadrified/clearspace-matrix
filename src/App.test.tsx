@@ -47,9 +47,13 @@ it('all notifications dismiss after ten seconds, including Undo', () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
   expect(screen.getByRole('status')).toHaveTextContent('Completed tasks cleared.');
-  act(() => vi.advanceTimersByTime(9999));
+  act(() => {
+    vi.advanceTimersByTime(9999);
+  });
   expect(screen.getByRole('status')).toBeInTheDocument();
-  act(() => vi.advanceTimersByTime(1));
+  act(() => {
+    vi.advanceTimersByTime(1);
+  });
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
 it('reset confirms and clears tasks and projects, and Undo restores both', () => {
@@ -229,7 +233,7 @@ it('keeps browser chrome and native controls aligned with the app theme rather t
 it('moves a checked task to the bottom of its quadrant in All tasks and restores order on Undo', () => {
   const matrix = createSamples('2026-10-15');
   const tasks = matrix.tasks.filter((task) => task.q === 'do');
-  tasks[5].done = true;
+  tasks[5]!.done = true;
   localStorage.setItem(MATRIX_KEY, JSON.stringify({ version: 2, ...matrix }));
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'All tasks' }));
@@ -240,10 +244,10 @@ it('moves a checked task to the bottom of its quadrant in All tasks and restores
     );
   const original = tasks.map((task) => task.id);
   expect(order()).toEqual(original);
-  fireEvent.click(within(quadrant).getByRole('checkbox', { name: `Complete ${tasks[0].title}` }));
+  fireEvent.click(within(quadrant).getByRole('checkbox', { name: `Complete ${tasks[0]!.title}` }));
   expect(order()).toEqual([...original.slice(1), original[0]]);
   expect(
-    within(quadrant).getByRole('checkbox', { name: `Reopen ${tasks[0].title}` }),
+    within(quadrant).getByRole('checkbox', { name: `Reopen ${tasks[0]!.title}` }),
   ).toBeChecked();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(order()).toEqual(original);

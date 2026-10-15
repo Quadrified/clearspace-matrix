@@ -15,6 +15,9 @@
   --glass: rgba(244, 246, 239, 0.9);
   --shadow: 0 3px 18px #24482d0a;
   --out: cubic-bezier(0.23, 1, 0.32, 1);
+  --check-border: #aaaab1;
+  --search-focus: #5496d8;
+  --search-focus-glow: #5496d815;
   font:
     100%/1.5 -apple-system,
     BlinkMacSystemFont,
@@ -42,7 +45,7 @@ body {
   overscroll-behavior: none;
   background: var(--bg);
   color: var(--ink);
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   -webkit-font-smoothing: antialiased;
 }
 button,
@@ -151,13 +154,13 @@ header:after {
   gap: 2px;
 }
 .brand-name {
-  font-size: calc(27px * var(--text-scale, 1));
+  font-size: calc(1.6875rem * var(--text-scale, 1));
   font-weight: 650;
   line-height: 1.1;
   letter-spacing: -0.8px;
 }
 .brand-tagline {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
   letter-spacing: 0.1px;
 }
@@ -181,7 +184,7 @@ header:after {
   border: 1px solid var(--line);
   background: var(--paper);
   padding: 9px 13px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .iconbtn {
@@ -213,7 +216,7 @@ header:after {
 }
 .hint,
 .quiet {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   line-height: 1.6;
 }
@@ -229,7 +232,7 @@ header:after {
   flex: 1;
 }
 .eyebrow {
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -237,7 +240,7 @@ header:after {
 }
 h1,
 .intro #matrixTitle {
-  font-size: calc(40px * var(--text-scale, 1));
+  font-size: calc(2.5rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -1.7px;
   line-height: 1.12;
@@ -246,7 +249,7 @@ h1,
   overflow-wrap: anywhere;
 }
 .intro p {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   color: var(--muted);
   margin: 0;
 }
@@ -259,7 +262,7 @@ h1,
 }
 .date {
   font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  font-size: calc(32px * var(--text-scale, 1));
+  font-size: calc(2rem * var(--text-scale, 1));
   font-weight: 500;
   color: var(--accent-ink);
   line-height: 1.15;
@@ -314,13 +317,13 @@ h1,
   border-radius: 8px;
   background: transparent;
   text-align: left;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 .add-menu kbd {
   margin-left: auto;
   font: inherit;
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .toolbar {
   display: grid;
@@ -354,7 +357,7 @@ h1,
   border-radius: 7px;
   color: var(--muted);
   padding: 7px 17px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   min-height: 34px;
   line-height: 1.4;
 }
@@ -383,8 +386,8 @@ h1,
   color: var(--muted);
 }
 .search:focus-within {
-  border-color: #5496d8;
-  box-shadow: 0 0 0 3px #5496d815;
+  border-color: var(--search-focus);
+  box-shadow: 0 0 0 3px var(--search-focus-glow);
 }
 .search input {
   flex: 1;
@@ -393,7 +396,7 @@ h1,
   outline: none;
   background: transparent;
   padding: 11px 0;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   color: var(--ink);
 }
 .search-clear {
@@ -414,7 +417,7 @@ h1,
   border-radius: 10px;
   background-color: var(--paper);
   padding: 10px 12px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   text-overflow: ellipsis;
 }
 .matrix-shell {
@@ -424,7 +427,7 @@ h1,
 .axis-top,
 .axis-side,
 .axis-mobile {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 1.4px;
@@ -537,7 +540,7 @@ h1,
   height: 20px;
 }
 .qhead h2 {
-  font-size: calc(19px * var(--text-scale, 1));
+  font-size: calc(1.1875rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.4px;
@@ -545,7 +548,7 @@ h1,
   overflow-wrap: anywhere;
 }
 .qhead p {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   color: var(--muted);
   margin: 0;
@@ -556,6 +559,17 @@ h1,
   width: 36px;
   height: 36px;
   padding: 9px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .count {
   display: inline-flex;
@@ -568,7 +582,7 @@ h1,
   color: var(--ink);
   border: 1px solid #88888818;
   border-radius: 9px;
-  font-size: calc(17px * var(--text-scale, 1));
+  font-size: calc(1.0625rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.3;
   font-variant-numeric: tabular-nums;
@@ -605,12 +619,12 @@ h1,
 .empty strong {
   font-weight: 500;
   color: var(--muted);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
 }
 .empty > span {
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .task {
   display: flex;
@@ -636,7 +650,7 @@ h1,
 }
 .task-title {
   display: block;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   font-weight: 500;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -651,7 +665,7 @@ h1,
   max-height: 3em;
   margin-top: 4px;
   color: var(--muted);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   white-space: pre-line;
   overflow-wrap: anywhere;
@@ -666,7 +680,7 @@ h1,
   width: 19px;
   height: 19px;
   margin: 3px 0 0;
-  border: 1.5px solid #aaaab1;
+  border: 1.5px solid var(--check-border);
   border-radius: 50%;
   cursor: pointer;
   background: transparent;
@@ -687,7 +701,7 @@ h1,
   gap: 7px;
   margin-top: 6px;
   color: var(--muted);
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .tag {
@@ -737,7 +751,7 @@ footer {
   gap: 10px;
   padding: 23px 0 calc(28px + env(safe-area-inset-bottom, 0px));
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .bottom-note {
   display: flex;
@@ -755,7 +769,7 @@ footer > div {
   gap: 3px;
 }
 footer .iconbtn {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 36px;
 }
@@ -785,7 +799,7 @@ dialog::backdrop {
 }
 dialog h2 {
   font-family: inherit;
-  font-size: calc(25px * var(--text-scale, 1));
+  font-size: calc(1.5625rem * var(--text-scale, 1));
   line-height: 1.2;
   letter-spacing: -0.7px;
   font-weight: 600;
@@ -806,10 +820,11 @@ dialog h2 {
   background: var(--soft);
   color: var(--muted);
 }
-label.field {
+label.field,
+div.field {
   display: block;
   margin: 16px 0 6px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 500;
   line-height: 1.5;
 }
@@ -824,7 +839,7 @@ label.field {
   color: var(--ink);
   border-radius: 10px;
   padding: 11px 12px;
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   line-height: 1.4;
   min-height: 43px;
 }
@@ -862,7 +877,7 @@ label.field {
   min-width: 0;
 }
 .project-picker .btn {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   flex-shrink: 0;
 }
 .project-row {
@@ -879,7 +894,7 @@ label.field {
   border: 1px solid var(--line);
   padding: 10px;
   border-radius: 9px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 #labelsDialog {
   width: min(550px, calc(100% - 32px));
@@ -894,7 +909,7 @@ label.field {
   padding-top: 0;
 }
 .label-section h3 {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   font-weight: 550;
   color: var(--muted);
   margin: 0;
@@ -912,7 +927,7 @@ label.field {
 .icon-picker-trigger {
   min-height: 43px;
   flex-shrink: 0;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
 }
 .icon-options {
   display: grid;
@@ -960,7 +975,7 @@ label.field {
   padding: 17px;
 }
 .settings-menu h2 {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.4;
   margin: 0 0 12px;
@@ -976,7 +991,7 @@ label.field {
   justify-content: flex-start;
   text-align: left;
   padding: 10px 11px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .settings-actions svg {
@@ -990,7 +1005,7 @@ label.field {
   padding-top: 14px;
   margin-top: 12px;
   border-top: 1px solid var(--line);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
 }
 .font-controls {
   display: flex;
@@ -1011,7 +1026,7 @@ label.field {
 }
 .settings-menu #saveState {
   display: block;
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   line-height: 1.5;
   color: var(--muted);
   border-top: 1px solid var(--line);
@@ -1022,7 +1037,7 @@ label.field {
   white-space: normal;
 }
 #focusRemaining {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1033,7 +1048,7 @@ label.field {
   color: white;
 }
 .timer-number {
-  font-size: clamp(42px, 14vw, calc(66px * var(--text-scale, 1)));
+  font-size: clamp(42px, 14vw, calc(4.125rem * var(--text-scale, 1)));
   font-weight: 300;
   font-variant-numeric: tabular-nums;
   letter-spacing: -2px;
@@ -1050,7 +1065,7 @@ label.field {
 .edit-time-link {
   display: flex;
   margin: 0 auto 18px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 34px;
   text-decoration: underline;
@@ -1064,7 +1079,7 @@ label.field {
   margin: 24px 0;
 }
 #clockInput {
-  font-size: calc(30px * var(--text-scale, 1));
+  font-size: calc(1.875rem * var(--text-scale, 1));
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
@@ -1076,12 +1091,12 @@ label.field {
   min-height: 220px;
 }
 #tutorialTitle {
-  font-size: calc(27px * var(--text-scale, 1));
+  font-size: calc(1.6875rem * var(--text-scale, 1));
   line-height: 1.2;
   margin: 17px 0 12px;
 }
 #tutorialDescription {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   line-height: 1.65;
   color: var(--muted);
 }
@@ -1104,7 +1119,7 @@ label.field {
   border: 1px solid var(--line);
   border-radius: 13px;
   background: var(--bg);
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.65;
 }
 .tutorial-example strong {
@@ -1145,7 +1160,7 @@ label.field {
   min-height: 44px;
 }
 .tutorial-actions .iconbtn {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 44px;
 }
@@ -1167,7 +1182,7 @@ label.field {
   border-radius: 13px;
   box-shadow: 0 8px 25px #00000020;
   z-index: 30;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   width: max-content;
@@ -1301,9 +1316,9 @@ label.field {
   }
   .intro #matrixTitle {
     font-size: clamp(
-      calc(30px * var(--text-scale, 1)),
+      calc(1.875rem * var(--text-scale, 1)),
       calc(3.5vw * var(--text-scale, 1)),
-      calc(40px * var(--text-scale, 1))
+      calc(2.5rem * var(--text-scale, 1))
     );
   }
   .intro {
@@ -1323,10 +1338,10 @@ label.field {
     padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
   }
   .brand-name {
-    font-size: calc(24px * var(--text-scale, 1));
+    font-size: calc(1.5rem * var(--text-scale, 1));
   }
   .brand-tagline {
-    font-size: calc(12px * var(--text-scale, 1));
+    font-size: calc(0.75rem * var(--text-scale, 1));
   }
   .logo {
     padding: 10px;
@@ -1349,16 +1364,16 @@ label.field {
     gap: 12px;
   }
   .intro #matrixTitle {
-    font-size: calc(32px * var(--text-scale, 1));
+    font-size: calc(2rem * var(--text-scale, 1));
     line-height: 1.15;
     letter-spacing: -1px;
   }
   .eyebrow {
-    font-size: calc(11px * var(--text-scale, 1));
+    font-size: calc(0.6875rem * var(--text-scale, 1));
     letter-spacing: 1px;
   }
   .date {
-    font-size: calc(26px * var(--text-scale, 1));
+    font-size: calc(1.625rem * var(--text-scale, 1));
     text-align: left;
     flex: 1;
     min-width: 0;
@@ -1371,7 +1386,7 @@ label.field {
     min-width: 0;
   }
   .stat strong {
-    font-size: calc(25px * var(--text-scale, 1));
+    font-size: calc(1.5625rem * var(--text-scale, 1));
   }
   .toolbar {
     margin: 22px 0 18px;
@@ -1410,10 +1425,10 @@ label.field {
     gap: 10px;
   }
   .qhead h2 {
-    font-size: calc(18px * var(--text-scale, 1));
+    font-size: calc(1.125rem * var(--text-scale, 1));
   }
   .qhead p {
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
   }
   .label-edit {
     width: 40px;
@@ -1429,7 +1444,7 @@ label.field {
     bottom: 15px;
   }
   .task-title {
-    font-size: calc(16px * var(--text-scale, 1));
+    font-size: calc(1rem * var(--text-scale, 1));
   }
   .check {
     width: 22px;
@@ -1440,7 +1455,7 @@ label.field {
   .field .select-trigger,
   .field textarea,
   .project-row input {
-    font-size: max(16px, calc(16px * var(--text-scale, 1)));
+    font-size: max(16px, calc(1rem * var(--text-scale, 1)));
     min-height: 44px;
   }
   .row {
@@ -1475,7 +1490,7 @@ label.field {
   }
   footer .iconbtn {
     min-height: 44px;
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
   }
 }
 @media (max-width: 430px) {
@@ -1490,7 +1505,7 @@ label.field {
     max-width: 100%;
   }
   .brand-name {
-    font-size: calc(23px * var(--text-scale, 1));
+    font-size: calc(1.4375rem * var(--text-scale, 1));
   }
   .header-right {
     margin-left: auto;
@@ -1498,16 +1513,16 @@ label.field {
     max-width: 100%;
   }
   #focusButton {
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
     padding: 9px;
     flex-wrap: wrap;
     max-width: 185px;
   }
   #focusRemaining {
-    font-size: calc(13px * var(--text-scale, 1));
+    font-size: calc(0.8125rem * var(--text-scale, 1));
   }
   .intro #matrixTitle {
-    font-size: calc(30px * var(--text-scale, 1));
+    font-size: calc(1.875rem * var(--text-scale, 1));
   }
   .intro > div:last-child {
     flex-wrap: wrap;
@@ -1540,7 +1555,7 @@ label.field {
     padding: 11px 13px;
   }
   .stat span {
-    font-size: calc(13px * var(--text-scale, 1));
+    font-size: calc(0.8125rem * var(--text-scale, 1));
   }
   .settings-menu {
     width: 280px;
@@ -1563,7 +1578,7 @@ label.field {
     );
   }
   dialog h2 {
-    font-size: calc(24px * var(--text-scale, 1));
+    font-size: calc(1.5rem * var(--text-scale, 1));
   }
   .tutorial-actions {
     flex-wrap: wrap;
@@ -1659,7 +1674,7 @@ label.field {
   transition: none !important;
 }
 #devButton {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   border-style: dashed;
 }
@@ -1784,7 +1799,7 @@ label.field {
   stroke-linecap: round;
 }
 .completion-ring strong {
-  font-size: calc(18px * var(--text-scale, 1));
+  font-size: calc(1.125rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -0.6px;
   font-variant-numeric: tabular-nums;
@@ -1801,12 +1816,12 @@ label.field {
   min-width: 0;
 }
 .completion-copy > span {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 550;
 }
 .completion-copy > small {
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   overflow-wrap: anywhere;
 }
 .overview-stat {
@@ -1831,7 +1846,7 @@ label.field {
   color: var(--muted);
 }
 .overview-stat strong {
-  font-size: calc(25px * var(--text-scale, 1));
+  font-size: calc(1.5625rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -0.6px;
   line-height: 1.2;
@@ -1839,7 +1854,7 @@ label.field {
   overflow-wrap: anywhere;
 }
 .overview-stat-label {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
 }
 @media (max-width: 760px) {
@@ -1953,7 +1968,7 @@ label.field {
   background: var(--paper);
   color: var(--ink);
   text-align: left;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 .select-value {
   min-width: 0;
@@ -2005,7 +2020,7 @@ label.field {
   min-height: 44px;
   padding: 11px 12px;
   border-radius: 8px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
   overflow-wrap: anywhere;
   cursor: pointer;
@@ -2056,7 +2071,7 @@ label.field {
   background: var(--selected);
   color: var(--ink);
   pointer-events: none;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .quadrant-celebration > span:nth-child(2) {
@@ -2079,7 +2094,7 @@ label.field {
 }
 .celebration-caption {
   display: block;
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   color: var(--muted);
 }
 .celebration-sparkles {
@@ -2330,7 +2345,7 @@ button,
   .select-trigger,
   .field .select-trigger,
   .select-item {
-    font-size: max(16px, calc(16px * var(--text-scale, 1)));
+    font-size: max(16px, calc(1rem * var(--text-scale, 1)));
   }
   button,
   .btn,
@@ -2402,4 +2417,10 @@ button,
     border-radius: 18px 18px 0 0;
     pointer-events: none;
   }
+}
+.dialog-actions .push-left {
+  margin-right: auto;
+}
+.project-list {
+  margin-top: 20px;
 }

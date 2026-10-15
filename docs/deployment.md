@@ -12,9 +12,12 @@ npm run typecheck
 npm run lint
 npm test
 npm run build
+npm run test:e2e
 ```
 
-Vite emits the React frontend in `client-dist/`. The packaging script embeds its JavaScript and CSS alongside `worker/handler.mjs` in `dist/server/index.js`, copies the local manifest into `dist/.openai/hosting.json` when configured. Build outputs in `dist/` and `client-dist/` are ignored. Preview the built React app with `npm run serve:worker` at http://127.0.0.1:8000. The preview imports the generated Worker directly. There is no standalone HTML output.
+Vite emits the React frontend in `client-dist/`. The packaging script bundles its hashed JavaScript and CSS files, the page, and `worker/handler.mjs` into `dist/server/index.js`, and copies the local manifest into `dist/.openai/hosting.json` when configured. Build outputs in `dist/` and `client-dist/` are ignored. Preview the built React app with `npm run serve:worker` at http://127.0.0.1:8000. The preview imports the generated Worker directly. There is no standalone HTML output.
+
+The Worker serves the hashed assets with `cache-control: public, max-age=31536000, immutable`, so repeat visits reuse them. The page itself is sent with `no-cache` and an `ETag`, so a new deployment is picked up on the next load. Every response carries `x-content-type-options`, `referrer-policy`, and `permissions-policy` headers. The page also carries a Content-Security-Policy that allows scripts only from the site and the one inline theme script (by hash), and forbids framing. The build fails if the JavaScript exceeds its gzip budget in `scripts/check-size.mjs`.
 
 A fresh clone builds without any account credentials or deployment identity. It does not produce a publishable Sites archive until the publisher creates `.openai/hosting.json` from `.openai/hosting.example.json` and sets the existing project ID provided by Sites. Keep that file local and ignored. Never create a new Site merely because a fresh clone has no local manifest.
 

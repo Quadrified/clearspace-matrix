@@ -1,3 +1,4 @@
+import { newId } from '../../lib/id';
 import { SoftPresence } from '../../components/SoftPresence';
 import { useState } from 'react';
 import type { Matrix, Project } from '../../domain/models';
@@ -59,7 +60,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
             const problem = projectNameError(matrix, name);
             setError(problem);
             if (problem) return;
-            const id = crypto.randomUUID();
+            const id = newId();
             change(
               (m) => ({ ...m, projects: [...m.projects, { id, name: name.trim() }] }),
               'Project added.',
@@ -83,7 +84,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
           <button className="btn primary">Add project</button>
           {error && <p role="alert">{error}</p>}
         </form>
-        <div style={{ marginTop: 20 }}>
+        <div className="project-list">
           {matrix.projects.map((project) => (
             <ProjectRow
               key={project.id}

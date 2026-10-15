@@ -1,4 +1,5 @@
 import { Children, isValidElement, useRef, useState } from 'react';
+import { useMotionSettings } from '../lib/motion';
 import type { FC, ReactNode } from 'react';
 import { Select as Primitive } from '@base-ui/react/select';
 import { Icon } from './Icon';
@@ -6,6 +7,12 @@ import { Icon } from './Icon';
 type OptionProps = { value?: string; children: ReactNode };
 // Declarative options are read by Select rather than rendered as native controls.
 export const SelectOption: FC<OptionProps> = () => null;
+
+// Options here are plain text, so their label text can be read straight from the children.
+const textOf = (node: ReactNode) =>
+  Children.toArray(node)
+    .map((part) => (typeof part === 'string' || typeof part === 'number' ? String(part) : ''))
+    .join('');
 
 export function Select({
   value,
@@ -22,13 +29,13 @@ export function Select({
   id?: string;
   'aria-label': string;
 }) {
-  const [keyboard, setKeyboard] = useState(false);
   const [container, setContainer] = useState<HTMLElement | null>(null);
+  const { instant } = useMotionSettings();
   const trigger = useRef<HTMLButtonElement>(null);
   const items = Children.toArray(children).flatMap((child) => {
     if (!isValidElement<OptionProps>(child)) return [];
     return [
-      { value: child.props.value ?? String(child.props.children), label: child.props.children },
+      { value: child.props.value ?? textOf(child.props.children), label: child.props.children },
     ];
   });
   return (
@@ -41,14 +48,7 @@ export function Select({
       }}
       disabled={disabled}
     >
-      <Primitive.Trigger
-        ref={trigger}
-        id={id}
-        className="select-trigger"
-        aria-label={label}
-        onPointerDown={() => setKeyboard(false)}
-        onKeyDown={() => setKeyboard(true)}
-      >
+      <Primitive.Trigger ref={trigger} id={id} className="select-trigger" aria-label={label}>
         <Primitive.Value className="select-value" />
         <Primitive.Icon className="select-chevron">
           <Icon name="chevron" />
@@ -62,13 +62,13 @@ export function Select({
           positionMethod="fixed"
           alignItemWithTrigger={false}
         >
-          <Primitive.Popup className="select-popup" data-instant={keyboard || undefined}>
+          <Primitive.Popup className="select-popup" data-instant={instant || undefined}>
             <Primitive.List className="select-list">
               {items.map((item) => (
                 <Primitive.Item
                   key={item.value}
                   value={item.value}
-                  label={Children.toArray(item.label).join('')}
+                  label={textOf(item.label)}
                   className="select-item"
                 >
                   <Primitive.ItemText>{item.label}</Primitive.ItemText>

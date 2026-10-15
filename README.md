@@ -59,6 +59,8 @@ npm run build
 npm run serve:worker
 ```
 
+Run the real-browser tests (Chromium, desktop and phone viewports) against that production build with `npm run test:e2e`.
+
 Open [127.0.0.1:8000](http://127.0.0.1:8000) to preview the compiled React app through its production Worker. Run `npm run build` again after changing source files. No standalone HTML version is generated.
 
 ## Test on your phone
@@ -115,9 +117,12 @@ Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal
 ```text
 src/
 ├── App.tsx                  # Screen composition and cross-feature actions
+├── main.tsx                 # Entry point with a crash-recovery error boundary
 ├── components/              # Dialog, popover, icons, and illustrations
 ├── domain/                  # Typed models, schemas, and pure matrix operations
 ├── features/
+│   ├── app/                 # Header, toolbar, and footer
+│   ├── backup/              # Export and import of JSON backups
 │   ├── tasks/               # Task editor and matrix board
 │   ├── projects/            # Project creation and editing
 │   ├── focus/               # Timer UI and time calculations
@@ -126,10 +131,11 @@ src/
 │   └── dev/                 # Local-only sample-data tools
 ├── lib/                     # Persistence, preferences, and notifications
 └── styles.css               # Responsive design and appearance preferences
-worker/handler.mjs           # Public app and favicon routes
+worker/handler.mjs           # Public app, hashed assets, caching, and security headers
+e2e/                         # Real-browser tests (Playwright)
 scripts/                     # Worker packaging, artifact checks, local server
 public/favicon.svg
-.github/workflows/checks.yml # Type-check, lint, test, and production build
+.github/workflows/checks.yml # Format, type-check, lint, test, and production build
 ```
 
 ## Validation

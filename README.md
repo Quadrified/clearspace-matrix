@@ -8,18 +8,18 @@
 
 ![Clearspace design overview](docs/preview.svg)
 
-*Design overview using the project's own SVG artwork.*
+_Design overview using the project's own SVG artwork._
 
 ## A calmer way to plan
 
 Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects and due dates. It saves your work in your browser. The React frontend keeps tasks on your device. A small server adapter serves the public app. Dev tools are available only in the local development server.
 
-| Quadrant | What belongs here | What to do |
-| --- | --- | --- |
-| Do first | Urgent and important | Take the next step now. |
-| Schedule | Important, not urgent | Protect time for it. |
-| Delegate | Urgent, not important | Ask for help or limit the effort. |
-| Let go | Neither urgent nor important | Skip what adds little value. |
+| Quadrant | What belongs here            | What to do                        |
+| -------- | ---------------------------- | --------------------------------- |
+| Do first | Urgent and important         | Take the next step now.           |
+| Schedule | Important, not urgent        | Protect time for it.              |
+| Delegate | Urgent, not important        | Ask for help or limit the effort. |
+| Let go   | Neither urgent nor important | Skip what adds little value.      |
 
 ## What you can do
 
@@ -89,13 +89,13 @@ Changes are developed and verified locally. Deployment happens only when explici
 
 ## Everyday shortcuts
 
-| Shortcut | Action |
-| --- | --- |
-| `N` | Add a task. |
-| `P` | Add or manage projects. |
-| Double-click the timer | Edit remaining time as minutes or `MM:SS`. |
-| `Enter` while editing the timer | Save the new remaining time. |
-| `Escape` while editing the timer | Cancel the edit. |
+| Shortcut                         | Action                                     |
+| -------------------------------- | ------------------------------------------ |
+| `N`                              | Add a task.                                |
+| `P`                              | Add or manage projects.                    |
+| Double-click the timer           | Edit remaining time as minutes or `MM:SS`. |
+| `Enter` while editing the timer  | Save the new remaining time.               |
+| `Escape` while editing the timer | Cancel the edit.                           |
 
 Task and project shortcuts are inactive while typing or while a dialog is open. The **Add** dropdown sits beside the Active, Completed, and All tasks tabs and lets you add a task or project. Each quadrant also has its own **+** button. On a phone, use the task editor's quadrant selector to move a task.
 
@@ -135,11 +135,24 @@ public/favicon.svg
 ## Validation
 
 ```sh
-npm run typecheck
-npm run lint
-npm test
-npm run build
+npm run check
 ```
+
+`npm run check` runs formatting, ESLint, strict TypeScript, tests, and the production build. Individual commands are `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. Use `npm run format` or `npm run lint:fix` to apply formatting and available lint fixes.
+
+### Commit and pull request checks
+
+`npm ci` installs Husky hooks through the `prepare` script. Before a Git commit, lint-staged formats staged files and runs ESLint on staged JavaScript and TypeScript. The hook then runs the full type check and test suite. Use Node 24 in your terminal and Git client. Hook failures stop the commit. Git clients must support hooks; CI repeats the checks independently.
+
+ESLint checks React rendering rules, Hooks, JSX accessibility, and unhandled or misused promises. TypeScript validates component props. Native modal dialogs intentionally set initial focus, so the blanket autofocus restriction is disabled. Accessibility linting does not replace keyboard or screen-reader testing.
+
+GitHub Actions runs on pushes and pull request creation, updates, reopening, and readiness for review:
+
+- `verify`: formatting, ESLint with zero warnings, types, tests, and production packaging validation.
+- `secrets`: Gitleaks scans Git history with credentials redacted.
+- `dependencies`: npm audits all dependencies and fails on high or critical vulnerabilities.
+
+Runs have timeouts and read-only repository permissions. New commits cancel older runs on the same branch. Actions are pinned to commit hashes. Dependabot proposes weekly dependency and GitHub Actions updates after its configuration reaches the default branch. Nothing deploys automatically. CI reports failures, but blocking merges requires GitHub branch protection, which remains unavailable on this private repository's current plan.
 
 The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, tutorial examples, Dev generation and cleanup, reset, ten-second toast dismissal, and timer editing and countdown behavior. The server suite checks public access and confirms that former Dev routes and APIs are unavailable. The build validator also checks that production excludes the Dev panel and sample generator.
 

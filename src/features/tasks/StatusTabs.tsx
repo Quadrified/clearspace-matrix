@@ -15,12 +15,7 @@ export function StatusTabs({
   const [keyboard, setKeyboard] = useState(false);
   return (
     <LayoutGroup id={id}>
-      <div
-        className="tabs"
-        aria-label="Task status"
-        onPointerDown={() => setKeyboard(false)}
-        onKeyDown={() => setKeyboard(true)}
-      >
+      <div className="tabs" role="group" aria-label="Task status">
         {(
           [
             ['active', 'Active'],
@@ -30,6 +25,8 @@ export function StatusTabs({
         ).map(([status, label]) => (
           <button
             key={status}
+            onPointerDown={() => setKeyboard(false)}
+            onKeyDown={() => setKeyboard(true)}
             className={status === value ? 'active' : ''}
             aria-pressed={status === value}
             onClick={() => onChange(status)}

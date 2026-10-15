@@ -47,9 +47,13 @@ it('all notifications dismiss after ten seconds, including Undo', () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
   expect(screen.getByRole('status')).toHaveTextContent('Completed tasks cleared.');
-  act(() => vi.advanceTimersByTime(9999));
+  act(() => {
+    vi.advanceTimersByTime(9999);
+  });
   expect(screen.getByRole('status')).toBeInTheDocument();
-  act(() => vi.advanceTimersByTime(1));
+  act(() => {
+    vi.advanceTimersByTime(1);
+  });
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
 it('reset confirms and clears tasks and projects, and Undo restores both', () => {

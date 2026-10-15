@@ -16,11 +16,15 @@ it('starts, closes the popup and keeps updating the Focus button', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Focus' }));
   fireEvent.click(screen.getByRole('button', { name: 'Start focus' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  act(() => vi.advanceTimersByTime(5000));
+  act(() => {
+    vi.advanceTimersByTime(5000);
+  });
   expect(screen.getByRole('button', { name: /Focus 24:55/ })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /Focus/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
-  act(() => vi.advanceTimersByTime(5000));
+  act(() => {
+    vi.advanceTimersByTime(5000);
+  });
   expect(screen.getByRole('button', { name: /Focus 24:50/ })).toBeInTheDocument();
 });
 it('double-click editing changes remaining time but Reset uses the selected session', () => {
@@ -48,13 +52,17 @@ it('editing a running timer resumes the new time and closes the popup', () => {
   render(<FocusTimer tasks={[]} notify={vi.fn()} />);
   fireEvent.click(screen.getByRole('button', { name: 'Focus' }));
   fireEvent.click(screen.getByRole('button', { name: 'Start focus' }));
-  act(() => vi.advanceTimersByTime(1000));
+  act(() => {
+    vi.advanceTimersByTime(1000);
+  });
   fireEvent.click(screen.getByRole('button', { name: /Focus/ }));
   fireEvent.doubleClick(screen.getByRole('timer'));
   fireEvent.change(screen.getByLabelText('Remaining time'), { target: { value: '1:05' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save time' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  act(() => vi.advanceTimersByTime(5000));
+  act(() => {
+    vi.advanceTimersByTime(5000);
+  });
   expect(screen.getByRole('button', { name: /Focus 01:00/ })).toBeInTheDocument();
 });
 it('a backdrop click dismisses the controls without stopping the running timer', () => {
@@ -78,6 +86,8 @@ it('a backdrop click dismisses the controls without stopping the running timer',
   fireEvent.pointerDown(dialog, { clientX: 1, clientY: 1 });
   fireEvent.click(dialog, { clientX: 1, clientY: 1 });
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  act(() => vi.advanceTimersByTime(5000));
+  act(() => {
+    vi.advanceTimersByTime(5000);
+  });
   expect(screen.getByRole('button', { name: /Focus 24:55/ })).toBeInTheDocument();
 });

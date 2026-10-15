@@ -20,10 +20,7 @@ destructive actions, changed defaults, or new dependencies. Write "None" if noth
 
 <!-- Record the checks actually run and their results. Name skipped checks and limitations.
 For code changes, relevant commands are:
-  npm run typecheck
-  npm run lint
-  npm test
-  npm run build
+  npm run check
 For UI changes, include the browser, viewport, and real phone checks performed.
 Do not describe automated DOM tests as visual or device verification. -->
 

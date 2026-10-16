@@ -98,7 +98,7 @@ test('deleting an empty project says there is nothing to delete', async ({ page 
 
 test('project can be created from the task editor and is selected', async ({ page }) => {
   await open(page, { matrix: { tasks: [], projects: [] } });
-  await page.getByRole('button', { name: 'Add a task to Do first' }).click();
+  await page.getByRole('button', { name: 'Add your first task' }).click();
   const editor = editorDialog(page);
   await editor.getByRole('button', { name: 'Manage projects' }).click();
   const dialog = projectsDialog(page);

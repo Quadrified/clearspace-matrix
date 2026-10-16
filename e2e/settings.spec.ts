@@ -204,12 +204,16 @@ test('reset board clears tasks and projects, then Undo from the toast restores t
   await dialog.getByRole('button', { name: 'Reset board' }).click();
   await expect(toast(page)).toContainText('Board reset. All tasks and projects cleared.');
   await expect(page.locator('.task')).toHaveCount(0);
+  await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Add your first task' })).toBeVisible();
   await expect(page.getByText('Start with what needs your attention.')).toBeVisible();
   expect(await storedMatrix(page)).toMatchObject({ tasks: [], projects: [] });
 
   await toast(page).getByRole('button', { name: 'Undo' }).click();
   await expect(toast(page)).toContainText('Undone.');
   await expect(page.locator('.task')).toHaveCount(7);
+  await expect(page.locator('.task-fab')).toHaveCount(4);
+  await expect(page.locator('.add-floating')).toHaveCount(1);
   const stored = await storedMatrix(page);
   expect(stored.tasks).toHaveLength(8);
   expect(stored.projects).toHaveLength(2);

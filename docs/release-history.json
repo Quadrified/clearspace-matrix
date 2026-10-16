@@ -514,5 +514,19 @@
       "Move the first-task prompt into the day panel on an empty board, keeping the starter actions together with the day information.",
       "Update responsive styling, README guidance, and browser assertions for the empty-board layout."
     ]
+  },
+  {
+    "n": 36,
+    "title": "GitHub link in the header",
+    "tag": "site-v36",
+    "sha": "d3b4ad0f0bec1cc14c6c6def6f7dab23360c128c",
+    "target": "5a0c8ceb9ba769404022ac7aaca2f1f1166bfa94",
+    "recorded_at": "2026-10-16T11:48:17-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T11:49:06.170891-04:00",
+    "changes": [
+      "Add a GitHub repository link to the header with responsive styling and component test coverage."
+    ]
   }
 ]

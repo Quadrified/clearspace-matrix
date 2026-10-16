@@ -322,9 +322,17 @@ Recorded source time: 2026-10-16T11:42:18-04:00. Tag: `site-v35`. Deployment suc
 
 Sites source: `2a5cfc661a6416f43828a7004c1d7b71a1e33487`. GitHub target: `3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0`. Reconstructed: False.
 
-## Available GitHub history through 3de57a5
+## Hosted version 36: GitHub link in the header
 
-This is the reachable Git history through `3de57a5`, the main commit deployed as hosted version 35, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-16T11:48:17-04:00. Tag: `site-v36`. Deployment succeeded; record updated 2026-10-16T11:49:06.170891-04:00 (America/Toronto).
+
+- Add a GitHub repository link to the header with responsive styling and component test coverage.
+
+Sites source: `d3b4ad0f0bec1cc14c6c6def6f7dab23360c128c`. GitHub target: `5a0c8ceb9ba769404022ac7aaca2f1f1166bfa94`. Reconstructed: False.
+
+## Available GitHub history through 5a0c8ce
+
+This is the reachable Git history through `5a0c8ce`, the main commit deployed as hosted version 36, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -391,3 +399,5 @@ This is the reachable Git history through `3de57a5`, the main commit deployed as
 - 2026-10-16T03:17:16-04:00 [9e13ab6](https://github.com/Quadrified/clearspace-matrix/commit/9e13ab6488d586fc23b6e2e5f4c94d74425b8fca): Refresh architecture, deployment, and contributor overview
 - 2026-10-16T03:24:40-04:00 [1984589](https://github.com/Quadrified/clearspace-matrix/commit/19845894dd1f51003960946f7e430d85a1bacb79): Record hosted release 34 and require logs after every deployment
 - 2026-10-16T11:09:58-04:00 [3de57a5](https://github.com/Quadrified/clearspace-matrix/commit/3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0): Move the first-task prompt into the day panel on an empty board
+- 2026-10-16T11:43:50-04:00 [008b872](https://github.com/Quadrified/clearspace-matrix/commit/008b8723358bd6ebb0e0355f34e5a99438b053fc): Record hosted release 35 and deployed source history
+- 2026-10-16T11:46:52-04:00 [5a0c8ce](https://github.com/Quadrified/clearspace-matrix/commit/5a0c8ceb9ba769404022ac7aaca2f1f1166bfa94): Add a GitHub link to the header

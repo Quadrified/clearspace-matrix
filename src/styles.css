@@ -2662,7 +2662,7 @@ button,
 }
 .axis-board {
   flex-shrink: 0;
-  width: clamp(180px, 23vw, 260px);
+  width: clamp(230px, 27vw, 360px);
   height: auto;
   overflow: visible;
 }
@@ -2711,6 +2711,19 @@ button,
 }
 .tabs .active .tab-count {
   background: #ffffff38;
+}
+
+/* Wide screens have one toolbar row instead of empty space beneath the tabs.
+   Status/actions may wrap within their column at larger text settings. */
+@media (min-width: 1100px) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 16px;
+  }
+  .toolbar > .filter-summary {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Compact search and filters sit together at the right edge. */

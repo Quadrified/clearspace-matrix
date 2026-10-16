@@ -3029,36 +3029,37 @@ button,
   }
 }
 
-/* Wide screens: the day moves into a rail and the matrix takes the full height. */
+/* Wide screens: the day moves into a rail and the matrix takes the full height.
+   A crowded board drops the rail and keeps the one-line day bar to give the quadrants the width. */
 @media (min-width: 1360px) {
-  .workspace {
+  .workspace.has-rail {
     display: grid;
     grid-template-columns: clamp(220px, 17vw, 252px) minmax(0, 1fr);
     gap: 40px;
     align-items: start;
   }
-  .day {
+  .workspace.has-rail .day {
     flex-direction: column;
     align-items: stretch;
     flex-wrap: nowrap;
     gap: 18px;
     padding: 30px 0 24px;
   }
-  .day-heading {
+  .workspace.has-rail .day-heading {
     display: contents;
   }
-  .day .date {
+  .workspace.has-rail .day .date {
     order: 1;
     font-size: calc(1.75rem * var(--text-scale, 1));
     line-height: 1.15;
     letter-spacing: -0.6px;
     text-wrap: balance;
   }
-  .day-copy {
+  .workspace.has-rail .day-copy {
     order: 2;
     margin-top: -6px;
   }
-  .day h1 {
+  .workspace.has-rail .day h1 {
     margin-bottom: 4px;
     font-size: calc(1.0625rem * var(--text-scale, 1));
     font-weight: 600;
@@ -3066,15 +3067,15 @@ button,
     color: var(--ink);
     text-wrap: balance;
   }
-  .day p {
+  .workspace.has-rail .day p {
     display: block;
   }
-  .overview {
+  .workspace.has-rail .overview {
     order: 3;
     display: grid;
     gap: 0;
   }
-  .overview-completion {
+  .workspace.has-rail .overview-completion {
     gap: 12px;
     margin-bottom: 6px;
     padding: 14px;
@@ -3082,17 +3083,17 @@ button,
     border-radius: 14px;
     background: linear-gradient(115deg, var(--paper), var(--soft));
   }
-  .completion-ring {
+  .workspace.has-rail .completion-ring {
     width: calc(40px * var(--text-scale, 1));
     height: calc(40px * var(--text-scale, 1));
   }
-  .completion-copy span {
+  .workspace.has-rail .completion-copy span {
     font-size: calc(0.9375rem * var(--text-scale, 1));
   }
-  .completion-copy small {
+  .workspace.has-rail .completion-copy small {
     display: block;
   }
-  .overview-stat {
+  .workspace.has-rail .overview-stat {
     flex-direction: row-reverse;
     justify-content: space-between;
     gap: 12px;
@@ -3101,24 +3102,24 @@ button,
     border-bottom: 1px solid var(--line);
     white-space: normal;
   }
-  .overview-stat-label {
+  .workspace.has-rail .overview-stat-label {
     text-transform: none;
     overflow-wrap: anywhere;
   }
-  .axis-board {
+  .workspace.has-rail .axis-board {
     order: 4;
     width: min(100%, calc(180px * var(--text-scale, 1)));
     margin-top: 4px;
   }
-  .board-column {
+  .workspace.has-rail .board-column {
     padding-top: 6px;
   }
-  .board-column > .first-task {
+  .workspace.has-rail .board-column > .first-task {
     margin-top: 24px;
   }
 }
 @media (min-width: 1360px) and (min-height: 700px) {
-  .day {
+  .workspace.has-rail .day {
     position: sticky;
     top: var(--app-header-height, var(--header-height-fallback));
   }

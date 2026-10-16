@@ -47,6 +47,23 @@ export function mergeMatrix(state: Matrix, incoming: Matrix): Matrix {
 export function localDate(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
+/** Most tasks a quadrant can show before the board gives up the side rail for width. */
+export const CROWDED_QUADRANT = 4;
+
+/**
+ * Whether any quadrant shows more than `CROWDED_QUADRANT` tasks under the current status tab.
+ * Search and filters are ignored so the layout does not shift while someone types.
+ */
+export function isCrowded(state: Matrix, status: Filters['status']) {
+  const counts = new Map<QuadrantId, number>();
+  for (const t of state.tasks) {
+    if (status !== 'all' && t.done !== (status === 'done')) continue;
+    const n = (counts.get(t.q) ?? 0) + 1;
+    if (n > CROWDED_QUADRANT) return true;
+    counts.set(t.q, n);
+  }
+  return false;
+}
 export function visibleTasks(state: Matrix, q: QuadrantId, f: Filters) {
   const projectNames = new Map(state.projects.map((p) => [p.id, p.name]));
   const search = f.search.toLowerCase();

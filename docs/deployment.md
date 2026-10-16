@@ -50,8 +50,17 @@ Playwright verifies Chromium interaction and layout behavior using desktop and s
 
 ## Releases and historical snapshots
 
-The [release timeline](RELEASE_HISTORY.md) and [source mapping](release-history.json) record hosted versions 1 through 33. GitHub tags `site-v1` through `site-v33` follow the hosting version numbers, not the package's semantic version. These records were created retrospectively; release-note source times and deployment-record timestamps should not be confused with GitHub publication dates.
+The [release timeline](RELEASE_HISTORY.md) and [source mapping](release-history.json) record successful hosted versions. GitHub tags `site-vN` follow the hosting version number, not the package's semantic version. The first 33 records were created retrospectively. Source times, deployment-record timestamps, and GitHub publication dates describe different events.
 
 Some tags point to matching existing GitHub commits. Others preserve reconstructed snapshots with publisher configuration omitted. The `hosted-release-history` branch is an archive of older implementations, not a branch to merge into main or deploy as the current app. Creating a GitHub release or tag does not itself publish a Sites version.
 
-For future requested releases, record the actual saved Sites version and source mapping. Keep the historical 1–33 snapshot intact rather than treating it as a live deployment-status feed. Reverting Git or moving a release tag does not roll back the live site; rollback requires explicitly building and publishing the selected older source.
+After every explicitly requested deployment succeeds:
+
+1. Read the saved Sites version and terminal deployment status. Use the actual hosting version number; do not infer it from a tag or package version.
+2. Append that version to `docs/release-history.json` and `docs/RELEASE_HISTORY.md`. Record the saved Sites source SHA, exact deployed GitHub source SHA, source time, deployment-record update time, success status, and a short change summary. Use America/Toronto offsets for new timestamps and preserve existing records.
+3. Create the corresponding `site-vN` GitHub release targeting the exact deployed GitHub source commit. Include the release notes and updated timeline and JSON as release assets. Keep publisher configuration and credentials out of the records.
+4. Format and review the documentation, then commit and push these release-log updates directly to `main`. The owner has authorized direct pushes for these documentation and release JSON updates. Application changes still follow the PR workflow.
+
+Release-log updates document an existing deployment. They do not require another deployment, and pushing them must not start a build/publish loop. Do not record failed or pending deployments as successful releases. If publishing succeeds but bookkeeping fails, finish the records for that same version without publishing again.
+
+Reverting Git or moving a release tag does not roll back the live site; rollback requires explicitly building and publishing the selected older source.

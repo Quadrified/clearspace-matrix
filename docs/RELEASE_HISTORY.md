@@ -1,6 +1,6 @@
 # Clearspace release history
 
-Retrospective records for the 33 hosted versions. Source times below are original commit times; GitHub publication dates reflect when these historical records were created. Private publisher configuration is excluded from reconstructed snapshots.
+Hosted releases and their source mappings. Versions 1 through 33 were recorded retrospectively. From version 34 onward, records are appended after a successful deployment. Source times identify the saved source commit; deployment-record timestamps identify the hosting record update. GitHub publication dates can differ from both. Private publisher configuration is excluded from reconstructed snapshots.
 
 ## Hosted version 1: Initial matrix
 
@@ -303,9 +303,19 @@ Recorded source time: 2026-10-16T02:55:11-04:00. Tag: `site-v33`. Deployment suc
 
 Sites source: `4026f51f5ab3f92cb2645027ec44ebe3eca148a8`. GitHub target: `d47fd3076d395a142d81db9b67115e3c20504ff7`. Reconstructed: False.
 
-## Available GitHub history through d47fd30
+## Hosted version 34: Adaptive board layout and refreshed documentation
 
-This is the reachable Git history through `d47fd30`, the main commit deployed as hosted version 33, including merges. Later commits are outside this historical snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-16T03:18:25-04:00. Tag: `site-v34`. Deployment succeeded; record updated 2026-10-16T03:20:31.774965-04:00 (America/Toronto).
+
+- Fold the wide-screen day rail into a day bar when a quadrant has more than four tasks in the selected status tab. Search, category, and project filters do not change this layout decision.
+- Add the tracked release timeline, source mapping, and README links.
+- Refresh the architecture, deployment, and contributor overview for current task controls, data flow, local Dev tools, and CI.
+
+Sites source: `0301bf97cb9949cabad01c353d4aafabf4d44da2`. GitHub target: `9e13ab6488d586fc23b6e2e5f4c94d74425b8fca`. Reconstructed: False.
+
+## Available GitHub history through 9e13ab6
+
+This is the reachable Git history through `9e13ab6`, the main commit deployed as hosted version 34, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -367,3 +377,6 @@ This is the reachable Git history through `d47fd30`, the main commit deployed as
 - 2026-10-16T02:44:00-04:00 [03da037](https://github.com/Quadrified/clearspace-matrix/commit/03da0376dc1e811cc90cee40c38b28ad9340a25e): Update project creation and reset browser checks for the starter flow
 - 2026-10-16T02:44:31-04:00 [e9beab2](https://github.com/Quadrified/clearspace-matrix/commit/e9beab217c1dab634c508b3e27812717857a8c46): Wait for the editor exit before reopening it in motion checks
 - 2026-10-16T02:51:05-04:00 [d47fd30](https://github.com/Quadrified/clearspace-matrix/commit/d47fd3076d395a142d81db9b67115e3c20504ff7): Wait for task dialog DOM removal in animated onboarding regression
+- 2026-10-16T03:04:22-04:00 [12fc693](https://github.com/Quadrified/clearspace-matrix/commit/12fc69310e65329d6211a4333c5b1464649cbda3): Drop the wide-screen side rail when a quadrant is crowded
+- 2026-10-16T03:10:51-04:00 [178598d](https://github.com/Quadrified/clearspace-matrix/commit/178598d86e8303e39a95532c9bc7c05e6d3bcc09): Document the 33 hosted releases and source history
+- 2026-10-16T03:17:16-04:00 [9e13ab6](https://github.com/Quadrified/clearspace-matrix/commit/9e13ab6488d586fc23b6e2e5f4c94d74425b8fca): Refresh architecture, deployment, and contributor overview

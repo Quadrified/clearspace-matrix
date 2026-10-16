@@ -105,4 +105,4 @@ Builds produce `client-dist/`, enforce the JavaScript gzip budget and package `d
 
 Axe scans report findings without failing CI. Optional screenshots capture images rather than asserting visual baselines. Simulated phones do not replace hardware, screen-reader or motion review. Super-Linter is not installed. CODEOWNERS identifies the owner but does not itself block pushes or merges. Dependabot proposes weekly dependency/action updates.
 
-The [release timeline](RELEASE_HISTORY.md) and [source mapping](release-history.json) preserve hosted versions 1–33, including labeled reconstructions. The archive branch is historical, not the current app. More detail lives in [CONTRIBUTING](../CONTRIBUTING.md), [SECURITY](../SECURITY.md) and the [deployment guide](deployment.md).
+The [release timeline](RELEASE_HISTORY.md) and [source mapping](release-history.json) record each successful deployment, including labeled reconstructions for the initial retrospective history. The archive branch is historical, not the current app. More detail lives in [CONTRIBUTING](../CONTRIBUTING.md), [SECURITY](../SECURITY.md) and the [deployment guide](deployment.md).

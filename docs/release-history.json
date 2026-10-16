@@ -483,5 +483,21 @@
       "Restore the starter experience after clearing all tasks without treating filtered-empty views as empty boards.",
       "Fix the animated onboarding browser test to wait for dialog DOM removal before reopening."
     ]
+  },
+  {
+    "n": 34,
+    "title": "Adaptive board layout and refreshed documentation",
+    "tag": "site-v34",
+    "sha": "0301bf97cb9949cabad01c353d4aafabf4d44da2",
+    "target": "9e13ab6488d586fc23b6e2e5f4c94d74425b8fca",
+    "recorded_at": "2026-10-16T03:18:25-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T03:20:31.774965-04:00",
+    "changes": [
+      "Fold the wide-screen day rail into a day bar when a quadrant has more than four tasks in the selected status tab. Search, category, and project filters do not change this layout decision.",
+      "Add the tracked release timeline, source mapping, and README links.",
+      "Refresh the architecture, deployment, and contributor overview for current task controls, data flow, local Dev tools, and CI."
+    ]
   }
 ]

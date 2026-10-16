@@ -1,10 +1,8 @@
 # Clearspace at a glance
 
-A one-page orientation for anyone new to this repository. It explains what the app does, what it is built with, how the pieces fit together, and what runs on every change. For detail, follow the links to the [README](../README.md), [architecture notes](architecture.md), and [deployment notes](deployment.md).
+Clearspace is a browser-local task planner built around the Eisenhower Matrix. This guide explains the product, data flow, development tools and delivery process. See the [README](../README.md) for setup details, [architecture](architecture.md) for implementation details and [deployment](deployment.md) for publishing.
 
-## What it is
-
-Clearspace is a personal [Eisenhower Matrix](https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method): a to-do board split into four quadrants by urgency and importance.
+## What the app does
 
 | Quadrant | Meaning                      |
 | -------- | ---------------------------- |
@@ -13,145 +11,98 @@ Clearspace is a personal [Eisenhower Matrix](https://en.wikipedia.org/wiki/Time_
 | Delegate | Urgent, not important        |
 | Let go   | Neither urgent nor important |
 
-People add tasks (with notes, subtasks, due dates, categories and projects), drag them between quadrants, filter by status or project, and complete them. Everything is saved in the browser's `localStorage`. There are no accounts, no database and no sync: each browser keeps its own board, and JSON export/import is the backup.
+Tasks support notes, subtasks, due dates, categories and optional projects. Users can edit, complete, delete, search, filter and reorder tasks. Desktop drag-and-drop moves tasks between quadrants; phones use the editor's quadrant picker. Subtask completion is independent of its parent. Due dates display as MM/DD/YYYY and remain ISO dates in storage.
 
-The live site is [clearspace-matrix.fastring19.chatgpt.site](https://clearspace-matrix.fastring19.chatgpt.site), hosted on ChatGPT Sites. Deployment is manual and only happens when explicitly requested.
+The date and progress appear in a day bar, or a side rail on screens at least 1360px wide. If a quadrant contains more than four tasks in the selected status tab, the rail folds away to give the board more width. Search and project/category filters do not trigger that change.
+
+On an empty board, the starter card offers Add your first task and Try example tasks. Quadrant FABs and mobile quick-add appear after tasks exist. Cancelling leaves the starter card intact; clearing all tasks restores it. Filtered-empty views keep the add controls. Projects remains in the toolbar, and N opens task creation.
+
+Settings offers themes, text sizes from 90% to 160%, quadrant labels/icons and Help. The seven-step tutorial has a progress bar and optional example tasks at the end. The focus timer is currently hidden; its implementation and tests remain.
 
 ## Tech stack
 
-| Area           | Tools                                                                                  |
-| -------------- | -------------------------------------------------------------------------------------- |
-| Language       | TypeScript (strict mode)                                                               |
-| UI             | React 19, Base UI (selects and dropdowns), Heroicons, Motion (animations)              |
-| Data and rules | Zod schemas for every stored, imported or served shape; pure domain functions          |
-| Build          | Vite 8, plus Node scripts that package the app into a single Worker file               |
-| Hosting        | A small Worker (`worker/handler.mjs`) on ChatGPT Sites that serves the page and assets |
-| Unit tests     | Vitest, React Testing Library, jsdom; Node's built-in test runner for the Worker       |
-| Browser tests  | Playwright (Chromium, desktop and phone viewports), axe-core for accessibility scans   |
-| Code quality   | ESLint 9 (React, Hooks, JSX a11y, typed rules), Prettier, Husky and lint-staged hooks  |
-| CI             | GitHub Actions (`.github/workflows/checks.yml`), Gitleaks, `npm audit`, Dependabot     |
-| Runtime        | Node.js 22.12 or newer locally, Node.js 24 in CI                                       |
+| Area              | Tools                                                                     |
+| ----------------- | ------------------------------------------------------------------------- |
+| App               | React 19, strict TypeScript, Vite 8                                       |
+| Interface         | CSS, Base UI selects, Heroicons, Motion                                   |
+| State and data    | React hooks/reducer, pure domain functions, Zod, localStorage             |
+| Production server | Worker serving the page, favicon and hashed assets                        |
+| Tests             | Vitest, Testing Library, Node test runner, Playwright, axe-core           |
+| Quality and CI    | ESLint, Prettier, Husky, lint-staged, GitHub Actions, Gitleaks, npm audit |
+| Runtime           | Node 22.12 or newer locally; Node 24 in CI                                |
 
-## How it works
-
-The whole app runs in the browser. The server never sees task data; it only hands out the compiled page.
+## How data moves
 
 ```mermaid
 flowchart LR
-  user([Person using the board])
-
-  subgraph browser [Browser]
-    ui["React UI<br/>App.tsx and src/features/*"]
-    hook["useMatrix<br/>state, undo, validation"]
-    domain["Domain rules<br/>src/domain (pure functions + Zod)"]
-    storage[("localStorage<br/>tasks, projects, labels, theme")]
-    backup[/"JSON backup file<br/>export and import"/]
-  end
-
-  subgraph host [ChatGPT Sites]
-    worker["Worker<br/>worker/handler.mjs"]
-  end
-
-  user -->|clicks, drags, types| ui
-  worker -->|"page, JS, CSS<br/>with security headers"| ui
-  ui -->|actions| hook
-  hook -->|"filter, move, merge, metrics"| domain
-  hook <-->|"validated read and write"| storage
-  ui <--> backup
+  server["Sites Worker"] -->|"Page and assets"| ui["React interface"]
+  store[(localStorage)] -->|"Read and validate"| state["useMatrix"]
+  state -->|"Current board"| ui
+  ui -->|"Task or project action"| rules["Pure domain operations"]
+  rules -->|"Next matrix"| state
+  state -->|"Validate and persist"| store
+  ui -->|"Undo previous matrix"| state
+  ui -->|Export| backup["JSON backup"]
+  backup -->|"Parse and merge"| rules
 ```
 
-In words:
+The Worker supplies the app without receiving task data. React reads saved state, validates it and displays the board. Task/project actions compute a new matrix; `useMatrix` validates it, saves one previous snapshot for Undo and persists changes in an effect. Search, filters and progress are derived from state. Appearance preferences use a separate hook.
 
-1. The Worker serves one HTML page plus hashed JS and CSS files, with caching and a strict Content-Security-Policy. It has no API and stores nothing.
-2. React renders the board. Feature folders under `src/features/` own each area: tasks and the matrix board, projects, settings and labels, backup, tutorial, the (currently hidden) focus timer, and local-only Dev tools.
-3. Every change goes through the `useMatrix` hook. It calls pure functions in `src/domain/` to compute the next board, validates it with Zod, keeps one step of Undo, and writes it to `localStorage`.
-4. On load, saved data is read and validated. Unreadable data is left untouched so it can still be exported. Changes in another tab are picked up through storage events.
+Tasks, projects and preferences stay in the current browser and origin. There is no account system, task database or cross-device sync. Tabs on the same origin receive matrix updates through storage events. Incoming updates wait while a dialog is open; a later local save takes precedence.
 
-## Repository map
+Backups contain tasks, subtasks and projects, excluding appearance settings. Import merges compatible data. Unreadable saved data is preserved and can be exported for recovery while edits remain in memory. Reset requires typing `Reset`, clears tasks/projects, retains appearance/labels and supports Undo.
 
-| Path                 | What lives there                                                          |
-| -------------------- | ------------------------------------------------------------------------- |
-| `src/App.tsx`        | Screen composition and cross-feature actions                              |
-| `src/features/`      | One folder per feature (tasks, projects, settings, backup, tutorial, ...) |
-| `src/domain/`        | Typed models, Zod schemas and pure matrix operations                      |
-| `src/lib/`           | Hooks for state, preferences, motion, toasts and dates                    |
-| `src/components/`    | Shared dialogs, popovers, selects, icons and illustrations                |
-| `src/styles.css`     | All styling, themes and responsive layout                                 |
-| `worker/handler.mjs` | The production server                                                     |
-| `scripts/`           | Packaging, bundle-size budget, artifact validation, local preview server  |
-| `tests/worker.mjs`   | Server tests                                                              |
-| `e2e/`               | Playwright browser tests                                                  |
-| `.github/`           | CI workflow, Dependabot, CODEOWNERS and the PR template                   |
+## Finding your way around
 
-Unit tests sit next to the code they cover as `*.test.ts(x)`.
+| Path                                | Responsibility                                                        |
+| ----------------------------------- | --------------------------------------------------------------------- |
+| `src/App.tsx`                       | Screen composition and cross-feature actions                          |
+| `src/features/`                     | Tasks, projects, day panel, settings, backups, tutorial and Dev tools |
+| `src/domain/`                       | Types, validation and pure board operations                           |
+| `src/lib/`                          | Persistence, preferences, date, motion and notification hooks         |
+| `src/components/`, `src/styles.css` | Shared controls, illustrations and responsive styling                 |
+| `worker/`, `scripts/`               | Public server, packaging, artifact checks and preview                 |
+| `e2e/`, `tests/`                    | Browser and Worker tests; component tests sit beside source           |
+| `.github/`                          | Workflow, Dependabot, CODEOWNERS and PR template                      |
 
-## From code change to live site
+```sh
+npm ci                # dependencies and hook installation
+npm run dev           # local Vite server
+npm run dev:mobile    # same-network phone access
+npm run build         # production packaging
+npm run serve:worker  # production preview at 127.0.0.1:8000
+```
+
+The local Dev button adds 24 samples across all quadrants and categories. A random 12 tasks receive two to four subtasks. Cleanup removes marked samples. Production excludes these controls and has no `/dev` mode. Different origins and phones have separate storage.
+
+## Tests and delivery
 
 ```mermaid
 flowchart TD
-  edit["Edit code locally<br/>npm run dev"] --> commit["git commit"]
-  commit --> hook{"Pre-commit hook<br/>lint-staged, typecheck, tests"}
-  hook -->|fails| edit
-  hook -->|passes| push["Push branch / open PR"]
-  push --> ci{"GitHub Actions: Checks<br/>verify, browser, dependencies, secrets"}
-  ci -->|red| edit
-  ci -->|green| review["Owner review (CODEOWNERS)"]
-  review --> merge["Merge to main"]
-  merge --> build["npm run build<br/>Vite + packaging + validation"]
-  build --> publish["Publish to ChatGPT Sites<br/>manual, only on request"]
-  publish --> live(["Live site"])
+  edit["Local development"] --> commit["Commit with enabled hooks"]
+  commit --> push["Push / open PR"]
+  push --> ci["GitHub CI: four jobs"]
+  ci --> review["Review and merge, or authorized direct push"]
+  review --> request{"Explicit deployment request?"}
+  request -->|No| unchanged["Live site unchanged"]
+  request -->|Yes| build["Build selected source and package"]
+  build --> publish["Save Sites version and publish"]
+  publish --> live["Confirm deployment succeeded"]
 ```
 
-### The build
+Pushes run CI; they do not deploy. Normal changes use PR review, while authorized direct pushes also run checks. Publishing separately selects and packages the requested source, saves a Sites version and verifies the result.
 
-`npm run build` runs these steps in order, and any failure stops it:
+| Check          | Coverage                                                                                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `verify`       | Prettier, TypeScript, React/Hooks/accessibility ESLint, component/domain tests, Worker tests and production build |
+| `browser`      | Playwright Chromium desktop and simulated mobile interactions/layouts                                             |
+| `dependencies` | npm audit fails on high/critical vulnerabilities                                                                  |
+| `secrets`      | Gitleaks scans Git history with values redacted                                                                   |
 
-1. `tsc --noEmit` type-checks the project.
-2. `vite build` compiles the React app into `client-dist/`.
-3. `scripts/check-size.mjs` fails if the JavaScript exceeds 200 kB gzipped.
-4. `scripts/build.mjs` packages the page, assets and Worker into `dist/server/index.js`.
-5. `scripts/validate-artifact.mjs` checks the output and confirms Dev tools and sample data are absent from production.
+`npm test` runs Vitest/Testing Library and Worker tests. `npm run test:e2e` runs browser checks. `npm run check` combines formatting, lint, types, tests and build. The current owner workflow leaves tests to GitHub CI. Enabled Husky hooks format/lint staged files and run types/tests; CI checks independently.
 
-Preview the result locally with `npm run serve:worker` at http://127.0.0.1:8000.
+Builds produce `client-dist/`, enforce the JavaScript gzip budget and package `dist/server/index.js`. Hashed JS/CSS remain separate browser requests served by the Worker, with immutable caching; HTML revalidates through an ETag. Artifact checks confirm production excludes Dev tools.
 
-## Tests
+Axe scans report findings without failing CI. Optional screenshots capture images rather than asserting visual baselines. Simulated phones do not replace hardware, screen-reader or motion review. Super-Linter is not installed. CODEOWNERS identifies the owner but does not itself block pushes or merges. Dependabot proposes weekly dependency/action updates.
 
-| Suite            | Command            | What it covers                                                                                                                                                                                   |
-| ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| React and domain | `npm test`         | Vitest + Testing Library on real components: the board and layout, task editor, subtasks, due dates, projects, reset, backup, preferences, undo, storage compatibility, Dev samples, focus timer |
-| Worker           | `npm test`         | `tests/worker.mjs` with Node's test runner: public routes, headers, and that old `/dev` routes return 404                                                                                        |
-| Browser (E2E)    | `npm run test:e2e` | Playwright against the production build in desktop (1280×900) and phone (390×844) viewports: tasks, projects, filters, settings, backup, cross-tab sync, hardening, UX                           |
-| Accessibility    | `npm run test:e2e` | `e2e/a11y.spec.ts` runs axe-core and reports violations without failing the run                                                                                                                  |
-| Visual baselines | manual             | `e2e/screenshots.spec.ts` captures full-page screenshots only when `SHOTS_DIR` is set                                                                                                            |
-
-`npm run check` runs formatting, lint, typecheck, unit tests and the build in one go. Run it before pushing.
-
-## CI/CD
-
-**Pre-commit (local).** Husky runs on every `git commit`: lint-staged formats and lints staged files, then the full typecheck and `npm test` run. A failure blocks the commit.
-
-**GitHub Actions.** One workflow, [Checks](../.github/workflows/checks.yml), runs on every push and on pull requests (opened, updated, reopened, or marked ready). It has four parallel jobs on Ubuntu with Node 24:
-
-| Job            | What it does                                                                   |
-| -------------- | ------------------------------------------------------------------------------ |
-| `verify`       | `npm ci`, Prettier check, typecheck, ESLint (zero warnings), `npm test`, build |
-| `browser`      | Installs Chromium and runs the Playwright suite (`npm run test:e2e`)           |
-| `dependencies` | `npm audit`, failing on high or critical vulnerabilities                       |
-| `secrets`      | Gitleaks scans the full Git history for committed credentials                  |
-
-The workflow has read-only permissions, per-job timeouts, actions pinned to commit hashes, and cancels older runs when a branch gets a new push.
-
-**Dependabot** opens weekly update PRs for npm packages and GitHub Actions.
-
-**Deployment** is not automated. Nothing deploys on push or merge; publishing to ChatGPT Sites is a manual step done only when asked. See [deployment notes](deployment.md).
-
-## Getting started
-
-```sh
-npm ci          # install dependencies and the pre-commit hook
-npm run dev     # start the app at the printed localhost URL
-```
-
-A **Dev** button appears in the header during local development. It adds or removes 24 sample tasks so you have something to look at. It never ships to production.
-
-Next reads: the [README](../README.md) for features and phone testing, [architecture notes](architecture.md) for state and storage details, [CONTRIBUTING](../CONTRIBUTING.md) for the PR workflow, and [SECURITY](../SECURITY.md) before publishing a fork.
+The [release timeline](RELEASE_HISTORY.md) and [source mapping](release-history.json) preserve hosted versions 1–33, including labeled reconstructions. The archive branch is historical, not the current app. More detail lives in [CONTRIBUTING](../CONTRIBUTING.md), [SECURITY](../SECURITY.md) and the [deployment guide](deployment.md).

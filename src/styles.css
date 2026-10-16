@@ -2411,6 +2411,9 @@ button,
 .dialog-actions .push-left {
   margin-right: auto;
 }
+#projectsDialog > form > .btn {
+  margin-top: 12px;
+}
 .project-list {
   margin-top: 20px;
 }

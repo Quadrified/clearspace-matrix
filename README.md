@@ -34,6 +34,8 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 - **Recover and back up.** Undo task changes, export and import JSON backups, or reset all tasks and projects with confirmation. Notifications dismiss after 10 seconds.
 - **Learn as you go.** A first-visit tutorial explains the matrix with examples. Replay it from Settings → Help.
 
+The seven-step Getting Started walkthrough is available on first use and through Help. A progress bar tracks the current step, with Skip tutorial beside the step label and Back/Next below the content.
+
 Progress sits beneath the hero subtitle beside the illustration. In narrow columns, completion stacks above the task counts. On phones, the hero shows the date and progress without the marketing copy or illustration.
 
 The interface uses sage and forest green themes, system body typography, a serif date, custom SVG illustrations, a translucent header, and responsive layouts. The theme switch, sliding task tabs, dropdowns, dialogs, notifications, and task layouts use short, interruptible transitions. Filtering and task changes animate in place. Keyboard interactions stay immediate, and reduced-motion preferences disable movement. Reduced transparency and increased contrast are also supported.

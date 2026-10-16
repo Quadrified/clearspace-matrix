@@ -148,11 +148,31 @@ it('only offers examples at the final tutorial step and does not duplicate them 
   expect(
     screen.queryByRole('button', { name: 'Start with example tasks' }),
   ).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Tutorial step 7' }));
+  for (let step = 1; step < 7; step++) {
+    expect(screen.getByRole('progressbar', { name: 'Tutorial progress' })).toHaveAttribute(
+      'aria-valuenow',
+      String(step),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+  }
+  expect(screen.getByRole('progressbar', { name: 'Tutorial progress' })).toHaveAttribute(
+    'aria-valuenow',
+    '7',
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Start with example tasks' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(4);
   help();
-  fireEvent.click(screen.getByRole('button', { name: 'Tutorial step 7' }));
+  for (let step = 1; step < 7; step++) {
+    expect(screen.getByRole('progressbar', { name: 'Tutorial progress' })).toHaveAttribute(
+      'aria-valuenow',
+      String(step),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+  }
+  expect(screen.getByRole('progressbar', { name: 'Tutorial progress' })).toHaveAttribute(
+    'aria-valuenow',
+    '7',
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Start with example tasks' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(4);
 });

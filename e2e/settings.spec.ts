@@ -122,34 +122,34 @@ test.describe('tutorial', () => {
     await page.getByRole('button', { name: 'Help' }).click();
     const dialog = page.locator('#helpDialog');
     await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAccessibleName('Getting started · 1 of 7');
-    const total = Number(
-      (await dialog.getByRole('heading', { level: 2 }).textContent())!.match(/of (\d+)/)![1],
-    );
+    await expect(dialog).toHaveAccessibleName('Getting Started');
+    const progress = dialog.getByRole('progressbar', { name: 'Tutorial progress' });
+    const total = Number(await progress.getAttribute('aria-valuemax'));
+    await expect(progress).toHaveAttribute('aria-valuenow', '1');
+    const skipBox = (await dialog.getByRole('button', { name: 'Skip tutorial' }).boundingBox())!;
+    const contentBox = (await dialog.locator('#tutorialContent').boundingBox())!;
+    expect(skipBox.y + skipBox.height).toBeLessThanOrEqual(contentBox.y);
+    await expect(dialog.locator('.tutorial-actions button')).toHaveText(['Back', 'Next']);
     expect(total).toBe(7);
     await expect(dialog.locator('#tutorialTitle')).toHaveText('Decide what deserves your time.');
     await expect(dialog.getByRole('button', { name: 'Back' })).toBeDisabled();
     const seen: string[] = [];
     for (let i = 1; i < total; i++) {
       await dialog.getByRole('button', { name: 'Next' }).click();
-      await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-        `Getting started · ${i + 1} of ${total}`,
-      );
+      await expect(progress).toHaveAttribute('aria-valuenow', String(i + 1));
+      await expect(progress).toHaveAttribute('aria-valuetext', `Step ${i + 1} of ${total}`);
       seen.push((await dialog.locator('#tutorialTitle').textContent())!);
     }
     expect(seen.slice(0, 4)).toEqual(['Do first', 'Schedule', 'Delegate', 'Let go']);
     await expect(dialog.getByRole('button', { name: 'Use my own tasks' })).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Start with example tasks' })).toBeVisible();
     await dialog.getByRole('button', { name: 'Back' }).click();
-    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      `Getting started · ${total - 1} of ${total}`,
-    );
-    await dialog.getByRole('button', { name: 'Tutorial step 3' }).click();
+    await expect(progress).toHaveAttribute('aria-valuenow', String(total - 1));
+    for (let i = total - 1; i > 3; i--) {
+      await dialog.getByRole('button', { name: 'Back' }).click();
+    }
     await expect(dialog.locator('#tutorialTitle')).toHaveText('Schedule');
-    await expect(dialog.getByRole('button', { name: 'Tutorial step 3' })).toHaveAttribute(
-      'aria-current',
-      'step',
-    );
+    await expect(progress).toHaveAttribute('aria-valuenow', '3');
     await dialog.getByRole('button', { name: 'Skip tutorial' }).click();
     await expect(dialog).toBeHidden();
     expect((await storedMatrix(page)).tasks).toHaveLength(8);
@@ -159,7 +159,9 @@ test.describe('tutorial', () => {
     await open(page, { matrix: { tasks: [], projects: [] }, tutorialSeen: false });
     const dialog = page.locator('#helpDialog');
     await expect(dialog).toBeVisible({ timeout: 3000 });
-    await dialog.getByRole('button', { name: 'Tutorial step 7' }).click();
+    for (let i = 1; i < 7; i++) {
+      await dialog.getByRole('button', { name: 'Next' }).click();
+    }
     await dialog.getByRole('button', { name: 'Start with example tasks' }).click();
     await expect(dialog).toBeHidden();
     await expect(toast(page)).toContainText('Example tasks added.');

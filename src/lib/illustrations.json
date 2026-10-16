@@ -1,0 +1,221 @@
+{
+  "do": [
+    [
+      "rect",
+      {
+        "x": 64,
+        "y": 19,
+        "width": 66,
+        "height": 78,
+        "rx": 9,
+        "fill": "var(--paper)",
+        "transform": "rotate(-6 97 58)"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m78 42 3 3 5-6M92 41h22m-36 17 3 3 5-6M92 57h17m-31 17 3 3 5-6M92 73h19",
+        "stroke-width": 2.4
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 137,
+        "cy": 33,
+        "r": 20,
+        "fill": "var(--paper)",
+        "stroke": "none"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m139 20-12 16h10l-2 12 13-17h-10Z",
+        "fill": "var(--tint)",
+        "stroke-width": 2
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M42 50h8m-4-4v8m102 20h6m-3-3v6",
+        "opacity": 0.45
+      }
+    ]
+  ],
+  "schedule": [
+    [
+      "rect",
+      {
+        "x": 56,
+        "y": 28,
+        "width": 82,
+        "height": 66,
+        "rx": 9,
+        "fill": "var(--paper)"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M56 46h82M77 21v15m41-15v15",
+        "stroke-width": 2.5
+      }
+    ],
+    [
+      "rect",
+      {
+        "x": 71,
+        "y": 56,
+        "width": 12,
+        "height": 11,
+        "rx": 3,
+        "fill": "var(--tint)",
+        "stroke": "none"
+      }
+    ],
+    [
+      "rect",
+      {
+        "x": 91,
+        "y": 56,
+        "width": 12,
+        "height": 11,
+        "rx": 3,
+        "fill": "var(--tint)",
+        "stroke": "none"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 116,
+        "cy": 76,
+        "r": 12,
+        "fill": "var(--tint)",
+        "stroke": "none"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m110 76 4 4 8-9",
+        "stroke-width": 2
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M151 91V67m0 12c-12 0-17-7-17-14 10 0 17 6 17 14m0-4c0-12 6-18 16-18 0 10-6 18-16 18",
+        "fill": "var(--tint)",
+        "stroke-width": 1.8
+      }
+    ]
+  ],
+  "delegate": [
+    [
+      "path",
+      {
+        "d": "M45 30h54a9 9 0 0 1 9 9v25a9 9 0 0 1-9 9H73L57 85V73H45a9 9 0 0 1-9-9V39a9 9 0 0 1 9-9Z",
+        "fill": "var(--paper)"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 58,
+        "cy": 51,
+        "r": 2.2,
+        "fill": "currentColor",
+        "stroke": "none"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 72,
+        "cy": 51,
+        "r": 2.2,
+        "fill": "currentColor",
+        "stroke": "none"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 86,
+        "cy": 51,
+        "r": 2.2,
+        "fill": "currentColor",
+        "stroke": "none"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M118 62h35a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-8v9l-13-9h-14a8 8 0 0 1-8-8V70a8 8 0 0 1 8-8Z",
+        "fill": "var(--tint)"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m124 78 6 5 10-12",
+        "stroke-width": 2.3
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m133 24 32-9-10 30-6-13-16-8 16 8 16-17",
+        "fill": "var(--paper)",
+        "stroke-width": 1.8
+      }
+    ]
+  ],
+  "eliminate": [
+    [
+      "path",
+      {
+        "d": "M58 69h84l-7 26H65Z",
+        "fill": "var(--paper)"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M73 69c1-16 6-26 15-33m-7 17c-15 1-23-6-24-17 14-1 23 7 24 17m3-9c-1-15 6-23 17-26 3 12-4 23-17 26",
+        "fill": "var(--tint)",
+        "stroke-width": 1.8
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M111 51c-2-12 3-21 13-26 6 11 2 21-13 26m-3 17 7-28",
+        "fill": "var(--tint)",
+        "stroke-width": 1.8
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M143 31h20m-13 8h19M35 62h15",
+        "opacity": 0.4
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 143,
+        "cy": 56,
+        "r": 3,
+        "fill": "currentColor",
+        "opacity": 0.3,
+        "stroke": "none"
+      }
+    ]
+  ]
+}

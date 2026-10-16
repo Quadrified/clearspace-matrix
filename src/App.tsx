@@ -173,7 +173,6 @@ export default function App() {
                   day: 'numeric',
                 })}
               </time>
-              <span className="eyebrow">A little clarity. A little breathing room.</span>
               <h1 id="matrixTitle">Make room for what matters.</h1>
               <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
             </div>

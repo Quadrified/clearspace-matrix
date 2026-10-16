@@ -2468,8 +2468,13 @@ button,
   display: grid;
   gap: 2px;
 }
-.first-task span {
-  color: var(--muted);
+.first-task h2 {
+  margin: 0;
+  max-width: 44ch;
+  font-size: calc(1rem * var(--text-scale, 1));
+  font-weight: 550;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 .first-task-actions {
   display: flex;
@@ -2646,54 +2651,18 @@ button,
   color: #fff;
 }
 
-/* Header: the date leads on the left, a tilted axis board sits on the right. */
+/* A quiet illustrated workspace balances the header on larger screens. */
 .intro .date {
   display: block;
   margin-bottom: 14px;
   font-size: calc(1.5rem * var(--text-scale, 1));
   text-align: left;
 }
-.intro .eyebrow {
-  display: block;
-}
 .axis-board {
   flex-shrink: 0;
-  width: clamp(130px, 17vw, 200px);
+  width: clamp(180px, 23vw, 260px);
   height: auto;
   overflow: visible;
-}
-.axis-card {
-  fill: #fffdf6;
-  stroke: color-mix(in srgb, var(--ink) 14%, transparent);
-  stroke-width: 1.5;
-}
-.axis-grid path {
-  stroke: #fffdf6;
-  stroke-width: 1;
-  opacity: 0.55;
-  fill: none;
-}
-.axis-lines path {
-  stroke: #1f3a2a;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  fill: none;
-}
-.axis-lines path:nth-child(2) {
-  fill: #1f3a2a;
-  stroke-width: 1;
-}
-.axis-dots circle {
-  fill: #fffdf6;
-}
-.night .axis-card {
-  fill: #25322b;
-}
-.night .axis-lines path {
-  stroke: #e8f1e9;
-}
-.night .axis-lines path:nth-child(2) {
-  fill: #e8f1e9;
 }
 @media (max-width: 760px) {
   .axis-board {
@@ -2727,14 +2696,16 @@ button,
   background: #ffffff38;
 }
 
-/* One Filters button opens a panel; applied filters stay visible as chips. */
+/* Compact search and filters sit together at the right edge. */
 .filters {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
   align-items: stretch;
 }
 .filters .search {
-  flex: 1;
+  flex: 0 1 260px;
+  width: 260px;
   grid-column: auto;
 }
 .filters-control {
@@ -2884,6 +2855,10 @@ button,
   background: #fff;
 }
 @media (max-width: 760px) {
+  .filters .search {
+    flex: 1;
+    width: auto;
+  }
   .filters-button {
     min-height: 44px;
   }

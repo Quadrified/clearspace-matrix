@@ -4,8 +4,7 @@ export function FirstTask({ onAdd, onExamples }: { onAdd: () => void; onExamples
   return (
     <section className="first-task" aria-label="Get started">
       <div>
-        <strong>Nothing here yet.</strong>
-        <span>Write down the first thing on your mind, or look around with a few examples.</span>
+        <h2>Write down the first thing on your mind, or explore a few examples.</h2>
       </div>
       <div className="first-task-actions">
         <button type="button" className="btn primary" onClick={onAdd}>

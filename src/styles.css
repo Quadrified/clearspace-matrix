@@ -71,6 +71,7 @@ textarea {
   min-width: 0;
 }
 button:focus-visible,
+a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
@@ -909,7 +910,8 @@ div.field {
   border-color: var(--green);
   box-shadow: 0 0 0 1px var(--green);
 }
-#settingsButton {
+#settingsButton,
+.repo-link {
   width: 40px;
   height: 40px;
   border: 1px solid var(--line);
@@ -1660,6 +1662,16 @@ div.field {
 .theme-toggle[data-keyboard] .theme-thumb {
   transition: none;
 }
+/* The repo link is an anchor, so it needs the button resets spelled out. */
+.repo-link {
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The filled mark reads heavier than outline icons, so it sits a size smaller. */
+.repo-link svg {
+  width: 18px;
+  height: 18px;
+}
 #settingsButton svg {
   width: 20px;
   height: 20px;
@@ -2126,6 +2138,7 @@ button,
   .tabs button,
   .search-clear,
   #settingsButton,
+  .repo-link,
   .dialog-top > .iconbtn,
   .toast button,
   .qhead .label-edit {

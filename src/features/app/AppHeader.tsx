@@ -1,4 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
+import { GitHubLink } from '../../components/GitHubLink';
 import { Icon } from '../../components/Icon';
 import { Popover } from '../../components/Popover';
 import { ThemeToggle } from '../../components/ThemeToggle';
@@ -45,6 +46,7 @@ export function AppHeader({
         {devTools}
         {/* <FocusTimer tasks={matrix.tasks} notify={show} /> */}
         <ThemeToggle night={prefs.night} onToggle={prefs.toggleNight} />
+        <GitHubLink />
         <div className="settings-control">
           <button
             id="settingsButton"

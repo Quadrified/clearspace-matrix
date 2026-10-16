@@ -12,14 +12,13 @@ import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
 import { Icon } from './components/Icon';
-import { AxisBoard } from './components/AxisBoard';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
 import { Toolbar } from './features/app/Toolbar';
 import { AppFooter } from './features/app/AppFooter';
 import { useBackup } from './features/backup/useBackup';
 import { FirstTask } from './features/tasks/FirstTask';
-import { TaskOverview } from './features/tasks/TaskOverview';
+import { DayPanel } from './features/app/DayPanel';
 import { MatrixBoard } from './features/tasks/MatrixBoard';
 import { TaskEditor } from './features/tasks/TaskEditor';
 import { ProjectsDialog } from './features/projects/ProjectsDialog';
@@ -169,52 +168,40 @@ export default function App() {
           onHelp={() => openDialog('tutorial')}
           storageError={storageError}
         />
-        <main>
-          <section className="intro">
-            <div className="intro-copy">
-              <time className="date">
-                {new Date(today + 'T12:00:00').toLocaleDateString(undefined, {
-                  weekday: 'long',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-              <h1 id="matrixTitle">Make room for what matters.</h1>
-              <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
-              {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
-            </div>
-            <AxisBoard />
-          </section>
-          {matrix.tasks.length === 0 && (
-            <FirstTask
-              onAdd={() => openTask()}
-              onExamples={() => change(addExamples, 'Example tasks added.')}
+        <main className="workspace">
+          <DayPanel today={today} summary={summary} hasTasks={matrix.tasks.length > 0} />
+          <div className="board-column">
+            {matrix.tasks.length === 0 && (
+              <FirstTask
+                onAdd={() => openTask()}
+                onExamples={() => change(addExamples, 'Example tasks added.')}
+              />
+            )}
+            <Toolbar
+              filters={filters}
+              projectFilter={projectFilter}
+              projects={matrix.projects}
+              filter={filter}
+              counts={counts}
+              resultCount={resultCount}
+              onClearFilters={clearFilters}
+              searchRef={searchRef}
+              onAddTask={() => openTask()}
+              onProjects={() => openDialog('projects')}
             />
-          )}
-          <Toolbar
-            filters={filters}
-            projectFilter={projectFilter}
-            projects={matrix.projects}
-            filter={filter}
-            counts={counts}
-            resultCount={resultCount}
-            onClearFilters={clearFilters}
-            searchRef={searchRef}
-            onAddTask={() => openTask()}
-            onProjects={() => openDialog('projects')}
-          />
-          <MatrixBoard
-            matrix={matrix}
-            labels={prefs.labels}
-            filters={boardFilters}
-            today={today}
-            onAdd={openTask}
-            onEdit={editTask}
-            onLabels={openLabels}
-            onToggle={updateTask}
-            onToggleSubtask={updateSubtask}
-            onMove={moveTaskTo}
-          />
+            <MatrixBoard
+              matrix={matrix}
+              labels={prefs.labels}
+              filters={boardFilters}
+              today={today}
+              onAdd={openTask}
+              onEdit={editTask}
+              onLabels={openLabels}
+              onToggle={updateTask}
+              onToggleSubtask={updateSubtask}
+              onMove={moveTaskTo}
+            />
+          </div>
         </main>
         <AppFooter
           importRef={importRef}

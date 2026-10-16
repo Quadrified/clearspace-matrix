@@ -114,11 +114,11 @@ test('phones get a floating add button and a bottom-sheet filter panel', async (
   await expect(editorDialog(page)).toBeVisible();
 });
 
-for (const width of [390, 900, 1440]) {
+for (const width of [390, 900, 1280, 1440]) {
   for (const theme of ['light', 'night'] as const) {
     for (const size of [90, 125, 160]) {
       for (const populated of [false, true]) {
-        test(`hero layout at ${width}px, ${theme}, ${size}%, ${populated ? 'populated' : 'empty'}`, async ({
+        test(`day panel at ${width}px, ${theme}, ${size}%, ${populated ? 'populated' : 'empty'}`, async ({
           page,
           isMobile,
         }) => {
@@ -129,54 +129,45 @@ for (const width of [390, 900, 1440]) {
             theme,
             size,
           });
-          const hero = page.locator('.intro');
-          const copy = page.locator('.intro-copy');
+          const day = page.locator('.day');
           const overview = page.getByRole('region', { name: 'Task overview' });
-          const art = page.locator('.axis-board');
-          const heroBox = (await hero.boundingBox())!;
-          const copyBox = (await copy.boundingBox())!;
-          const dateBox = (await hero.locator('.date').boundingBox())!;
+          const art = day.locator('.axis-board');
+          const dayBox = (await day.boundingBox())!;
+          const dateBox = (await day.locator('.date').boundingBox())!;
+          const artBox = (await art.boundingBox())!;
+          const board = (await page.locator('.board-column').boundingBox())!;
           await expect(overview).toHaveCount(populated ? 1 : 0);
-          expect(copyBox.x).toBeGreaterThanOrEqual(heroBox.x);
-          expect(copyBox.x + copyBox.width).toBeLessThanOrEqual(heroBox.x + heroBox.width + 1);
+          await expect(art).toHaveAttribute('aria-hidden', 'true');
+          expect(artBox.x + artBox.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
 
-          if (width <= 760) {
-            await expect(art).toBeHidden();
-            await expect(page.locator('#matrixSubtitle')).toBeHidden();
+          if (width >= 1360) {
+            // A side rail: the day sits beside the board and the board starts at the top.
+            expect(dayBox.x + dayBox.width).toBeLessThanOrEqual(board.x);
+            expect(Math.abs(board.y - dayBox.y)).toBeLessThan(1);
+            expect(artBox.y).toBeGreaterThan(dateBox.y + dateBox.height);
+            await expect(page.locator('#matrixSubtitle')).toBeVisible();
           } else {
-            const artBox = (await art.boundingBox())!;
-            expect(artBox.x).toBeGreaterThanOrEqual(copyBox.x + copyBox.width);
-            expect(artBox.x + artBox.width).toBeLessThanOrEqual(heroBox.x + heroBox.width + 1);
-            expect(artBox.width).toBeLessThanOrEqual(360);
+            // A single line above the board, with a small illustration beside the date.
+            expect(board.y).toBeGreaterThanOrEqual(dayBox.y + dayBox.height);
+            expect(artBox.x).toBeGreaterThanOrEqual(dateBox.x + dateBox.width);
             expect(
-              Math.abs(copyBox.y + copyBox.height / 2 - artBox.y - artBox.height / 2),
-            ).toBeLessThan(1);
+              Math.abs(artBox.y + artBox.height / 2 - dateBox.y - dateBox.height / 2),
+            ).toBeLessThan(4);
+            expect(artBox.width).toBeLessThanOrEqual(56 * (size / 100) + 1);
+            await expect(page.locator('#matrixSubtitle')).toBeHidden();
           }
 
           if (populated) {
-            await expect(copy.locator('.overview')).toHaveCount(1);
-            const progressBox = (await overview.boundingBox())!;
-            const above =
-              width <= 760 ? dateBox : (await page.locator('#matrixSubtitle').boundingBox())!;
-            expect(progressBox.y - above.y - above.height).toBeCloseTo(width <= 760 ? 16 : 24, 0);
-            expect(progressBox.width).toBeCloseTo(copyBox.width, 0);
-            const completion = (await overview.locator('.overview-completion').boundingBox())!;
-            const counts = await overview.locator('.overview-stat').all();
-            for (const count of counts) {
-              const box = (await count.boundingBox())!;
-              expect(box.x + box.width).toBeLessThanOrEqual(progressBox.x + progressBox.width + 1);
-              if (copyBox.width < 560) {
-                expect(box.y).toBeGreaterThanOrEqual(completion.y + completion.height);
-              } else {
-                expect(box.x).toBeGreaterThanOrEqual(completion.x + completion.width);
-              }
-            }
-            expect(await overview.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+            const box = (await overview.boundingBox())!;
+            expect(box.x + box.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
           } else {
-            await expect(hero.locator('.first-task')).toHaveCount(0);
             const prompt = (await page.locator('.first-task').boundingBox())!;
-            expect(prompt.y).toBeGreaterThanOrEqual(heroBox.y + heroBox.height);
-            expect(prompt.width).toBeCloseTo(heroBox.width, 0);
+            expect(prompt.x).toBeGreaterThanOrEqual(board.x);
+          }
+          if (width <= 1200 && size <= 100) {
+            // The quadrants are on the first screen, not pushed below a hero.
+            const matrix = (await page.locator('.matrix').boundingBox())!;
+            expect(matrix.y).toBeLessThan(populated ? 420 : 600);
           }
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),

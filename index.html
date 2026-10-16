@@ -17,6 +17,22 @@
     <title>Clearspace · Eisenhower Matrix</title>
   </head>
   <body>
+    <!-- Apply the saved theme before first paint so dark mode never flashes light. -->
+    <script>
+      try {
+        var saved = localStorage.getItem('clearspace.theme');
+        var dark = saved ? saved === 'night' : matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) {
+          document.body.classList.add('night');
+          document.documentElement.style.colorScheme = 'dark';
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+            meta.content = '#12271e';
+          });
+        }
+      } catch (e) {
+        /* Storage can be blocked; the app falls back to light. */
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

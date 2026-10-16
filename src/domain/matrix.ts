@@ -1,6 +1,6 @@
 import { matrixSchema, taskSchema, emptyMatrix } from './models';
 import type { Matrix, Task, Filters, QuadrantId } from './models';
-import { z } from 'zod';
+import * as z from 'zod/mini';
 export const MATRIX_KEY = 'clearspace.matrix.v1';
 export function parseStoredMatrix(raw: string | null): Matrix {
   if (!raw) return structuredClone(emptyMatrix);
@@ -48,22 +48,18 @@ export function localDate(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 export function visibleTasks(state: Matrix, q: QuadrantId, f: Filters) {
+  const projectNames = new Map(state.projects.map((p) => [p.id, p.name]));
+  const search = f.search.toLowerCase();
   const tasks = state.tasks.filter(
     (t) =>
       t.q === q &&
       (f.status === 'all' || (f.status === 'done' ? t.done : !t.done)) &&
       (!f.category || t.category === f.category) &&
       (!f.project || (f.project === '__none' ? !t.projectId : t.projectId === f.project)) &&
-      [
-        t.title,
-        t.notes,
-        t.owner,
-        t.category,
-        state.projects.find((p) => p.id === t.projectId)?.name ?? '',
-      ]
+      [t.title, t.notes, t.owner, t.category, projectNames.get(t.projectId ?? '') ?? '']
         .join(' ')
         .toLowerCase()
-        .includes(f.search.toLowerCase()),
+        .includes(search),
   );
   return tasks.sort((a, b) => {
     if (f.status === 'all') {

@@ -3,8 +3,9 @@ import { defaultLabels, labelsSchema, quadrants } from '../domain/models';
 import type { Labels } from '../domain/models';
 export function readLabels(): Labels {
   try {
-    const raw = JSON.parse(localStorage.getItem('clearspace.labels.v1') ?? 'null');
-    const parsed = labelsSchema.safeParse(raw?.quadrants ?? raw);
+    const raw = JSON.parse(localStorage.getItem('clearspace.labels.v1') ?? 'null') as unknown;
+    const saved = raw as { quadrants?: unknown } | null;
+    const parsed = labelsSchema.safeParse(saved?.quadrants ?? raw);
     if (!parsed.success) return structuredClone(defaultLabels);
     const old = [
       'Handle what needs you now.',
@@ -27,9 +28,20 @@ function get(key: string, fallback: string) {
     return fallback;
   }
 }
+function systemPrefersDark() {
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } catch {
+    return false;
+  }
+}
+function readNight() {
+  const saved = get('clearspace.theme', '');
+  return saved ? saved === 'night' : systemPrefersDark();
+}
 export function usePreferences(notify: (s: string) => void) {
   const [labels, setLabels] = useState(readLabels);
-  const [night, setNight] = useState(() => get('clearspace.theme', 'light') === 'night');
+  const [night, setNight] = useState(readNight);
   const [size, setSize] = useState(() => {
     const n = Number(get('clearspace.fontSize.v1', '100'));
     return Number.isFinite(n) ? Math.max(90, Math.min(160, n)) : 100;

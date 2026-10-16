@@ -42,15 +42,16 @@ export default function DevTools({ matrix, change, notify }: Props) {
             <button
               className="btn"
               disabled={!matrix.tasks.some((task) => task.isDevSample)}
-              onClick={() =>
+              onClick={() => {
                 change(
                   (current) => ({
                     ...current,
                     tasks: current.tasks.filter((task) => !task.isDevSample),
                   }),
                   'Dev sample tasks removed.',
-                )
-              }
+                );
+                setOpen(false);
+              }}
             >
               Remove Dev samples
             </button>

@@ -15,6 +15,9 @@
   --glass: rgba(244, 246, 239, 0.9);
   --shadow: 0 3px 18px #24482d0a;
   --out: cubic-bezier(0.23, 1, 0.32, 1);
+  --check-border: #aaaab1;
+  --search-focus: #5496d8;
+  --search-focus-glow: #5496d815;
   font:
     100%/1.5 -apple-system,
     BlinkMacSystemFont,
@@ -42,7 +45,7 @@ body {
   overscroll-behavior: none;
   background: var(--bg);
   color: var(--ink);
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   -webkit-font-smoothing: antialiased;
 }
 button,
@@ -151,13 +154,13 @@ header:after {
   gap: 2px;
 }
 .brand-name {
-  font-size: calc(27px * var(--text-scale, 1));
+  font-size: calc(1.6875rem * var(--text-scale, 1));
   font-weight: 650;
   line-height: 1.1;
   letter-spacing: -0.8px;
 }
 .brand-tagline {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
   letter-spacing: 0.1px;
 }
@@ -181,7 +184,7 @@ header:after {
   border: 1px solid var(--line);
   background: var(--paper);
   padding: 9px 13px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .iconbtn {
@@ -213,7 +216,7 @@ header:after {
 }
 .hint,
 .quiet {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   line-height: 1.6;
 }
@@ -229,7 +232,7 @@ header:after {
   flex: 1;
 }
 .eyebrow {
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -237,7 +240,7 @@ header:after {
 }
 h1,
 .intro #matrixTitle {
-  font-size: calc(40px * var(--text-scale, 1));
+  font-size: calc(2.5rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -1.7px;
   line-height: 1.12;
@@ -246,7 +249,7 @@ h1,
   overflow-wrap: anywhere;
 }
 .intro p {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   color: var(--muted);
   margin: 0;
 }
@@ -259,7 +262,7 @@ h1,
 }
 .date {
   font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  font-size: calc(32px * var(--text-scale, 1));
+  font-size: calc(2rem * var(--text-scale, 1));
   font-weight: 500;
   color: var(--accent-ink);
   line-height: 1.15;
@@ -314,13 +317,13 @@ h1,
   border-radius: 8px;
   background: transparent;
   text-align: left;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 .add-menu kbd {
   margin-left: auto;
   font: inherit;
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .toolbar {
   display: grid;
@@ -354,7 +357,7 @@ h1,
   border-radius: 7px;
   color: var(--muted);
   padding: 7px 17px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   min-height: 34px;
   line-height: 1.4;
 }
@@ -383,8 +386,8 @@ h1,
   color: var(--muted);
 }
 .search:focus-within {
-  border-color: #5496d8;
-  box-shadow: 0 0 0 3px #5496d815;
+  border-color: var(--search-focus);
+  box-shadow: 0 0 0 3px var(--search-focus-glow);
 }
 .search input {
   flex: 1;
@@ -393,7 +396,7 @@ h1,
   outline: none;
   background: transparent;
   padding: 11px 0;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   color: var(--ink);
 }
 .search-clear {
@@ -414,7 +417,7 @@ h1,
   border-radius: 10px;
   background-color: var(--paper);
   padding: 10px 12px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   text-overflow: ellipsis;
 }
 .matrix-shell {
@@ -424,7 +427,7 @@ h1,
 .axis-top,
 .axis-side,
 .axis-mobile {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 1.4px;
@@ -537,7 +540,7 @@ h1,
   height: 20px;
 }
 .qhead h2 {
-  font-size: calc(19px * var(--text-scale, 1));
+  font-size: calc(1.1875rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.4px;
@@ -545,7 +548,7 @@ h1,
   overflow-wrap: anywhere;
 }
 .qhead p {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   color: var(--muted);
   margin: 0;
@@ -568,7 +571,7 @@ h1,
   color: var(--ink);
   border: 1px solid #88888818;
   border-radius: 9px;
-  font-size: calc(17px * var(--text-scale, 1));
+  font-size: calc(1.0625rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.3;
   font-variant-numeric: tabular-nums;
@@ -605,12 +608,12 @@ h1,
 .empty strong {
   font-weight: 500;
   color: var(--muted);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
 }
 .empty > span {
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .task {
   display: flex;
@@ -636,7 +639,7 @@ h1,
 }
 .task-title {
   display: block;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   font-weight: 500;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -651,7 +654,7 @@ h1,
   max-height: 3em;
   margin-top: 4px;
   color: var(--muted);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   white-space: pre-line;
   overflow-wrap: anywhere;
@@ -666,7 +669,7 @@ h1,
   width: 19px;
   height: 19px;
   margin: 3px 0 0;
-  border: 1.5px solid #aaaab1;
+  border: 1.5px solid var(--check-border);
   border-radius: 50%;
   cursor: pointer;
   background: transparent;
@@ -687,7 +690,7 @@ h1,
   gap: 7px;
   margin-top: 6px;
   color: var(--muted);
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .tag {
@@ -737,7 +740,7 @@ footer {
   gap: 10px;
   padding: 23px 0 calc(28px + env(safe-area-inset-bottom, 0px));
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
 }
 .bottom-note {
   display: flex;
@@ -755,7 +758,7 @@ footer > div {
   gap: 3px;
 }
 footer .iconbtn {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 36px;
 }
@@ -785,7 +788,7 @@ dialog::backdrop {
 }
 dialog h2 {
   font-family: inherit;
-  font-size: calc(25px * var(--text-scale, 1));
+  font-size: calc(1.5625rem * var(--text-scale, 1));
   line-height: 1.2;
   letter-spacing: -0.7px;
   font-weight: 600;
@@ -806,10 +809,11 @@ dialog h2 {
   background: var(--soft);
   color: var(--muted);
 }
-label.field {
+label.field,
+div.field {
   display: block;
   margin: 16px 0 6px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 500;
   line-height: 1.5;
 }
@@ -824,7 +828,7 @@ label.field {
   color: var(--ink);
   border-radius: 10px;
   padding: 11px 12px;
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   line-height: 1.4;
   min-height: 43px;
 }
@@ -862,7 +866,7 @@ label.field {
   min-width: 0;
 }
 .project-picker .btn {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   flex-shrink: 0;
 }
 .project-row {
@@ -879,7 +883,7 @@ label.field {
   border: 1px solid var(--line);
   padding: 10px;
   border-radius: 9px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 #labelsDialog {
   width: min(550px, calc(100% - 32px));
@@ -894,7 +898,7 @@ label.field {
   padding-top: 0;
 }
 .label-section h3 {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   font-weight: 550;
   color: var(--muted);
   margin: 0;
@@ -912,7 +916,7 @@ label.field {
 .icon-picker-trigger {
   min-height: 43px;
   flex-shrink: 0;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
 }
 .icon-options {
   display: grid;
@@ -960,7 +964,7 @@ label.field {
   padding: 17px;
 }
 .settings-menu h2 {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.4;
   margin: 0 0 12px;
@@ -976,7 +980,7 @@ label.field {
   justify-content: flex-start;
   text-align: left;
   padding: 10px 11px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .settings-actions svg {
@@ -990,7 +994,7 @@ label.field {
   padding-top: 14px;
   margin-top: 12px;
   border-top: 1px solid var(--line);
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
 }
 .font-controls {
   display: flex;
@@ -1011,7 +1015,7 @@ label.field {
 }
 .settings-menu #saveState {
   display: block;
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   line-height: 1.5;
   color: var(--muted);
   border-top: 1px solid var(--line);
@@ -1022,7 +1026,7 @@ label.field {
   white-space: normal;
 }
 #focusRemaining {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1033,7 +1037,7 @@ label.field {
   color: white;
 }
 .timer-number {
-  font-size: clamp(42px, 14vw, calc(66px * var(--text-scale, 1)));
+  font-size: clamp(42px, 14vw, calc(4.125rem * var(--text-scale, 1)));
   font-weight: 300;
   font-variant-numeric: tabular-nums;
   letter-spacing: -2px;
@@ -1050,7 +1054,7 @@ label.field {
 .edit-time-link {
   display: flex;
   margin: 0 auto 18px;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 34px;
   text-decoration: underline;
@@ -1064,7 +1068,7 @@ label.field {
   margin: 24px 0;
 }
 #clockInput {
-  font-size: calc(30px * var(--text-scale, 1));
+  font-size: calc(1.875rem * var(--text-scale, 1));
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
@@ -1076,12 +1080,12 @@ label.field {
   min-height: 220px;
 }
 #tutorialTitle {
-  font-size: calc(27px * var(--text-scale, 1));
+  font-size: calc(1.6875rem * var(--text-scale, 1));
   line-height: 1.2;
   margin: 17px 0 12px;
 }
 #tutorialDescription {
-  font-size: calc(16px * var(--text-scale, 1));
+  font-size: calc(1rem * var(--text-scale, 1));
   line-height: 1.65;
   color: var(--muted);
 }
@@ -1104,7 +1108,7 @@ label.field {
   border: 1px solid var(--line);
   border-radius: 13px;
   background: var(--bg);
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.65;
 }
 .tutorial-example strong {
@@ -1145,7 +1149,7 @@ label.field {
   min-height: 44px;
 }
 .tutorial-actions .iconbtn {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   min-height: 44px;
 }
@@ -1167,7 +1171,7 @@ label.field {
   border-radius: 13px;
   box-shadow: 0 8px 25px #00000020;
   z-index: 30;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
   max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   width: max-content;
@@ -1301,9 +1305,9 @@ label.field {
   }
   .intro #matrixTitle {
     font-size: clamp(
-      calc(30px * var(--text-scale, 1)),
+      calc(1.875rem * var(--text-scale, 1)),
       calc(3.5vw * var(--text-scale, 1)),
-      calc(40px * var(--text-scale, 1))
+      calc(2.5rem * var(--text-scale, 1))
     );
   }
   .intro {
@@ -1323,10 +1327,10 @@ label.field {
     padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
   }
   .brand-name {
-    font-size: calc(24px * var(--text-scale, 1));
+    font-size: calc(1.5rem * var(--text-scale, 1));
   }
   .brand-tagline {
-    font-size: calc(12px * var(--text-scale, 1));
+    font-size: calc(0.75rem * var(--text-scale, 1));
   }
   .logo {
     padding: 10px;
@@ -1349,16 +1353,16 @@ label.field {
     gap: 12px;
   }
   .intro #matrixTitle {
-    font-size: calc(32px * var(--text-scale, 1));
+    font-size: calc(2rem * var(--text-scale, 1));
     line-height: 1.15;
     letter-spacing: -1px;
   }
   .eyebrow {
-    font-size: calc(11px * var(--text-scale, 1));
+    font-size: calc(0.6875rem * var(--text-scale, 1));
     letter-spacing: 1px;
   }
   .date {
-    font-size: calc(26px * var(--text-scale, 1));
+    font-size: calc(1.625rem * var(--text-scale, 1));
     text-align: left;
     flex: 1;
     min-width: 0;
@@ -1371,7 +1375,7 @@ label.field {
     min-width: 0;
   }
   .stat strong {
-    font-size: calc(25px * var(--text-scale, 1));
+    font-size: calc(1.5625rem * var(--text-scale, 1));
   }
   .toolbar {
     margin: 22px 0 18px;
@@ -1410,10 +1414,10 @@ label.field {
     gap: 10px;
   }
   .qhead h2 {
-    font-size: calc(18px * var(--text-scale, 1));
+    font-size: calc(1.125rem * var(--text-scale, 1));
   }
   .qhead p {
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
   }
   .label-edit {
     width: 40px;
@@ -1429,7 +1433,7 @@ label.field {
     bottom: 15px;
   }
   .task-title {
-    font-size: calc(16px * var(--text-scale, 1));
+    font-size: calc(1rem * var(--text-scale, 1));
   }
   .check {
     width: 22px;
@@ -1440,7 +1444,7 @@ label.field {
   .field .select-trigger,
   .field textarea,
   .project-row input {
-    font-size: max(16px, calc(16px * var(--text-scale, 1)));
+    font-size: max(16px, calc(1rem * var(--text-scale, 1)));
     min-height: 44px;
   }
   .row {
@@ -1475,7 +1479,7 @@ label.field {
   }
   footer .iconbtn {
     min-height: 44px;
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
   }
 }
 @media (max-width: 430px) {
@@ -1490,7 +1494,7 @@ label.field {
     max-width: 100%;
   }
   .brand-name {
-    font-size: calc(23px * var(--text-scale, 1));
+    font-size: calc(1.4375rem * var(--text-scale, 1));
   }
   .header-right {
     margin-left: auto;
@@ -1498,16 +1502,16 @@ label.field {
     max-width: 100%;
   }
   #focusButton {
-    font-size: calc(14px * var(--text-scale, 1));
+    font-size: calc(0.875rem * var(--text-scale, 1));
     padding: 9px;
     flex-wrap: wrap;
     max-width: 185px;
   }
   #focusRemaining {
-    font-size: calc(13px * var(--text-scale, 1));
+    font-size: calc(0.8125rem * var(--text-scale, 1));
   }
   .intro #matrixTitle {
-    font-size: calc(30px * var(--text-scale, 1));
+    font-size: calc(1.875rem * var(--text-scale, 1));
   }
   .intro > div:last-child {
     flex-wrap: wrap;
@@ -1540,7 +1544,7 @@ label.field {
     padding: 11px 13px;
   }
   .stat span {
-    font-size: calc(13px * var(--text-scale, 1));
+    font-size: calc(0.8125rem * var(--text-scale, 1));
   }
   .settings-menu {
     width: 280px;
@@ -1563,7 +1567,7 @@ label.field {
     );
   }
   dialog h2 {
-    font-size: calc(24px * var(--text-scale, 1));
+    font-size: calc(1.5rem * var(--text-scale, 1));
   }
   .tutorial-actions {
     flex-wrap: wrap;
@@ -1659,7 +1663,7 @@ label.field {
   transition: none !important;
 }
 #devButton {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   color: var(--muted);
   border-style: dashed;
 }
@@ -1784,7 +1788,7 @@ label.field {
   stroke-linecap: round;
 }
 .completion-ring strong {
-  font-size: calc(18px * var(--text-scale, 1));
+  font-size: calc(1.125rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -0.6px;
   font-variant-numeric: tabular-nums;
@@ -1801,12 +1805,12 @@ label.field {
   min-width: 0;
 }
 .completion-copy > span {
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 550;
 }
 .completion-copy > small {
   color: var(--muted);
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   overflow-wrap: anywhere;
 }
 .overview-stat {
@@ -1831,7 +1835,7 @@ label.field {
   color: var(--muted);
 }
 .overview-stat strong {
-  font-size: calc(25px * var(--text-scale, 1));
+  font-size: calc(1.5625rem * var(--text-scale, 1));
   font-weight: 600;
   letter-spacing: -0.6px;
   line-height: 1.2;
@@ -1839,7 +1843,7 @@ label.field {
   overflow-wrap: anywhere;
 }
 .overview-stat-label {
-  font-size: calc(13px * var(--text-scale, 1));
+  font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
 }
 @media (max-width: 760px) {
@@ -1953,7 +1957,7 @@ label.field {
   background: var(--paper);
   color: var(--ink);
   text-align: left;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
 }
 .select-value {
   min-width: 0;
@@ -2005,7 +2009,7 @@ label.field {
   min-height: 44px;
   padding: 11px 12px;
   border-radius: 8px;
-  font-size: calc(15px * var(--text-scale, 1));
+  font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
   overflow-wrap: anywhere;
   cursor: pointer;
@@ -2056,7 +2060,7 @@ label.field {
   background: var(--selected);
   color: var(--ink);
   pointer-events: none;
-  font-size: calc(14px * var(--text-scale, 1));
+  font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.4;
 }
 .quadrant-celebration > span:nth-child(2) {
@@ -2079,7 +2083,7 @@ label.field {
 }
 .celebration-caption {
   display: block;
-  font-size: calc(12px * var(--text-scale, 1));
+  font-size: calc(0.75rem * var(--text-scale, 1));
   color: var(--muted);
 }
 .celebration-sparkles {
@@ -2132,8 +2136,8 @@ label.field {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--selected);
-  box-shadow: 0 1px 4px #10281d0d;
+  background: var(--green);
+  box-shadow: 0 2px 6px #10281d33;
 }
 .tab-label {
   position: relative;
@@ -2330,7 +2334,7 @@ button,
   .select-trigger,
   .field .select-trigger,
   .select-item {
-    font-size: max(16px, calc(16px * var(--text-scale, 1)));
+    font-size: max(16px, calc(1rem * var(--text-scale, 1)));
   }
   button,
   .btn,
@@ -2401,5 +2405,496 @@ button,
     background: var(--paper);
     border-radius: 18px 18px 0 0;
     pointer-events: none;
+  }
+}
+.dialog-actions .push-left {
+  margin-right: auto;
+}
+.project-list {
+  margin-top: 20px;
+}
+
+/* UX pass: one-click add, tab counts, filter summary, first-run prompt, editor helpers. */
+.add-control {
+  display: flex;
+  gap: 8px;
+}
+#newTask,
+#projectsButton {
+  gap: 7px;
+  padding: 9px 14px;
+}
+#projectsButton svg {
+  width: 18px;
+  height: 18px;
+}
+.tab-count {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-variant-numeric: tabular-nums;
+}
+.tabs button {
+  position: relative;
+}
+.tabs .tab-label,
+.tabs .tab-count {
+  position: relative;
+}
+.filter-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+.first-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+.first-task > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+.first-task span {
+  color: var(--muted);
+}
+.first-task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.overdue {
+  font-weight: 650;
+}
+.overdue-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  vertical-align: -2px;
+}
+.task[draggable='true'] {
+  cursor: grab;
+}
+.task[draggable='true']::after {
+  content: '⋮⋮';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--muted);
+  opacity: 0;
+  letter-spacing: -2px;
+  pointer-events: none;
+}
+.task {
+  position: relative;
+}
+.task[draggable='true']:hover::after,
+.task[draggable='true']:focus-within::after {
+  opacity: 0.55;
+}
+.task-fab:focus-visible,
+.task-fab:hover {
+  box-shadow: 0 3px 12px #00000026;
+}
+.backup-state.due {
+  color: #b43b32;
+  font-weight: 600;
+}
+.settings-shortcuts {
+  margin: 0;
+  padding: 0 2px;
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+}
+.settings-shortcuts kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font: inherit;
+}
+.date-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--muted);
+  padding: 4px 11px;
+  min-height: 30px;
+  font: inherit;
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.chip:hover {
+  color: var(--ink);
+  border-color: var(--muted);
+}
+.field small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.field textarea {
+  field-sizing: content;
+  min-height: 5rem;
+  max-height: 14rem;
+}
+.btn.danger.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+#tutorialSkip {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+}
+.add-floating {
+  display: none;
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 6px 18px #00000033;
+}
+.add-floating svg {
+  width: 26px;
+  height: 26px;
+}
+@media (max-width: 760px) {
+  .toolbar-status {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .toolbar-status .add-control {
+    margin-left: 0;
+  }
+  .add-control > .btn {
+    flex: 1;
+    min-height: 44px;
+  }
+  .tabs {
+    width: 100%;
+  }
+  .tabs button {
+    padding: 8px 6px;
+  }
+  .axis-rail {
+    display: none;
+  }
+  .task::after {
+    display: none;
+  }
+  .task-fab {
+    right: 15px;
+    bottom: 15px;
+  }
+  .add-floating {
+    display: grid;
+  }
+  footer {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* The active status tab is a solid, high-contrast pill so the current view is obvious. */
+.tabs .active,
+.tabs .active .tab-label {
+  color: #fff;
+  font-weight: 650;
+}
+.tabs .active .tab-count {
+  background: #ffffff33;
+  color: #fff;
+}
+
+/* Keep the destructive confirm readable on hover: the generic .btn hover would turn it pale. */
+.btn.reset-confirm:hover,
+.btn.reset-confirm:focus-visible {
+  background: #8f2c25;
+  border-color: #8f2c25;
+  color: #fff;
+}
+.night .btn.reset-confirm:hover,
+.night .btn.reset-confirm:focus-visible {
+  background: #a84a3f;
+  border-color: #a84a3f;
+  color: #fff;
+}
+
+/* Header: the date leads on the left, a tilted axis board sits on the right. */
+.intro .date {
+  display: block;
+  margin-bottom: 14px;
+  font-size: calc(1.5rem * var(--text-scale, 1));
+  text-align: left;
+}
+.intro .eyebrow {
+  display: block;
+}
+.axis-board {
+  flex-shrink: 0;
+  width: clamp(130px, 17vw, 200px);
+  height: auto;
+  overflow: visible;
+}
+.axis-card {
+  fill: #fffdf6;
+  stroke: color-mix(in srgb, var(--ink) 14%, transparent);
+  stroke-width: 1.5;
+}
+.axis-grid path {
+  stroke: #fffdf6;
+  stroke-width: 1;
+  opacity: 0.55;
+  fill: none;
+}
+.axis-lines path {
+  stroke: #1f3a2a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+}
+.axis-lines path:nth-child(2) {
+  fill: #1f3a2a;
+  stroke-width: 1;
+}
+.axis-dots circle {
+  fill: #fffdf6;
+}
+.night .axis-card {
+  fill: #25322b;
+}
+.night .axis-lines path {
+  stroke: #e8f1e9;
+}
+.night .axis-lines path:nth-child(2) {
+  fill: #e8f1e9;
+}
+@media (max-width: 760px) {
+  .axis-board {
+    display: none;
+  }
+  .intro .date {
+    flex: none;
+    font-size: calc(1.375rem * var(--text-scale, 1));
+    margin-bottom: 10px;
+  }
+}
+
+/* Status tabs: a saturated active pill against quieter inactive tabs. */
+.tabs {
+  background: color-mix(in srgb, var(--ink) 9%, var(--bg));
+  padding: 4px;
+}
+.tabs button {
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+.tab-indicator {
+  background: linear-gradient(180deg, #2f8456, #1f6240);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, #2f8456 30%, transparent),
+    0 3px 8px #1f624055;
+}
+.night .tab-indicator {
+  background: linear-gradient(180deg, #46a572, #2f7f55);
+}
+.tabs .active .tab-count {
+  background: #ffffff38;
+}
+
+/* One Filters button opens a panel; applied filters stay visible as chips. */
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.filters .search {
+  flex: 1;
+  grid-column: auto;
+}
+.filters-control {
+  position: relative;
+  flex-shrink: 0;
+}
+.filters-button {
+  gap: 8px;
+  min-height: 44px;
+  height: 100%;
+  padding: 0 16px;
+  font-weight: 550;
+}
+.filters-button svg {
+  width: 19px;
+  height: 19px;
+}
+.filters-button.on {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.filters-badge {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: #fff;
+  color: var(--green);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+.filters-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  width: min(440px, calc(100vw - 32px));
+  padding: 18px 18px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #1d33231f;
+}
+.filters-section {
+  margin-bottom: 16px;
+}
+.filters-section h2 {
+  margin: 0 0 8px;
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.filters-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.opt {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.opt[aria-pressed='true'],
+.filters-seg [aria-pressed='true'] {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 650;
+}
+.filters-seg {
+  display: flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--soft);
+}
+.filters-seg button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.filters-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.link-button {
+  border: 0;
+  background: transparent;
+  padding: 6px 4px;
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.applied-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border-radius: 99px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+.applied-chip b {
+  color: var(--muted);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+}
+.applied-chip button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.applied-chip svg {
+  width: 14px;
+  height: 14px;
+}
+.night .filters-badge {
+  background: #fff;
+}
+@media (max-width: 760px) {
+  .filters-button {
+    min-height: 44px;
+  }
+  .filters-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: auto;
+    max-height: 80dvh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -12px 40px #1d332333;
   }
 }

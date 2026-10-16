@@ -27,6 +27,8 @@ import {
   TagIcon,
   FolderIcon,
   ChevronDownIcon,
+  ExclamationTriangleIcon,
+  AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 import type { IconName } from '../domain/models';
 
@@ -59,6 +61,8 @@ const icons = {
   tag: TagIcon,
   folder: FolderIcon,
   chevron: ChevronDownIcon,
+  alert: ExclamationTriangleIcon,
+  filter: AdjustmentsHorizontalIcon,
 } as const;
 
 export const iconLabels: Record<IconName, string> = {
@@ -79,7 +83,9 @@ export const iconLabels: Record<IconName, string> = {
   clock: 'Clock',
 };
 
-export function Icon({ name, ...props }: { name: string } & SVGProps<SVGSVGElement>) {
-  const Component = icons[name as keyof typeof icons] ?? TagIcon;
+export type IconKey = keyof typeof icons;
+
+export function Icon({ name, ...props }: { name: IconKey } & SVGProps<SVGSVGElement>) {
+  const Component = icons[name];
   return <Component aria-hidden="true" focusable="false" {...props} />;
 }

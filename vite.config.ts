@@ -6,6 +6,8 @@ export default defineConfig({
     outDir: 'client-dist',
     assetsInlineLimit: 1000000,
     cssCodeSplit: false,
+    // The size budget in scripts/check-size.mjs is the real guard; this only quiets Vite's 500 kB default.
+    chunkSizeWarningLimit: 600,
     rollupOptions: { output: { inlineDynamicImports: true } },
   },
   test: {

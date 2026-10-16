@@ -7,11 +7,13 @@ export function Toast({
   undo,
   onUndo,
   onDismiss,
+  onPause,
 }: {
   text: string;
   undo: boolean;
   onUndo: () => void;
   onDismiss: () => void;
+  onPause?: (paused: boolean) => void;
 }) {
   const present = useIsPresent();
   const { instant } = useMotionSettings();
@@ -20,6 +22,10 @@ export function Toast({
       id="toast"
       className="toast"
       role="status"
+      onPointerEnter={() => onPause?.(true)}
+      onPointerLeave={() => onPause?.(false)}
+      onFocus={() => onPause?.(true)}
+      onBlur={() => onPause?.(false)}
       aria-hidden={!present || undefined}
       inert={!present || undefined}
       initial={instant ? false : { opacity: 0, transform: 'translate(-50%, 6px)' }}

@@ -57,7 +57,11 @@ export function LabelsDialog({
                 </button>
               </div>
               {picker === q.id && (
-                <div className="icon-options" aria-label={`Icons for ${draft[q.id].title}`}>
+                <div
+                  className="icon-options"
+                  role="group"
+                  aria-label={`Icons for ${draft[q.id].title}`}
+                >
                   {iconNames.map((icon) => (
                     <button
                       type="button"
@@ -93,8 +97,7 @@ export function LabelsDialog({
         <div className="dialog-actions">
           <button
             type="button"
-            className="btn"
-            style={{ marginRight: 'auto' }}
+            className="btn push-left"
             onClick={() => setDraft(structuredClone(defaultLabels))}
           >
             Use defaults

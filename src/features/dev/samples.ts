@@ -1,3 +1,4 @@
+import { newId } from '../../lib/id';
 import { quadrantIds } from '../../domain/models';
 import type { Matrix, Task, QuadrantId } from '../../domain/models';
 
@@ -68,11 +69,11 @@ export function createSamples(today: string): Matrix {
   for (const q of quadrantIds)
     groups[q].forEach(([title, category, p, days], i) =>
       tasks.push({
-        id: 'dev-task-' + crypto.randomUUID(),
+        id: 'dev-task-' + newId(),
         title,
         q,
         category,
-        projectId: projects[p].id,
+        projectId: projects[p]!.id,
         done: i === 5 && q !== 'do',
         notes:
           i % 2 === 0

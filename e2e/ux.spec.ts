@@ -69,7 +69,7 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
     await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
     await page.getByRole('button', { name: 'Add your first task' }).click();
     await editorDialog(page).getByRole('button', { name: 'Cancel' }).click();
-    await expect(editorDialog(page)).toBeHidden();
+    await expect(editorDialog(page)).toHaveCount(0);
     await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
     await page.getByRole('button', { name: 'Add your first task' }).click();
     await editorDialog(page).getByPlaceholder('What do you need to do?').fill('My first task');

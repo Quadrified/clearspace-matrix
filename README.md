@@ -10,6 +10,8 @@
 
 _Design overview using the project's own SVG artwork._
 
+New here? Start with the [project overview](docs/OVERVIEW.md) for the tech stack, a flowchart of how the app works, and what tests and CI run.
+
 ## A calmer way to plan
 
 Get tasks out of your head and give each one a place. Clearspace combines the four-quadrant matrix with projects and due dates. It saves your work in your browser. The React frontend keeps tasks on your device. A small server adapter serves the public app. Dev tools are available only in the local development server.
@@ -164,6 +166,7 @@ ESLint checks React rendering rules, Hooks, JSX accessibility, and unhandled or 
 GitHub Actions runs on pushes and pull request creation, updates, reopening, and readiness for review:
 
 - `verify`: formatting, ESLint with zero warnings, types, tests, and production packaging validation.
+- `browser`: Playwright runs the real-browser suite in Chromium at desktop and phone sizes.
 - `secrets`: Gitleaks scans Git history with credentials redacted.
 - `dependencies`: npm audits all dependencies and fails on high or critical vulnerabilities.
 

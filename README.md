@@ -24,6 +24,7 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 ## What you can do
 
 - **Manage tasks.** Create, edit, complete, delete, and move tasks between quadrants. Add notes, categories, projects, and optional due dates. In All tasks, completed tasks sit below active tasks, and newly completed tasks move to the bottom of their quadrant.
+- **Break tasks into steps.** Add up to 100 subtasks in the task editor, rename or remove steps, and check them off in the editor or directly on the card. Cards show every step and a completed count. Press Enter in a step to add another. Empty steps are skipped when saving. Completing subtasks does not automatically complete their parent task. Subtasks are searchable, saved locally, included in backups, and support Undo.
 - **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
 - **Focus timer, paused for now.** The control is temporarily hidden. Its implementation and tests remain in the codebase for later use.
 - **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%. At 100%, body text is 16px, desktop task titles are 15px, and task notes are 14px.

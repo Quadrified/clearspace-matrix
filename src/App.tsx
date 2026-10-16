@@ -1,3 +1,4 @@
+import { toggleSubtask } from './domain/matrix';
 import { ResetBoardDialog } from './features/settings/ResetBoardDialog';
 import { useHeaderHeight } from './lib/useHeaderHeight';
 import { Toast } from './components/Toast';
@@ -136,6 +137,11 @@ export default function App() {
     (id: string) => change((matrix) => toggleTask(matrix, id, Date.now()), 'Task updated.'),
     [change],
   );
+  const updateSubtask = useCallback(
+    (taskId: string, subtaskId: string) =>
+      change((matrix) => toggleSubtask(matrix, taskId, subtaskId), 'Subtask updated.'),
+    [change],
+  );
   const editTask = useCallback((t: Task) => openTask(t.q, t), [openTask]);
   const openLabels = useCallback(() => openDialog('labels'), [openDialog]);
   const moveTaskTo = useCallback(
@@ -206,6 +212,7 @@ export default function App() {
             onEdit={editTask}
             onLabels={openLabels}
             onToggle={updateTask}
+            onToggleSubtask={updateSubtask}
             onMove={moveTaskTo}
           />
         </main>

@@ -2985,3 +2985,108 @@ button,
     height: auto;
   }
 }
+
+/* Subtasks remain separate controls from the parent task's edit button. */
+.task.has-subtasks {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 11px;
+  row-gap: 8px;
+}
+.subtask-progress {
+  display: block;
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+  margin-top: 6px;
+}
+.card-subtasks {
+  grid-column: 2;
+  min-width: 0;
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--line);
+}
+.card-subtask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 5px 0;
+  cursor: pointer;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  line-height: 1.5;
+}
+.card-subtask .check {
+  flex-shrink: 0;
+  margin: 0;
+}
+.card-subtask > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.card-subtask.is-done > span {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.subtasks-editor {
+  min-width: 0;
+  margin: 12px 0 24px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.subtasks-editor legend {
+  padding: 0 6px;
+  font-weight: 550;
+}
+.subtasks-editor legend small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.subtasks-editor .hint {
+  margin: 0 0 12px;
+}
+.subtasks-editor ol {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+.subtasks-editor li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 6px;
+}
+.subtask-check-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.subtask-check-target .check {
+  margin: 0;
+}
+.subtasks-editor input:not([type='checkbox']) {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: max(16px, calc(1rem * var(--text-scale, 1)));
+}
+.subtasks-editor li > .iconbtn {
+  width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
+@media (any-pointer: coarse) {
+  .subtasks-editor li {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+}

@@ -19,6 +19,7 @@ export function MatrixBoard({
   onEdit,
   onLabels,
   onToggle,
+  onToggleSubtask,
   onMove,
 }: {
   matrix: Matrix;
@@ -29,6 +30,7 @@ export function MatrixBoard({
   onEdit: (t: Task) => void;
   onLabels: () => void;
   onToggle: (id: string) => void;
+  onToggleSubtask: (taskId: string, subtaskId: string) => void;
   onMove: (id: string, q: QuadrantId, before?: string) => void;
 }) {
   const [celebrations, setCelebrations] = useState<
@@ -185,6 +187,7 @@ export function MatrixBoard({
                           isLastActive={!task.done && activeCount[q.id] === 1}
                           onEdit={onEdit}
                           onToggle={onToggle}
+                          onToggleSubtask={onToggleSubtask}
                           onCelebrate={onCelebrate}
                           onDragStart={onDragStart}
                           onDragEnd={finishDrag}

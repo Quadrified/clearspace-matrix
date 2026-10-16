@@ -56,7 +56,14 @@ export function visibleTasks(state: Matrix, q: QuadrantId, f: Filters) {
       (f.status === 'all' || (f.status === 'done' ? t.done : !t.done)) &&
       (!f.category || t.category === f.category) &&
       (!f.project || (f.project === '__none' ? !t.projectId : t.projectId === f.project)) &&
-      [t.title, t.notes, t.owner, t.category, projectNames.get(t.projectId ?? '') ?? '']
+      [
+        t.title,
+        t.notes,
+        t.owner,
+        t.category,
+        projectNames.get(t.projectId ?? '') ?? '',
+        ...(t.subtasks ?? []).map((item) => item.title),
+      ]
         .join(' ')
         .toLowerCase()
         .includes(search),
@@ -84,6 +91,23 @@ export function toggleTask(state: Matrix, id: string, now: number): Matrix {
     tasks: task.done
       ? state.tasks.map((task) => (task.id === id ? updated : task))
       : [...state.tasks.filter((task) => task.id !== id), updated],
+  };
+}
+export function toggleSubtask(state: Matrix, taskId: string, subtaskId: string): Matrix {
+  const task = state.tasks.find((item) => item.id === taskId);
+  if (!task?.subtasks?.some((item) => item.id === subtaskId)) return state;
+  return {
+    ...state,
+    tasks: state.tasks.map((item) =>
+      item.id === taskId
+        ? {
+            ...item,
+            subtasks: item.subtasks?.map((subtask) =>
+              subtask.id === subtaskId ? { ...subtask, done: !subtask.done } : subtask,
+            ),
+          }
+        : item,
+    ),
   };
 }
 export function stats(state: Matrix, today = localDate()) {

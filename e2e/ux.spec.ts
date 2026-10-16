@@ -123,6 +123,8 @@ test('the date leads on the left and the axis board sits on the right', async ({
   const date = await page.locator('.intro .date').boundingBox();
   const mascot = await page.locator('.intro .axis-board').boundingBox();
   expect(date!.x).toBeLessThan(100);
-  expect(mascot!.x).toBeGreaterThan(900);
+  const hero = await page.locator('.intro').boundingBox();
+  expect(mascot!.x).toBeGreaterThanOrEqual(date!.x + date!.width);
+  expect(mascot!.x + mascot!.width).toBeLessThanOrEqual(hero!.x + hero!.width + 1);
   await expect(page.locator('.axis-board')).toHaveAttribute('aria-hidden', 'true');
 });

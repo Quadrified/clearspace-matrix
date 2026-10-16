@@ -86,10 +86,9 @@ it('reset confirms and clears tasks and projects, and Undo restores both', () =>
   expect(screen.queryByText('Task to clear')).not.toBeInTheDocument();
   expect(screen.queryByRole('option', { name: 'Keep me' })).not.toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!)).toMatchObject({ tasks: [], projects: [] });
-  expect(screen.getByRole('progressbar', { name: 'Completion' })).toHaveAttribute(
-    'aria-valuenow',
-    '0',
-  );
+  // With no tasks left the overview gives way to the first-task prompt.
+  expect(screen.queryByRole('progressbar', { name: 'Completion' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Add your first task' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getByText('Task to clear')).toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects[0].name).toBe('Keep me');
@@ -195,7 +194,8 @@ it('offers a persistent appearance switch directly in the header', () => {
 it('lets dropdown typeahead use shortcut letters without opening another feature', async () => {
   const user = userEvent.setup();
   render(<App />);
-  screen.getByRole('combobox', { name: 'Filter by category' }).focus();
+  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  screen.getByRole('combobox', { name: 'Category' }).focus();
   await user.keyboard('{ArrowDown}');
   await screen.findByRole('listbox');
   await user.keyboard('p');
@@ -203,10 +203,10 @@ it('lets dropdown typeahead use shortcut letters without opening another feature
     expect(screen.getByRole('option', { name: 'Personal' })).toHaveAttribute('data-highlighted'),
   );
   await user.keyboard('{Enter}');
-  expect(screen.getByRole('combobox', { name: 'Filter by category' })).toHaveTextContent(
-    'Personal',
-  );
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(screen.getByRole('combobox', { name: 'Category' })).toHaveTextContent('Personal');
+  expect(
+    screen.queryByRole('dialog', { name: 'A place for your projects.' }),
+  ).not.toBeInTheDocument();
 });
 
 it('keeps browser chrome and native controls aligned with the app theme rather than the OS', () => {

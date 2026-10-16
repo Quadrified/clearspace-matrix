@@ -166,5 +166,21 @@ export async function choose(
   await page.getByRole('option', { name: option, exact: true }).click();
 }
 
-export const editorDialog = (page: Page) =>
-  page.getByRole('dialog', { name: 'A little less on your mind.' });
+export const editorDialog = (page: Page) => page.getByRole('dialog', { name: /^(New|Edit) task$/ });
+
+/** Opens the Filters panel if it is closed. */
+export async function openFilters(page: Page) {
+  const button = page.getByRole('button', { name: /^Filters/ });
+  if ((await button.getAttribute('aria-expanded')) !== 'true') await button.click();
+  await expect(page.locator('#filtersPanel')).toBeVisible();
+}
+
+/** Toggles one chip (or sort option) in the Filters panel, e.g. pickFilter(page, 'Category', 'Work'). */
+export async function pickFilter(page: Page, group: string, option: string) {
+  await openFilters(page);
+  await page
+    .locator('#filtersPanel')
+    .getByRole('group', { name: group, exact: true })
+    .getByRole('button', { name: option, exact: true })
+    .click();
+}

@@ -28,9 +28,20 @@ function get(key: string, fallback: string) {
     return fallback;
   }
 }
+function systemPrefersDark() {
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } catch {
+    return false;
+  }
+}
+function readNight() {
+  const saved = get('clearspace.theme', '');
+  return saved ? saved === 'night' : systemPrefersDark();
+}
 export function usePreferences(notify: (s: string) => void) {
   const [labels, setLabels] = useState(readLabels);
-  const [night, setNight] = useState(() => get('clearspace.theme', 'light') === 'night');
+  const [night, setNight] = useState(readNight);
   const [size, setSize] = useState(() => {
     const n = Number(get('clearspace.fontSize.v1', '100'));
     return Number.isFinite(n) ? Math.max(90, Math.min(160, n)) : 100;

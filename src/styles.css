@@ -2136,8 +2136,8 @@ div.field {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--selected);
-  box-shadow: 0 1px 4px #10281d0d;
+  background: var(--green);
+  box-shadow: 0 2px 6px #10281d33;
 }
 .tab-label {
   position: relative;
@@ -2412,4 +2412,489 @@ button,
 }
 .project-list {
   margin-top: 20px;
+}
+
+/* UX pass: one-click add, tab counts, filter summary, first-run prompt, editor helpers. */
+.add-control {
+  display: flex;
+  gap: 8px;
+}
+#newTask,
+#projectsButton {
+  gap: 7px;
+  padding: 9px 14px;
+}
+#projectsButton svg {
+  width: 18px;
+  height: 18px;
+}
+.tab-count {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-variant-numeric: tabular-nums;
+}
+.tabs button {
+  position: relative;
+}
+.tabs .tab-label,
+.tabs .tab-count {
+  position: relative;
+}
+.filter-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+.first-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+.first-task > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+.first-task span {
+  color: var(--muted);
+}
+.first-task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.overdue {
+  font-weight: 650;
+}
+.overdue-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+  vertical-align: -2px;
+}
+.task[draggable='true'] {
+  cursor: grab;
+}
+.task[draggable='true']::after {
+  content: '⋮⋮';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--muted);
+  opacity: 0;
+  letter-spacing: -2px;
+  pointer-events: none;
+}
+.task {
+  position: relative;
+}
+.task[draggable='true']:hover::after,
+.task[draggable='true']:focus-within::after {
+  opacity: 0.55;
+}
+.task-fab:focus-visible,
+.task-fab:hover {
+  box-shadow: 0 3px 12px #00000026;
+}
+.backup-state.due {
+  color: #b43b32;
+  font-weight: 600;
+}
+.settings-shortcuts {
+  margin: 0;
+  padding: 0 2px;
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+}
+.settings-shortcuts kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font: inherit;
+}
+.date-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--muted);
+  padding: 4px 11px;
+  min-height: 30px;
+  font: inherit;
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.chip:hover {
+  color: var(--ink);
+  border-color: var(--muted);
+}
+.field small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.field textarea {
+  field-sizing: content;
+  min-height: 5rem;
+  max-height: 14rem;
+}
+.btn.danger.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+#tutorialSkip {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+}
+.add-floating {
+  display: none;
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 6px 18px #00000033;
+}
+.add-floating svg {
+  width: 26px;
+  height: 26px;
+}
+@media (max-width: 760px) {
+  .toolbar-status {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .toolbar-status .add-control {
+    margin-left: 0;
+  }
+  .add-control > .btn {
+    flex: 1;
+    min-height: 44px;
+  }
+  .tabs {
+    width: 100%;
+  }
+  .tabs button {
+    padding: 8px 6px;
+  }
+  .axis-rail {
+    display: none;
+  }
+  .task::after {
+    display: none;
+  }
+  .task-fab {
+    right: 15px;
+    bottom: 15px;
+  }
+  .add-floating {
+    display: grid;
+  }
+  footer {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* The active status tab is a solid, high-contrast pill so the current view is obvious. */
+.tabs .active,
+.tabs .active .tab-label {
+  color: #fff;
+  font-weight: 650;
+}
+.tabs .active .tab-count {
+  background: #ffffff33;
+  color: #fff;
+}
+
+/* Keep the destructive confirm readable on hover: the generic .btn hover would turn it pale. */
+.btn.reset-confirm:hover,
+.btn.reset-confirm:focus-visible {
+  background: #8f2c25;
+  border-color: #8f2c25;
+  color: #fff;
+}
+.night .btn.reset-confirm:hover,
+.night .btn.reset-confirm:focus-visible {
+  background: #a84a3f;
+  border-color: #a84a3f;
+  color: #fff;
+}
+
+/* Header: the date leads on the left, a tilted axis board sits on the right. */
+.intro .date {
+  display: block;
+  margin-bottom: 14px;
+  font-size: calc(1.5rem * var(--text-scale, 1));
+  text-align: left;
+}
+.intro .eyebrow {
+  display: block;
+}
+.axis-board {
+  flex-shrink: 0;
+  width: clamp(130px, 17vw, 200px);
+  height: auto;
+  overflow: visible;
+}
+.axis-card {
+  fill: #fffdf6;
+  stroke: color-mix(in srgb, var(--ink) 14%, transparent);
+  stroke-width: 1.5;
+}
+.axis-grid path {
+  stroke: #fffdf6;
+  stroke-width: 1;
+  opacity: 0.55;
+  fill: none;
+}
+.axis-lines path {
+  stroke: #1f3a2a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+}
+.axis-lines path:nth-child(2) {
+  fill: #1f3a2a;
+  stroke-width: 1;
+}
+.axis-dots circle {
+  fill: #fffdf6;
+}
+.night .axis-card {
+  fill: #25322b;
+}
+.night .axis-lines path {
+  stroke: #e8f1e9;
+}
+.night .axis-lines path:nth-child(2) {
+  fill: #e8f1e9;
+}
+@media (max-width: 760px) {
+  .axis-board {
+    display: none;
+  }
+  .intro .date {
+    flex: none;
+    font-size: calc(1.375rem * var(--text-scale, 1));
+    margin-bottom: 10px;
+  }
+}
+
+/* Status tabs: a saturated active pill against quieter inactive tabs. */
+.tabs {
+  background: color-mix(in srgb, var(--ink) 9%, var(--bg));
+  padding: 4px;
+}
+.tabs button {
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+.tab-indicator {
+  background: linear-gradient(180deg, #2f8456, #1f6240);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, #2f8456 30%, transparent),
+    0 3px 8px #1f624055;
+}
+.night .tab-indicator {
+  background: linear-gradient(180deg, #46a572, #2f7f55);
+}
+.tabs .active .tab-count {
+  background: #ffffff38;
+}
+
+/* One Filters button opens a panel; applied filters stay visible as chips. */
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.filters .search {
+  flex: 1;
+  grid-column: auto;
+}
+.filters-control {
+  position: relative;
+  flex-shrink: 0;
+}
+.filters-button {
+  gap: 8px;
+  min-height: 44px;
+  height: 100%;
+  padding: 0 16px;
+  font-weight: 550;
+}
+.filters-button svg {
+  width: 19px;
+  height: 19px;
+}
+.filters-button.on {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.filters-badge {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: #fff;
+  color: var(--green);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+.filters-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  width: min(440px, calc(100vw - 32px));
+  padding: 18px 18px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #1d33231f;
+}
+.filters-section {
+  margin-bottom: 16px;
+}
+.filters-section h2 {
+  margin: 0 0 8px;
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.filters-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.opt {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.opt[aria-pressed='true'],
+.filters-seg [aria-pressed='true'] {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 650;
+}
+.filters-seg {
+  display: flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--soft);
+}
+.filters-seg button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.filters-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.link-button {
+  border: 0;
+  background: transparent;
+  padding: 6px 4px;
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.applied-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border-radius: 99px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+.applied-chip b {
+  color: var(--muted);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+}
+.applied-chip button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.applied-chip svg {
+  width: 14px;
+  height: 14px;
+}
+.night .filters-badge {
+  background: #fff;
+}
+@media (max-width: 760px) {
+  .filters-button {
+    min-height: 44px;
+  }
+  .filters-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: auto;
+    max-height: 80dvh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -12px 40px #1d332333;
+  }
 }

@@ -96,6 +96,8 @@ export function MatrixBoard({
     () => quadrants.map((q) => visibleTasks(matrix, q.id, filters)),
     [matrix, filters],
   );
+  const filtered = !!(filters.search || filters.category || filters.project);
+  const hasTasks = (q: QuadrantId) => matrix.tasks.some((t) => t.q === q);
   const activeCount = useMemo(() => {
     const counts: Record<QuadrantId, number> = { do: 0, schedule: 0, delegate: 0, eliminate: 0 };
     for (const t of matrix.tasks) if (!t.done) counts[t.q]++;
@@ -201,12 +203,11 @@ export function MatrixBoard({
                       >
                         <EmptyIllustration q={q.id} />
                         <strong>
-                          {filters.search || filters.category || filters.project
+                          {filtered
                             ? 'No matching tasks.'
                             : filters.status === 'done'
                               ? 'Nothing completed here yet.'
-                              : filters.status === 'active' &&
-                                  matrix.tasks.some((t) => t.q === q.id)
+                              : filters.status === 'active' && hasTasks(q.id)
                                 ? 'All clear here.'
                                 : q.empty}
                         </strong>

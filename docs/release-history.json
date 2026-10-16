@@ -499,5 +499,20 @@
       "Add the tracked release timeline, source mapping, and README links.",
       "Refresh the architecture, deployment, and contributor overview for current task controls, data flow, local Dev tools, and CI."
     ]
+  },
+  {
+    "n": 35,
+    "title": "First-task prompt in the day panel",
+    "tag": "site-v35",
+    "sha": "2a5cfc661a6416f43828a7004c1d7b71a1e33487",
+    "target": "3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0",
+    "recorded_at": "2026-10-16T11:42:18-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T11:43:02.558493-04:00",
+    "changes": [
+      "Move the first-task prompt into the day panel on an empty board, keeping the starter actions together with the day information.",
+      "Update responsive styling, README guidance, and browser assertions for the empty-board layout."
+    ]
   }
 ]

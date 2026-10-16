@@ -313,9 +313,18 @@ Recorded source time: 2026-10-16T03:18:25-04:00. Tag: `site-v34`. Deployment suc
 
 Sites source: `0301bf97cb9949cabad01c353d4aafabf4d44da2`. GitHub target: `9e13ab6488d586fc23b6e2e5f4c94d74425b8fca`. Reconstructed: False.
 
-## Available GitHub history through 9e13ab6
+## Hosted version 35: First-task prompt in the day panel
 
-This is the reachable Git history through `9e13ab6`, the main commit deployed as hosted version 34, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-16T11:42:18-04:00. Tag: `site-v35`. Deployment succeeded; record updated 2026-10-16T11:43:02.558493-04:00 (America/Toronto).
+
+- Move the first-task prompt into the day panel on an empty board, keeping the starter actions together with the day information.
+- Update responsive styling, README guidance, and browser assertions for the empty-board layout.
+
+Sites source: `2a5cfc661a6416f43828a7004c1d7b71a1e33487`. GitHub target: `3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0`. Reconstructed: False.
+
+## Available GitHub history through 3de57a5
+
+This is the reachable Git history through `3de57a5`, the main commit deployed as hosted version 35, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -380,3 +389,5 @@ This is the reachable Git history through `9e13ab6`, the main commit deployed as
 - 2026-10-16T03:04:22-04:00 [12fc693](https://github.com/Quadrified/clearspace-matrix/commit/12fc69310e65329d6211a4333c5b1464649cbda3): Drop the wide-screen side rail when a quadrant is crowded
 - 2026-10-16T03:10:51-04:00 [178598d](https://github.com/Quadrified/clearspace-matrix/commit/178598d86e8303e39a95532c9bc7c05e6d3bcc09): Document the 33 hosted releases and source history
 - 2026-10-16T03:17:16-04:00 [9e13ab6](https://github.com/Quadrified/clearspace-matrix/commit/9e13ab6488d586fc23b6e2e5f4c94d74425b8fca): Refresh architecture, deployment, and contributor overview
+- 2026-10-16T03:24:40-04:00 [1984589](https://github.com/Quadrified/clearspace-matrix/commit/19845894dd1f51003960946f7e430d85a1bacb79): Record hosted release 34 and require logs after every deployment
+- 2026-10-16T11:09:58-04:00 [3de57a5](https://github.com/Quadrified/clearspace-matrix/commit/3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0): Move the first-task prompt into the day panel on an empty board

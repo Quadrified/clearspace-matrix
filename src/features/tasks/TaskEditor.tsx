@@ -1,3 +1,4 @@
+import { DueDateInput } from './DueDateInput';
 import { SubtasksEditor } from './SubtasksEditor';
 import { newId } from '../../lib/id';
 import { SoftPresence } from '../../components/SoftPresence';
@@ -123,12 +124,7 @@ export function TaskEditor({
               <label htmlFor="taskDue">
                 Due date <small>(optional)</small>
               </label>
-              <input
-                id="taskDue"
-                type="date"
-                value={draft.due}
-                onChange={(e) => patch('due', e.target.value)}
-              />
+              <DueDateInput value={draft.due} onChange={(value) => patch('due', value)} />
               <div className="date-chips" role="group" aria-label="Pick a day">
                 {(
                   [

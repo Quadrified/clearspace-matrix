@@ -186,8 +186,8 @@ test('reset board clears tasks and projects, then Undo from the toast restores t
 }) => {
   await open(page, { matrix: seedMatrix });
   await openSettings(page);
-  await page.getByRole('button', { name: 'Reset board' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Reset your board?' });
+  await page.getByRole('button', { name: 'Need a fresh start?' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Need a fresh start?' });
   await expect(dialog).toContainText(
     'All tasks and projects will be cleared. Your labels and appearance preferences will stay. You can undo this reset.',
   );
@@ -196,7 +196,9 @@ test('reset board clears tasks and projects, then Undo from the toast restores t
   expect((await storedMatrix(page)).tasks).toHaveLength(8);
 
   await openSettings(page);
-  await page.getByRole('button', { name: 'Reset board' }).click();
+  await page.getByRole('button', { name: 'Need a fresh start?' }).click();
+  await expect(dialog.getByRole('button', { name: 'Reset board' })).toBeDisabled();
+  await dialog.getByLabel('Type Reset to confirm').fill('Reset');
   await dialog.getByRole('button', { name: 'Reset board' }).click();
   await expect(toast(page)).toContainText('Board reset. All tasks and projects cleared.');
   await expect(page.locator('.task')).toHaveCount(0);
@@ -228,8 +230,9 @@ test('Reset board confirm stays readable on hover', async ({ page, isMobile }) =
   test.skip(!!isMobile, 'Hover needs a pointer');
   await open(page, { matrix: seedMatrix });
   await openSettings(page);
-  await page.getByRole('button', { name: 'Reset board' }).click();
+  await page.getByRole('button', { name: 'Need a fresh start?' }).click();
   const confirm = page.getByRole('dialog').getByRole('button', { name: 'Reset board' });
+  await page.getByLabel('Type Reset to confirm').fill('Reset');
   await confirm.hover();
   await expect(confirm).toHaveCSS('color', 'rgb(255, 255, 255)');
   await expect(confirm).toHaveCSS('background-color', 'rgb(143, 44, 37)');

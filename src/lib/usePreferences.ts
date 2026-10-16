@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { defaultLabels, labelsSchema, quadrants } from '../domain/models';
 import type { Labels } from '../domain/models';
 export function readLabels(): Labels {
@@ -46,7 +46,9 @@ export function usePreferences(notify: (s: string) => void) {
     const n = Number(get('clearspace.fontSize.v1', '100'));
     return Number.isFinite(n) ? Math.max(90, Math.min(160, n)) : 100;
   });
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Update the canvas, controls, and browser chrome in the same pre-paint commit.
+    document.documentElement.classList.toggle('night', night);
     document.body.classList.toggle('night', night);
     document.documentElement.style.colorScheme = night ? 'dark' : 'light';
     // Match browser chrome to the app's explicit preference, even if the OS differs.

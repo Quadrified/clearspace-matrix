@@ -85,5 +85,45 @@ export function createSamples(today: string): Matrix {
         isDevSample: true,
       }),
     );
+  // Shuffle a copy so each batch has a different mix without changing card order.
+  const candidates = [...tasks];
+  for (let i = candidates.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [candidates[i], candidates[j]] = [candidates[j]!, candidates[i]!];
+  }
+  const steps = {
+    Work: [
+      'Review the context',
+      'Write down the next action',
+      'Share a brief update',
+      'Check the result',
+    ],
+    Personal: [
+      'Check what is needed',
+      'Choose a convenient time',
+      'Take the first step',
+      'Confirm it is handled',
+    ],
+    Health: [
+      'Check the relevant details',
+      'Prepare what you need',
+      'Make time in your routine',
+      'Review the next step',
+    ],
+    Learning: [
+      'Choose a focused topic',
+      'Review the material',
+      'Try a short exercise',
+      'Write down a takeaway',
+    ],
+  };
+  for (const task of candidates.slice(0, 12)) {
+    const count = 2 + Math.floor(Math.random() * 3);
+    task.subtasks = steps[task.category || 'Work'].slice(0, count).map((title, index) => ({
+      id: 'dev-subtask-' + newId(),
+      title,
+      done: task.done || index === 0,
+    }));
+  }
   return { projects, tasks };
 }

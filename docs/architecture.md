@@ -24,7 +24,7 @@ The migration preserves these keys. Older stock subtitles map to the current urg
 
 If saved data cannot be read, it is left untouched. The user can work in memory and export a backup. A failed storage write displays a warning. Storage events refresh task and project state across tabs when no dialog is open.
 
-Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project removes its assignments, not its tasks. Reset removes all tasks while retaining projects and preferences. All notifications, including Undo, dismiss after ten seconds.
+Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project removes its assignments, not its tasks. Reset board removes all tasks and projects while retaining labels and appearance preferences. The confirmation explains both removals, and Undo restores tasks and projects together. All notifications, including Undo, dismiss after ten seconds.
 
 ## Focus timer
 

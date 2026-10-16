@@ -91,6 +91,7 @@ export function MatrixBoard({
                         onClick={() => onEdit(task)}
                       >
                         <span className="task-title">{task.title}</span>
+                        {task.notes.trim() && <span className="task-notes">{task.notes}</span>}
 
                         <span className="meta">
                           {task.isDevSample && <span className="tag">Dev</span>}
@@ -113,7 +114,6 @@ export function MatrixBoard({
                                   })}
                             </span>
                           )}
-                          {task.notes && <span className="duedate">Notes</span>}
                         </span>
                       </button>
                     </article>

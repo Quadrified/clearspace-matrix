@@ -53,7 +53,7 @@ it('all notifications dismiss after ten seconds, including Undo', () => {
   act(() => vi.advanceTimersByTime(1));
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
-it('reset clears task metrics while preserving projects and supports Undo', () => {
+it('reset confirms and clears tasks and projects, and Undo restores both', () => {
   localStorage.setItem(
     MATRIX_KEY,
     JSON.stringify({
@@ -77,12 +77,20 @@ it('reset clears task metrics while preserving projects and supports Undo', () =
   );
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Reset matrix' }));
-  fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Reset matrix' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Reset board' }));
+  expect(screen.getByRole('dialog')).toHaveTextContent('All tasks and projects will be cleared.');
+  fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Reset board' }));
   expect(screen.queryByText('Task to clear')).not.toBeInTheDocument();
-  expect(screen.getByRole('option', { name: 'Keep me' })).toBeInTheDocument();
+  expect(screen.queryByRole('option', { name: 'Keep me' })).not.toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!)).toMatchObject({ tasks: [], projects: [] });
+  expect(screen.getByRole('progressbar', { name: 'Completion' })).toHaveAttribute(
+    'aria-valuenow',
+    '0',
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getByText('Task to clear')).toBeInTheDocument();
+  expect(screen.getByRole('option', { name: 'Keep me' })).toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].projectId).toBe('p');
 });
 it('does not expose Dev to anonymous visitors', async () => {
   render(<App />);

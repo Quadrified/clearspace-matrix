@@ -176,7 +176,7 @@ export default function App() {
                   </button>
                   <button className="iconbtn danger" onClick={() => openDialog('reset')}>
                     <Icon name="eliminate" />
-                    Reset matrix
+                    Reset board
                   </button>
                 </div>
                 <div className="settings-size">
@@ -390,10 +390,10 @@ export default function App() {
         />
       )}{' '}
       {dialog === 'reset' && (
-        <Modal id="resetDialog" title="Start with a clear matrix?" onClose={() => setDialog(null)}>
+        <Modal id="resetDialog" title="Reset your board?" onClose={() => setDialog(null)}>
           <p>
-            All tasks will be cleared. Your projects, labels, and preferences stay. You can undo
-            this action.
+            All tasks and projects will be cleared. Your labels and appearance preferences will
+            stay. You can undo this reset.
           </p>
           <div className="dialog-actions">
             <button className="btn" autoFocus onClick={() => setDialog(null)}>
@@ -402,12 +402,15 @@ export default function App() {
             <button
               className="btn reset-confirm"
               onClick={() => {
-                change((m) => ({ ...m, tasks: [] }), 'Matrix reset. All tasks cleared.');
+                change(
+                  () => ({ tasks: [], projects: [] }),
+                  'Board reset. All tasks and projects cleared.',
+                );
                 setFilters(initialFilters);
                 setDialog(null);
               }}
             >
-              Reset matrix
+              Reset board
             </button>
           </div>
         </Modal>

@@ -535,27 +535,27 @@ h1,
 .qicon {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   background: var(--tint);
   color: var(--accent);
   border-radius: 11px;
 }
 .qicon svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
 }
 .qhead h2 {
   font-size: calc(1.1875rem * var(--text-scale, 1));
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.4px;
-  margin: 0 0 5px;
+  margin: 0 0 2px;
   overflow-wrap: anywhere;
 }
 .qhead p {
   font-size: calc(0.875rem * var(--text-scale, 1));
-  line-height: 1.5;
+  line-height: 1.4;
   color: var(--muted);
   margin: 0;
   overflow-wrap: anywhere;
@@ -1528,8 +1528,8 @@ div.field {
   }
   .qhead .qicon {
     grid-row: 1/3;
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
   }
   .qhead > div {
     grid-row: 1/3;

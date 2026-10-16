@@ -1659,8 +1659,9 @@ div.field {
     background: #0009;
   }
 }
+/* Suppress control transitions for keyboard input, but let active keyframes finish.
+   Removing and restoring animation restarts fades on the next pointer click. */
 .keyboard-input * {
-  animation: none !important;
   transition: none !important;
 }
 #devButton {
@@ -2286,9 +2287,6 @@ dialog::backdrop {
   to {
     opacity: 1;
   }
-}
-.keyboard-input dialog::backdrop {
-  animation: none;
 }
 @media (prefers-reduced-motion: reduce) {
   dialog::backdrop {

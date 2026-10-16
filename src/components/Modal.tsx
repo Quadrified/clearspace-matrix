@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom';
 import { motion, useIsPresent } from 'motion/react';
 import { softEase, useMotionSettings } from '../lib/motion';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Icon } from './Icon';
 import { announceDialogClosed } from '../lib/dialogEvents';
@@ -22,7 +22,8 @@ export function Modal({
   const { instant } = useMotionSettings();
   const ref = useRef<HTMLDialogElement>(null);
   const outside = useRef(false);
-  useEffect(() => {
+  // Promote to the top layer and apply autofocus before the first visible frame.
+  useLayoutEffect(() => {
     const el = ref.current!;
     el.showModal();
     return () => {

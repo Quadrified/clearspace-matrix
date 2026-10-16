@@ -171,7 +171,7 @@ export default function App() {
         />
         <main>
           <section className="intro">
-            <div>
+            <div className="intro-copy">
               <time className="date">
                 {new Date(today + 'T12:00:00').toLocaleDateString(undefined, {
                   weekday: 'long',
@@ -181,10 +181,10 @@ export default function App() {
               </time>
               <h1 id="matrixTitle">Make room for what matters.</h1>
               <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
+              {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
             </div>
             <AxisBoard />
           </section>
-          {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
           {matrix.tasks.length === 0 && (
             <FirstTask
               onAdd={() => openTask()}

@@ -114,17 +114,75 @@ test('phones get a floating add button and a bottom-sheet filter panel', async (
   await expect(editorDialog(page)).toBeVisible();
 });
 
-test('the date leads on the left and the axis board sits on the right', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(!!isMobile, 'The axis board is hidden on phones');
-  await open(page, { matrix: seedMatrix });
-  const date = await page.locator('.intro .date').boundingBox();
-  const mascot = await page.locator('.intro .axis-board').boundingBox();
-  expect(date!.x).toBeLessThan(100);
-  const hero = await page.locator('.intro').boundingBox();
-  expect(mascot!.x).toBeGreaterThanOrEqual(date!.x + date!.width);
-  expect(mascot!.x + mascot!.width).toBeLessThanOrEqual(hero!.x + hero!.width + 1);
-  await expect(page.locator('.axis-board')).toHaveAttribute('aria-hidden', 'true');
-});
+for (const width of [390, 900, 1440]) {
+  for (const theme of ['light', 'night'] as const) {
+    for (const size of [90, 125, 160]) {
+      for (const populated of [false, true]) {
+        test(`hero layout at ${width}px, ${theme}, ${size}%, ${populated ? 'populated' : 'empty'}`, async ({
+          page,
+          isMobile,
+        }) => {
+          test.skip(Boolean(isMobile) !== width <= 760, 'Use the matching device project');
+          await page.setViewportSize({ width, height: 900 });
+          await open(page, {
+            matrix: populated ? seedMatrix : { tasks: [], projects: [] },
+            theme,
+            size,
+          });
+          const hero = page.locator('.intro');
+          const copy = page.locator('.intro-copy');
+          const overview = page.getByRole('region', { name: 'Task overview' });
+          const art = page.locator('.axis-board');
+          const heroBox = (await hero.boundingBox())!;
+          const copyBox = (await copy.boundingBox())!;
+          const dateBox = (await hero.locator('.date').boundingBox())!;
+          await expect(overview).toHaveCount(populated ? 1 : 0);
+          expect(copyBox.x).toBeGreaterThanOrEqual(heroBox.x);
+          expect(copyBox.x + copyBox.width).toBeLessThanOrEqual(heroBox.x + heroBox.width + 1);
+
+          if (width <= 760) {
+            await expect(art).toBeHidden();
+            await expect(page.locator('#matrixSubtitle')).toBeHidden();
+          } else {
+            const artBox = (await art.boundingBox())!;
+            expect(artBox.x).toBeGreaterThanOrEqual(copyBox.x + copyBox.width);
+            expect(artBox.x + artBox.width).toBeLessThanOrEqual(heroBox.x + heroBox.width + 1);
+            expect(artBox.width).toBeLessThanOrEqual(360);
+            expect(
+              Math.abs(copyBox.y + copyBox.height / 2 - artBox.y - artBox.height / 2),
+            ).toBeLessThan(1);
+          }
+
+          if (populated) {
+            await expect(copy.locator('.overview')).toHaveCount(1);
+            const progressBox = (await overview.boundingBox())!;
+            const above =
+              width <= 760 ? dateBox : (await page.locator('#matrixSubtitle').boundingBox())!;
+            expect(progressBox.y - above.y - above.height).toBeCloseTo(width <= 760 ? 16 : 24, 0);
+            expect(progressBox.width).toBeCloseTo(copyBox.width, 0);
+            const completion = (await overview.locator('.overview-completion').boundingBox())!;
+            const counts = await overview.locator('.overview-stat').all();
+            for (const count of counts) {
+              const box = (await count.boundingBox())!;
+              expect(box.x + box.width).toBeLessThanOrEqual(progressBox.x + progressBox.width + 1);
+              if (copyBox.width < 560) {
+                expect(box.y).toBeGreaterThanOrEqual(completion.y + completion.height);
+              } else {
+                expect(box.x).toBeGreaterThanOrEqual(completion.x + completion.width);
+              }
+            }
+            expect(await overview.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+          } else {
+            await expect(hero.locator('.first-task')).toHaveCount(0);
+            const prompt = (await page.locator('.first-task').boundingBox())!;
+            expect(prompt.y).toBeGreaterThanOrEqual(heroBox.y + heroBox.height);
+            expect(prompt.width).toBeCloseTo(heroBox.width, 0);
+          }
+          expect(
+            await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+          ).toBe(true);
+        });
+      }
+    }
+  }
+}

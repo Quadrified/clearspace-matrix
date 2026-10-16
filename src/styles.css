@@ -228,9 +228,14 @@ header:after {
   gap: 32px;
   padding: 34px 0 26px;
 }
-.intro > div:first-child {
+.intro-copy {
   min-width: 0;
   flex: 1;
+  container: hero-copy / inline-size;
+}
+.intro-copy > .overview {
+  width: 100%;
+  margin-top: 24px;
 }
 .eyebrow {
   font-size: calc(0.75rem * var(--text-scale, 1));
@@ -1807,6 +1812,7 @@ div.field {
   min-width: 0;
 }
 .completion-copy > span {
+  overflow-wrap: anywhere;
   font-size: calc(0.875rem * var(--text-scale, 1));
   font-weight: 550;
 }
@@ -1845,13 +1851,13 @@ div.field {
   overflow-wrap: anywhere;
 }
 .overview-stat-label {
+  overflow-wrap: anywhere;
   font-size: calc(0.8125rem * var(--text-scale, 1));
   color: var(--muted);
 }
-@media (max-width: 760px) {
+@container hero-copy (width < 560px) {
   .overview {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: min(100%, 430px);
     padding: 16px;
     gap: 16px 0;
   }
@@ -1865,9 +1871,6 @@ div.field {
   }
   .overview-stat:nth-child(2) {
     border-left: 0;
-  }
-  .overview-stat-label {
-    overflow-wrap: anywhere;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2684,6 +2687,9 @@ button,
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+  .intro-copy > .overview {
+    margin-top: 16px;
   }
   .intro .date {
     flex: none;

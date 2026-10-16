@@ -10,7 +10,7 @@ import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
 import { Icon } from './components/Icon';
-import { Mascot } from './components/Mascot';
+import { AxisBoard } from './components/AxisBoard';
 import { Modal } from './components/Modal';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
@@ -177,7 +177,7 @@ export default function App() {
               <h1 id="matrixTitle">Make room for what matters.</h1>
               <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
             </div>
-            <Mascot />
+            <AxisBoard />
           </section>
           {matrix.tasks.length > 0 && <TaskOverview summary={summary} />}
           {matrix.tasks.length === 0 && (

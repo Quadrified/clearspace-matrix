@@ -2646,7 +2646,7 @@ button,
   color: #fff;
 }
 
-/* Header: the date leads on the left, the mascot waves from the right. */
+/* Header: the date leads on the left, a tilted axis board sits on the right. */
 .intro .date {
   display: block;
   margin-bottom: 14px;
@@ -2656,76 +2656,53 @@ button,
 .intro .eyebrow {
   display: block;
 }
-.mascot {
+.axis-board {
   flex-shrink: 0;
-  width: clamp(120px, 15vw, 176px);
+  width: clamp(130px, 17vw, 200px);
   height: auto;
   overflow: visible;
 }
-.mascot :where(rect, ellipse, circle) {
-  stroke: none;
+.axis-card {
+  fill: #fffdf6;
+  stroke: color-mix(in srgb, var(--ink) 14%, transparent);
+  stroke-width: 1.5;
 }
-.mascot-shadow {
+.axis-grid path {
+  stroke: #fffdf6;
+  stroke-width: 1;
+  opacity: 0.55;
+  fill: none;
+}
+.axis-lines path {
+  stroke: #1f3a2a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+}
+.axis-lines path:nth-child(2) {
   fill: #1f3a2a;
-  opacity: 0.12;
+  stroke-width: 1;
 }
-.mascot-leaf {
-  fill: #6fa27c;
+.axis-dots circle {
+  fill: #fffdf6;
 }
-.mascot-leaf-2 {
-  fill: #8fbb97;
+.night .axis-card {
+  fill: #25322b;
 }
-.mascot-stem {
-  fill: #4f7f5c;
+.night .axis-lines path {
+  stroke: #e8f1e9;
+}
+.night .axis-lines path:nth-child(2) {
+  fill: #e8f1e9;
 }
 @media (max-width: 760px) {
-  .mascot {
+  .axis-board {
     display: none;
   }
   .intro .date {
     flex: none;
     font-size: calc(1.375rem * var(--text-scale, 1));
     margin-bottom: 10px;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .mascot-body {
-    animation: mascot-bob 4.2s ease-in-out infinite;
-    transform-origin: 100px 190px;
-  }
-  .mascot-eyes {
-    animation: mascot-blink 5.5s infinite;
-    transform-origin: 100px 88px;
-    transform-box: view-box;
-  }
-  .mascot-wave {
-    animation: mascot-wave 2.6s ease-in-out infinite;
-    transform-origin: 160px 112px;
-    transform-box: view-box;
-  }
-}
-@keyframes mascot-bob {
-  50% {
-    transform: translateY(-5px);
-  }
-}
-@keyframes mascot-blink {
-  0%,
-  94%,
-  100% {
-    transform: scaleY(1);
-  }
-  97% {
-    transform: scaleY(0.1);
-  }
-}
-@keyframes mascot-wave {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  50% {
-    transform: rotate(-9deg);
   }
 }
 
@@ -2748,16 +2725,6 @@ button,
 }
 .tabs .active .tab-count {
   background: #ffffff38;
-}
-.night .mascot-limb {
-  stroke: #cfe5d3;
-}
-.night .mascot-foot {
-  fill: #cfe5d3;
-}
-.night .mascot-shadow {
-  fill: #000;
-  opacity: 0.25;
 }
 
 /* One Filters button opens a panel; applied filters stay visible as chips. */

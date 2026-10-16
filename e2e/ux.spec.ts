@@ -114,12 +114,15 @@ test('phones get a floating add button and a bottom-sheet filter panel', async (
   await expect(editorDialog(page)).toBeVisible();
 });
 
-test('the date leads on the left and the mascot sits on the right', async ({ page, isMobile }) => {
-  test.skip(!!isMobile, 'The mascot is hidden on phones');
+test('the date leads on the left and the axis board sits on the right', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!!isMobile, 'The axis board is hidden on phones');
   await open(page, { matrix: seedMatrix });
   const date = await page.locator('.intro .date').boundingBox();
-  const mascot = await page.locator('.intro .mascot').boundingBox();
+  const mascot = await page.locator('.intro .axis-board').boundingBox();
   expect(date!.x).toBeLessThan(100);
   expect(mascot!.x).toBeGreaterThan(900);
-  await expect(page.locator('.mascot')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.axis-board')).toHaveAttribute('aria-hidden', 'true');
 });

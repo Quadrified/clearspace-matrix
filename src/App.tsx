@@ -1,3 +1,4 @@
+import { ResetBoardDialog } from './features/settings/ResetBoardDialog';
 import { useHeaderHeight } from './lib/useHeaderHeight';
 import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
@@ -11,7 +12,6 @@ import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
 import { Icon } from './components/Icon';
 import { AxisBoard } from './components/AxisBoard';
-import { Modal } from './components/Modal';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
 import { Toolbar } from './features/app/Toolbar';
@@ -273,35 +273,18 @@ export default function App() {
           />
         )}
         {dialog === 'reset' && (
-          <Modal
+          <ResetBoardDialog
             key="reset"
-            id="resetDialog"
-            title="Reset your board?"
             onClose={() => setDialog(null)}
-          >
-            <p>
-              All tasks and projects will be cleared. Your labels and appearance preferences will
-              stay. You can undo this reset.
-            </p>
-            <div className="dialog-actions">
-              <button className="btn" autoFocus onClick={() => setDialog(null)}>
-                Cancel
-              </button>
-              <button
-                className="btn reset-confirm"
-                onClick={() => {
-                  change(
-                    () => ({ tasks: [], projects: [] }),
-                    'Board reset. All tasks and projects cleared.',
-                  );
-                  setFilters(initialFilters);
-                  setDialog(null);
-                }}
-              >
-                Reset board
-              </button>
-            </div>
-          </Modal>
+            onReset={() => {
+              change(
+                () => ({ tasks: [], projects: [] }),
+                'Board reset. All tasks and projects cleared.',
+              );
+              setFilters(initialFilters);
+              setDialog(null);
+            }}
+          />
         )}
       </SoftPresence>
       <SoftPresence>

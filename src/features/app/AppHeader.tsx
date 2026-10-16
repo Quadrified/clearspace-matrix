@@ -74,7 +74,7 @@ export function AppHeader({
               </button>
               <button className="iconbtn danger" onClick={() => onResetBoard()}>
                 <Icon name="eliminate" />
-                Reset board
+                Need a fresh start?
               </button>
             </div>
             <div className="settings-size">
@@ -99,9 +99,6 @@ export function AppHeader({
                 </button>
               </div>
             </div>
-            <p className="settings-shortcuts">
-              Shortcuts: <kbd>N</kbd> new task · <kbd>P</kbd> projects
-            </p>
             <span id="saveState">
               {storageError ? 'Storage unavailable. Export to save.' : 'Saved on this browser'}
             </span>

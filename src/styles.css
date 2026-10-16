@@ -33,6 +33,7 @@
   display: none !important;
 }
 html {
+  background: var(--bg);
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;

@@ -138,6 +138,8 @@ public/favicon.svg
 .github/workflows/checks.yml # Format, type-check, lint, test, and production build
 ```
 
+Resetting the board through Settings → "Need a fresh start?" clears every task and project. Type `Reset` exactly to enable confirmation. Labels and appearance preferences stay, and the toast offers Undo.
+
 ## Validation
 
 ```sh

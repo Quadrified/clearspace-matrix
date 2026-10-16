@@ -190,6 +190,8 @@ See [deployment notes](docs/deployment.md) before changing the existing hosted p
 
 ## Learn more
 
+Browse the [33 hosted releases on GitHub](https://github.com/Quadrified/clearspace-matrix/releases), the [release timeline and Git history](docs/RELEASE_HISTORY.md), or the [machine-readable source mapping](docs/release-history.json). Early reconstructed snapshots are labeled, and their private publisher configuration is excluded.
+
 The [project overview](docs/OVERVIEW.md) explains the whole app on one page: the tech stack, flowcharts of how data moves and how changes reach the live site, the test suites, and CI/CD. For deeper detail, see the [architecture notes](docs/architecture.md) and [deployment notes](docs/deployment.md).
 
 ## Ownership and review

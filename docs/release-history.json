@@ -1,0 +1,487 @@
+[
+  {
+    "n": 1,
+    "title": "Initial matrix",
+    "tag": "site-v1",
+    "sha": "f5c363d23d143f906a6e179bcbfbe15407aa033a",
+    "target": "aa8e6064065cb607c3fcf6019ff3b25ac3f7d056",
+    "recorded_at": "2026-10-15T11:20:18-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:21:31.502408-04:00",
+    "changes": [
+      "Launch the four-quadrant task board with browser-local persistence, categories, due dates and notes.",
+      "Include task editing, completion, search, backups, appearance controls and the original focus timer."
+    ]
+  },
+  {
+    "n": 2,
+    "title": "Projects",
+    "tag": "site-v2",
+    "sha": "d03a348892c707dc1d1384a8ab593932e457f279",
+    "target": "6a35bc04b63c83f3102ae916d44e57eea3eb63ed",
+    "recorded_at": "2026-10-15T11:25:40-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:27:14.404583-04:00",
+    "changes": [
+      "Add project creation, renaming, task assignment and project filtering.",
+      "Extend persistence, validation and backups to include projects."
+    ]
+  },
+  {
+    "n": 3,
+    "title": "Adjustable text size",
+    "tag": "site-v3",
+    "sha": "ad413834196e0d0dd9413bb580dfe3347520ee48",
+    "target": "fb0c722b4274ed625a2d74c2dd7e9e8d1e2bac77",
+    "recorded_at": "2026-10-15T11:27:27-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:28:36.012109-04:00",
+    "changes": [
+      "Add persistent text-size controls from 90% to 160%.",
+      "Adapt typography and responsive layouts to the chosen size."
+    ]
+  },
+  {
+    "n": 4,
+    "title": "Quadrant add controls and responsive filters",
+    "tag": "site-v4",
+    "sha": "a8f1e6cf3caaf48219f5927a2bbbc9895ec69293",
+    "target": "d966d99043d59fe06438adc2d33b52dd8a4f230f",
+    "recorded_at": "2026-10-15T11:30:15-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:31:23.987156-04:00",
+    "changes": [
+      "Move quadrant add controls to the lower-right corner.",
+      "Rework filter rows and give dropdown chevrons consistent spacing."
+    ]
+  },
+  {
+    "n": 5,
+    "title": "Clearspace favicon",
+    "tag": "site-v5",
+    "sha": "048f188b0c52ede403e641b7f3469e50d72d4333",
+    "target": "0eb792ac9accf116175944313a3551c5854d1b61",
+    "recorded_at": "2026-10-15T11:31:23-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:32:26.482700-04:00",
+    "changes": ["Add the Clearspace SVG favicon and reference it from the page."]
+  },
+  {
+    "n": 6,
+    "title": "Floating quadrant buttons",
+    "tag": "site-v6",
+    "sha": "da7270dc124023c1afafc82222a9cf0f647225b8",
+    "target": "563c62f2f7e305904ac925f2ec3e768c18c3ffad",
+    "recorded_at": "2026-10-15T11:32:44-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:33:52.856269-04:00",
+    "changes": ["Refine the round quadrant FABs, their positioning and card spacing."]
+  },
+  {
+    "n": 7,
+    "title": "Seven-step onboarding",
+    "tag": "site-v7",
+    "sha": "01c795228f74105928a73af5b93b2c4a1f1d95b3",
+    "target": "726878fa23e06425566fe53957ff58ddcb1383cf",
+    "recorded_at": "2026-10-15T11:35:03-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:36:11.611741-04:00",
+    "changes": [
+      "Add the first-visit tutorial with Back, Next and Skip controls.",
+      "Allow the walkthrough to be replayed through Help."
+    ]
+  },
+  {
+    "n": 8,
+    "title": "Task and project add menu",
+    "tag": "site-v8",
+    "sha": "350ce46e2d49f5e3033d2d6855feaae226023684",
+    "target": "01e12e84aa14ed2b7fce97dd011ae7d8e8163a78",
+    "recorded_at": "2026-10-15T11:36:46-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:37:51.688748-04:00",
+    "changes": ["Combine task and project creation in an Add menu."]
+  },
+  {
+    "n": 9,
+    "title": "Project form ordering correction",
+    "tag": "site-v9",
+    "sha": "3afeeac2de161db95ead63b8a823ff3936624063",
+    "target": "db65d60aa19abfe77a7260d6113d3a13661d9429",
+    "recorded_at": "2026-10-15T11:37:39-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:38:45.241306-04:00",
+    "changes": ["Correct the ordering of the project picker in the task editor."]
+  },
+  {
+    "n": 10,
+    "title": "Example tasks at the end of onboarding",
+    "tag": "site-v10",
+    "sha": "544f8f46d587f0aee738020c2d0ef92cdf2f809c",
+    "target": "236357f0e8c697c0ee612c2d4ebd3a40d164c1b4",
+    "recorded_at": "2026-10-15T11:41:16-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:42:25.952468-04:00",
+    "changes": [
+      "Make Start with example tasks the final tutorial action.",
+      "Keep example creation deduplicated and offer an own-tasks alternative."
+    ]
+  },
+  {
+    "n": 11,
+    "title": "Branding, progress cards and custom focus duration",
+    "tag": "site-v11",
+    "sha": "3296231df778bccb68c113a236ad593113322b38",
+    "target": "ded6f40b0b2c3cf4c3adc615bfb4807925e0a95e",
+    "recorded_at": "2026-10-15T11:44:48-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:45:59.154175-04:00",
+    "changes": [
+      "Enlarge the brand and place its tagline underneath.",
+      "Split progress into compact statistic cards and allow custom timer durations.",
+      "Add the P shortcut for project management."
+    ]
+  },
+  {
+    "n": 12,
+    "title": "Custom quadrant icons",
+    "tag": "site-v12",
+    "sha": "4bbdf052a44a22ed43409e485b48901a0781bad6",
+    "target": "e9c0c3b13dc6c6717d320baf81fc44007c464cf6",
+    "recorded_at": "2026-10-15T11:52:49-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:53:58.467625-04:00",
+    "changes": [
+      "Add a generic icon picker beside editable quadrant titles.",
+      "Enlarge quadrant count badges."
+    ]
+  },
+  {
+    "n": 13,
+    "title": "Settings menu and compact statistics",
+    "tag": "site-v13",
+    "sha": "24d460a5d2263a5865166c04b027e9f7678a8db6",
+    "target": "61024459819a909c6a1121b07a13f638e07c3658",
+    "recorded_at": "2026-10-15T11:55:39-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:56:52.544090-04:00",
+    "changes": [
+      "Move appearance, labels and Help controls into Settings.",
+      "Enlarge the date, tighten Add, capitalize statistic labels and center their numbers."
+    ]
+  },
+  {
+    "n": 14,
+    "title": "Minimal hero copy",
+    "tag": "site-v14",
+    "sha": "4b6a059e7c8eb56c94532f36bb1c6007812365ea",
+    "target": "0e3f90475c47869d85d0fedb95da9a66ecb8e5e7",
+    "recorded_at": "2026-10-15T11:56:56-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:58:18.942854-04:00",
+    "changes": ["Reduce the hero to a shorter Your matrix heading and less supporting text."]
+  },
+  {
+    "n": 15,
+    "title": "Focus countdown in the header",
+    "tag": "site-v15",
+    "sha": "2cf03893e75cc0ba33544ae84745f6495a78a868",
+    "target": "7e70e8b78c4e289b2caaf22e41e8d3547b2c8ddc",
+    "recorded_at": "2026-10-15T11:58:28-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T11:59:39.898821-04:00",
+    "changes": [
+      "Close the timer dialog when a focus session starts.",
+      "Display remaining time in the header Focus control."
+    ]
+  },
+  {
+    "n": 16,
+    "title": "Settings icon and text-size placement",
+    "tag": "site-v16",
+    "sha": "dcd9fc9155c42c2ba532f7cdee0c2ba4f8775bd7",
+    "target": "23791450726d5733501ed715f173d7907b9b5629",
+    "recorded_at": "2026-10-15T11:59:41-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:01:34.589308-04:00",
+    "changes": ["Add an icon to Edit labels and move text-size controls lower in Settings."]
+  },
+  {
+    "n": 17,
+    "title": "Inline timer editing",
+    "tag": "site-v17",
+    "sha": "88dc40bec44d1607aced7256634e93a5c8e7a8d2",
+    "target": "2fc3ca406f189abd472f1d17554a190d99c4ca2a",
+    "recorded_at": "2026-10-15T12:02:24-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:03:39.229428-04:00",
+    "changes": [
+      "Allow double-clicking the clock to edit minutes or MM:SS.",
+      "Retain session presets, validation and keyboard save/cancel controls."
+    ]
+  },
+  {
+    "n": 18,
+    "title": "Fixed branding and timer backdrop dismissal",
+    "tag": "site-v18",
+    "sha": "00f0302e3ccaa82d8dea030ac2854fe05c597868",
+    "target": "dd562e283ed40c7b4b4c4c74dcfb1967dc701ef6",
+    "recorded_at": "2026-10-15T12:04:09-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:05:54.582561-04:00",
+    "changes": [
+      "Keep marketing title/subtitle fixed while preserving quadrant customization.",
+      "Allow clicking outside the timer dialog to close it."
+    ]
+  },
+  {
+    "n": 19,
+    "title": "Illustrated empty states",
+    "tag": "site-v19",
+    "sha": "d28a70a51e5696d4f1c5b4e07bf7d3f054d46b8f",
+    "target": "93c4a23901296ea9a09c2a45429f1bb92c95ebd2",
+    "recorded_at": "2026-10-15T12:07:18-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:08:26.835007-04:00",
+    "changes": [
+      "Use urgency and importance descriptions as quadrant subtitles.",
+      "Add custom SVG illustrations to the four empty states."
+    ]
+  },
+  {
+    "n": 20,
+    "title": "Board reset and restored marketing header",
+    "tag": "site-v20",
+    "sha": "7cc4f7d92d3cb904f9b7b558f46c0636d14bc354",
+    "target": "901ab6a7b44b4496a833d2f26e3a5bfc5b0f1d05",
+    "recorded_at": "2026-10-15T12:09:11-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:11:00.803989-04:00",
+    "changes": [
+      "Restore Make room for what matters. and its subtitle.",
+      "Add a confirmed task reset with Undo. At this historical version, projects were retained."
+    ]
+  },
+  {
+    "n": 21,
+    "title": "Interface design refresh",
+    "tag": "site-v21",
+    "sha": "4a58542f52b9c7884a1e93b7121625ee95ee4876",
+    "target": "519a83690da1d348e64e2cd4786ea65f8f4f5e4f",
+    "recorded_at": "2026-10-15T12:41:05-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:42:25.098633-04:00",
+    "changes": [
+      "Refresh system typography, rounded surfaces, responsive layouts and theme styling.",
+      "Respect reduced motion, transparency and contrast preferences."
+    ]
+  },
+  {
+    "n": 22,
+    "title": "Ten-second notifications",
+    "tag": "site-v22",
+    "sha": "5088be4b7f19f94af6c7a8480de24df0c7cce50d",
+    "target": "6f141c77a963a650f5c945d746f1fda4dd46ee17",
+    "recorded_at": "2026-10-15T12:42:09-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T12:43:16.320323-04:00",
+    "changes": ["Auto-dismiss notifications, including Undo notifications, after ten seconds."]
+  },
+  {
+    "n": 23,
+    "title": "Owner-authorized Dev tools",
+    "tag": "site-v23",
+    "sha": "3032ef5e7a05a673d09401f4b349aee60bb951dc",
+    "target": "a063bd65f95554735e6fb92519898042094c7608",
+    "recorded_at": "2026-10-15T13:28:17-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T13:29:39.917222-04:00",
+    "changes": [
+      "Add the historical owner-authorized Dev sample generator and server authorization routes.",
+      "Introduce Worker packaging and development-tool regression checks. These hosted Dev routes were removed in later releases."
+    ]
+  },
+  {
+    "n": 24,
+    "title": "React and TypeScript migration",
+    "tag": "site-v24",
+    "sha": "b3dba747c0070646387f71887e4429ebe1aadbd9",
+    "target": "ca3626b25a3998ed878a6c8bc4e6f8494d7b63ad",
+    "recorded_at": "2026-10-15T13:51:07-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T13:52:21.826897-04:00",
+    "changes": [
+      "Replace the main app with React 19, strict TypeScript, Vite and Zod-validated domain state.",
+      "Organize task, project, settings, tutorial and backup features into components and hooks.",
+      "Add Vitest, React Testing Library, Worker tests and typed persistence while retaining existing browser data."
+    ]
+  },
+  {
+    "n": 25,
+    "title": "Theme toggle and progress redesign",
+    "tag": "site-v25",
+    "sha": "87da08aa010f6fe167f78ad3856d979683f21fe8",
+    "target": "3b25422ba112eb6e6952fd16282b30c9306e0ea4",
+    "recorded_at": "2026-10-15T14:45:01-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T14:46:08.900474-04:00",
+    "changes": [
+      "Repair the settings icon and move light/dark switching into a header toggle.",
+      "Redesign progress into a compact completion ring and task counts."
+    ]
+  },
+  {
+    "n": 26,
+    "title": "Task notes and complete board reset",
+    "tag": "site-v26",
+    "sha": "2d4e597e80235edbb22625109580ab549939815e",
+    "target": "ed6dde3f832d505aba4ecc71b4b1394639884908",
+    "recorded_at": "2026-10-15T16:14:45-04:00",
+    "reconstructed": true,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T16:16:35.336143-04:00",
+    "changes": [
+      "Show task notes directly on cards.",
+      "Reset both tasks and projects, explain the scope in confirmation, and preserve Undo."
+    ]
+  },
+  {
+    "n": 27,
+    "title": "Local Dev tools, motion, mobile polish and CI",
+    "tag": "site-v27",
+    "sha": "e9c3850d2a178ce3fc52d67b439eba5ac0033beb",
+    "target": "7f6148d76d84865785512f31d11f935c87bc61d2",
+    "recorded_at": "2026-10-15T17:59:57-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T18:49:04.378632-04:00",
+    "changes": [
+      "Restrict Dev samples to local development and remove hosted Dev routes and the standalone variant.",
+      "Add Heroicons, custom Base UI selects, drag feedback, quadrant-clear celebrations and softer transitions.",
+      "Improve mobile input/viewport behavior, sticky axes, sorting and typography.",
+      "Add ownership guidance, a PR template, pre-commit hooks and pinned CI checks for code, dependencies and secrets."
+    ]
+  },
+  {
+    "n": 28,
+    "title": "Browser regression coverage and board UX",
+    "tag": "site-v28",
+    "sha": "ca82384c1f93601b294bb25ac4acaea1b17a0789",
+    "target": "9a64ec53c02ef00976591120b77b5ec129b75c95",
+    "recorded_at": "2026-10-15T22:28:31-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T22:29:38.861242-04:00",
+    "changes": [
+      "Add the Playwright desktop/mobile regression suite and improve cross-tab updates.",
+      "Introduce the unified Filters panel, applied-filter chips, tab counts and empty-board starter card.",
+      "Improve the header illustration, green accents, mobile controls and production caching/security checks."
+    ]
+  },
+  {
+    "n": 29,
+    "title": "Confirmed fresh start and mobile hero",
+    "tag": "site-v29",
+    "sha": "b479c2a3cde38aa489b48505a79f7248a5972362",
+    "target": "6e2cf72e3d750f126f2247fb8ca26261e7e45dec",
+    "recorded_at": "2026-10-15T22:41:44-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T22:42:52.621831-04:00",
+    "changes": [
+      "Require typing Reset before clearing tasks and projects.",
+      "Synchronize theme application before paint and remove shortcut hints from Settings.",
+      "Hide marketing text on mobile and refine the illustrated header and project form spacing."
+    ]
+  },
+  {
+    "n": 30,
+    "title": "Subtasks, US dates and modal paint fixes",
+    "tag": "site-v30",
+    "sha": "92450ab78324ccd91825ffcb37dbb19c9a1d16fd",
+    "target": "0f4142a532ccff158a22cb95bde06502ff6f1638",
+    "recorded_at": "2026-10-15T23:09:02-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-15T23:10:19.286422-04:00",
+    "changes": [
+      "Add editable subtasks, card checklists, backup/search compatibility and independent completion.",
+      "Display due dates as MM/DD/YYYY while retaining ISO storage.",
+      "Randomize subtasks in local Dev samples, improve modal opening/backdrop behavior, and enlarge hero artwork.",
+      "Consolidate desktop toolbar actions and compact search/filter controls."
+    ]
+  },
+  {
+    "n": 31,
+    "title": "Hero progress and onboarding hierarchy",
+    "tag": "site-v31",
+    "sha": "447f45cc1496ec298d94872a4f9b74e5c81d03e6",
+    "target": "818d2001c142c5f0a23bc0f7c37fb81de1b8b8ee",
+    "recorded_at": "2026-10-16T02:03:00-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T02:04:13.893862-04:00",
+    "changes": [
+      "Move progress beneath the hero subtitle with a narrow-column stacked layout.",
+      "Enlarge quadrant icons and tighten title/subtitle spacing.",
+      "Give Getting Started a larger heading, an accessible progress bar, top-positioned Skip and bottom Back/Next navigation."
+    ]
+  },
+  {
+    "n": 32,
+    "title": "Matrix-first day panel",
+    "tag": "site-v32",
+    "sha": "7f83b97e0d00dd9a3bfc240c2ddf36790946c077",
+    "target": "6a4e8d6fac2d20b3da9f5b9c82099ed08ad588e0",
+    "recorded_at": "2026-10-16T02:25:54-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T02:27:47.418145-04:00",
+    "changes": [
+      "Put the matrix first, with a day rail on wide screens and a compact day bar elsewhere.",
+      "Add and link the contributor overview with architecture and delivery flowcharts."
+    ]
+  },
+  {
+    "n": 33,
+    "title": "Guided first-task creation",
+    "tag": "site-v33",
+    "sha": "4026f51f5ab3f92cb2645027ec44ebe3eca148a8",
+    "target": "d47fd3076d395a142d81db9b67115e3c20504ff7",
+    "recorded_at": "2026-10-16T02:55:11-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-16T02:56:29.683139-04:00",
+    "changes": [
+      "Remove the duplicate toolbar Add task button while retaining Projects and the N shortcut.",
+      "Hide quadrant and mobile FABs until the board contains tasks; reveal them with reduced-motion-aware animation.",
+      "Restore the starter experience after clearing all tasks without treating filtered-empty views as empty boards.",
+      "Fix the animated onboarding browser test to wait for dialog DOM removal before reopening."
+    ]
+  }
+]

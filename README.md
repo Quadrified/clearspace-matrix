@@ -84,6 +84,8 @@ Run `npm run dev` or `npm start`, then use the **Dev** button in the header. It 
 - **Remove Dev samples** removes only marked sample tasks. Your own tasks and project definitions stay saved.
 - Both actions support Undo and affect only the current browser. Samples are generated locally, without API requests.
 
+Each Dev batch gives a randomly selected 12 of its 24 tasks two to four subtasks. Active tasks include completed and incomplete steps; completed tasks have all their steps checked.
+
 Production builds exclude the Dev panel and sample generator. `npm run serve:worker` previews that production build and has no Dev controls. The former `/dev` and `/api/dev/*` server routes return 404.
 
 Development and production origins have separate browser storage. Changing code does not automatically reset your local tasks, so samples remain available across reloads until you remove them.

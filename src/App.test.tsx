@@ -325,3 +325,11 @@ it('restores the starter card and removes FABs when the last task is deleted', (
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
 });
+
+it('header links to the open-source repository in a new tab', () => {
+  render(<App />);
+  const link = screen.getByRole('link', { name: /open source on github/i });
+  expect(link).toHaveAttribute('href', 'https://github.com/Quadrified/clearspace-matrix');
+  expect(link).toHaveAttribute('target', '_blank');
+  expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+});

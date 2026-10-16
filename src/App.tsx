@@ -6,7 +6,7 @@ import { SoftPresence } from './components/SoftPresence';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
 import { initialFilters, quadrants } from './domain/models';
-import { addExamples, moveTask, stats, toggleTask, visibleTasks } from './domain/matrix';
+import { addExamples, isCrowded, moveTask, stats, toggleTask, visibleTasks } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
@@ -66,6 +66,8 @@ export default function App() {
     }),
     [summary, matrix.tasks.length],
   );
+  // A busy board needs the width, so the wide-screen side rail folds back into the day bar.
+  const crowded = useMemo(() => isCrowded(matrix, filters.status), [matrix, filters.status]);
   const resultCount = useMemo(
     () => quadrants.reduce((n, q) => n + visibleTasks(matrix, q.id, boardFilters).length, 0),
     [matrix, boardFilters],
@@ -168,7 +170,7 @@ export default function App() {
           onHelp={() => openDialog('tutorial')}
           storageError={storageError}
         />
-        <main className="workspace">
+        <main className={crowded ? 'workspace' : 'workspace has-rail'}>
           <DayPanel today={today} summary={summary} hasTasks={matrix.tasks.length > 0} />
           <div className="board-column">
             {matrix.tasks.length === 0 && (

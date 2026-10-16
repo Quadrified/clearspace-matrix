@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   addExamples,
+  isCrowded,
   mergeMatrix,
   moveTask,
   parseBackup,
@@ -142,5 +143,23 @@ describe('completed task ordering', () => {
       visibleTasks(reopened, 'do', { ...initialFilters, status: 'all' }).map((task) => task.id),
     ).toEqual(['second', 'first', 'old-done']);
     expect(reopened.tasks.find((task) => task.id === 'first')?.completedAt).toBeNull();
+  });
+});
+
+describe('crowded board', () => {
+  const many = (n: number, q: 'do' | 'schedule', done = false) =>
+    Array.from({ length: n }, (_, i) => ({ ...task, id: `${q}-${done}-${i}`, q, done }));
+  it('turns crowded once one quadrant shows more than four tasks', () => {
+    expect(isCrowded({ tasks: many(4, 'do'), projects: [] }, 'active')).toBe(false);
+    expect(
+      isCrowded({ tasks: [...many(4, 'do'), ...many(4, 'schedule')], projects: [] }, 'active'),
+    ).toBe(false);
+    expect(isCrowded({ tasks: many(5, 'do'), projects: [] }, 'active')).toBe(true);
+  });
+  it('counts only the tasks the current tab shows', () => {
+    const state = { tasks: [...many(3, 'do'), ...many(3, 'do', true)], projects: [] };
+    expect(isCrowded(state, 'active')).toBe(false);
+    expect(isCrowded(state, 'done')).toBe(false);
+    expect(isCrowded(state, 'all')).toBe(true);
   });
 });

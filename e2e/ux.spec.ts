@@ -210,3 +210,35 @@ for (const width of [390, 900, 1280, 1440]) {
     }
   }
 }
+
+test('a crowded board gives up the side rail for the day bar on wide screens', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const base = seedMatrix.tasks.find((t) => t.q === 'do' && !t.done)!;
+  const extra = Array.from({ length: 4 }, (_, i) => ({
+    ...base,
+    id: `t-extra-${i}`,
+    title: `Extra urgent task ${i + 1}`,
+    done: false,
+    completedAt: null,
+  }));
+  await open(page, { matrix: { ...seedMatrix, tasks: [...seedMatrix.tasks, ...extra] } });
+  const day = page.locator('.day');
+  const board = page.locator('.board-column');
+  const inBar = async () => {
+    const dayBox = (await day.boundingBox())!;
+    return (await board.boundingBox())!.y >= dayBox.y + dayBox.height;
+  };
+  // Do first now shows more than four active tasks, so the board takes the full width.
+  await expect(page.locator('main.workspace')).not.toHaveClass(/has-rail/);
+  expect(await inBar()).toBe(true);
+  await expect(page.locator('#matrixSubtitle')).toBeHidden();
+  // The Completed tab shows one task, so the rail comes back.
+  await page.getByRole('button', { name: /^Completed/ }).click();
+  await expect(page.locator('main.workspace')).toHaveClass(/has-rail/);
+  expect(await inBar()).toBe(false);
+  await expect(page.locator('#matrixSubtitle')).toBeVisible();
+});

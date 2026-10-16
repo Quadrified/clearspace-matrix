@@ -15,7 +15,6 @@ export function Toolbar({
   resultCount,
   onClearFilters,
   searchRef,
-  onAddTask,
   onProjects,
 }: {
   filters: Filters;
@@ -26,7 +25,6 @@ export function Toolbar({
   resultCount: number;
   onClearFilters: () => void;
   searchRef: RefObject<HTMLInputElement | null>;
-  onAddTask: () => void;
   onProjects: () => void;
 }) {
   const [panelOpen, setPanelOpen] = useState(false);
@@ -44,10 +42,6 @@ export function Toolbar({
           onChange={(value) => filter('status', value)}
         />
         <div className="add-control">
-          <button id="newTask" className="btn primary" onClick={() => onAddTask()}>
-            <Icon name="plus" />
-            Add task
-          </button>
           <button id="projectsButton" className="btn" onClick={() => onProjects()}>
             <Icon name="folder" />
             Projects

@@ -8,6 +8,7 @@ import type { Task, Matrix, Labels, Filters, QuadrantId } from '../../domain/mod
 import { quadrants } from '../../domain/models';
 import { visibleTasks } from '../../domain/matrix';
 import { Icon } from '../../components/Icon';
+import { AddTaskFab } from '../../components/AddTaskFab';
 import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
 export function MatrixBoard({
@@ -225,14 +226,13 @@ export function MatrixBoard({
                     animated={celebration.animated}
                   />
                 )}
-                <button
-                  className="task-fab"
-                  aria-label={`Add a task to ${label.title}`}
-                  title={`Add a task to ${label.title}`}
-                  onClick={() => onAdd(q.id)}
-                >
-                  <Icon name="plus" />
-                </button>
+                {matrix.tasks.length > 0 && (
+                  <AddTaskFab
+                    className="task-fab"
+                    label={`Add a task to ${label.title}`}
+                    onClick={() => onAdd(q.id)}
+                  />
+                )}
               </motion.section>
             );
           })}

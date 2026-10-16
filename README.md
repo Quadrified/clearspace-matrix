@@ -108,7 +108,7 @@ Changes are developed and verified locally. Deployment happens only when explici
 | `Enter` while editing the timer  | Save the new remaining time.               |
 | `Escape` while editing the timer | Cancel the edit.                           |
 
-Task and project shortcuts are inactive while typing or while a dialog is open. The **Add** dropdown sits beside the Active, Completed, and All tasks tabs and lets you add a task or project. Each quadrant also has its own **+** button. On a phone, use the task editor's quadrant selector to move a task.
+Task and project shortcuts are inactive while typing or while a dialog is open. The **Projects** button sits beside the Active, Completed, and All tasks tabs. On an empty board, use **Add your first task**, **Try example tasks**, or the `N` shortcut. The four quadrant **+** buttons and the phone's floating quick-add button appear after a task is saved or examples are added, with a brief reveal that respects reduced motion and keyboard input. Cancelling the editor keeps the starter card visible. Clearing every task restores that empty-board experience; filters do not affect button availability. On a phone, use the task editor's quadrant selector to move a task.
 
 ## Your data
 

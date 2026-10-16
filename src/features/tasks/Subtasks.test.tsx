@@ -8,7 +8,7 @@ const stored = () => parseStoredMatrix(localStorage.getItem(MATRIX_KEY));
 
 it('adds subtasks, shows them on the card, persists independent completion and supports Undo', () => {
   const view = render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Launch website' } });
   fireEvent.click(screen.getByRole('button', { name: 'Add subtask' }));
   expect(screen.getByLabelText('Subtask 1')).toHaveFocus();
@@ -43,7 +43,7 @@ it('adds subtasks, shows them on the card, persists independent completion and s
 
 it('edits and removes subtasks, skips blank rows, and discards cancelled edits', () => {
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Read a book' } });
   fireEvent.click(screen.getByRole('button', { name: 'Add subtask' }));
   fireEvent.change(screen.getByLabelText('Subtask 1'), { target: { value: '  First chapter  ' } });

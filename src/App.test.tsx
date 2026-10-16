@@ -10,20 +10,24 @@ beforeEach(() => {
 });
 it('adds a Work task, saves it in the existing storage format, and undoes it', async () => {
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   expect(screen.getByRole('combobox', { name: 'Category' })).toHaveTextContent('Work');
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Ship the React app' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
   expect(screen.getByText('Ship the React app')).toBeInTheDocument();
+  expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
+  expect(screen.getByRole('button', { name: 'Quick add task' })).toBeInTheDocument();
   await waitFor(() =>
     expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].title).toBe('Ship the React app'),
   );
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.queryByText('Ship the React app')).not.toBeInTheDocument();
+  expect(screen.queryAllByRole('button', { name: /^Add a task to / })).toHaveLength(0);
+  expect(screen.queryByRole('button', { name: 'Quick add task' })).not.toBeInTheDocument();
 });
 it('preserves a draft when creating its project', () => {
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Launch checklist' } });
   fireEvent.click(screen.getByRole('button', { name: 'Manage projects' }));
   fireEvent.change(screen.getByLabelText('New project'), { target: { value: 'Clearspace' } });
@@ -97,6 +101,8 @@ it('reset confirms and clears tasks and projects, and Undo restores both', () =>
   // With no tasks left the overview gives way to the first-task prompt.
   expect(screen.queryByRole('progressbar', { name: 'Completion' })).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Add your first task' })).toBeInTheDocument();
+  expect(screen.queryAllByRole('button', { name: /^Add a task to / })).toHaveLength(0);
+  expect(screen.queryByRole('button', { name: 'Quick add task' })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(screen.getByText('Task to clear')).toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects[0].name).toBe('Keep me');
@@ -111,7 +117,7 @@ it('shows Dev tools during local development without making an authorization req
 it('does not overwrite unreadable saved data when working in memory', async () => {
   localStorage.setItem(MATRIX_KEY, 'corrupt-original');
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Recovery task' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
   await act(async () => {});
@@ -222,7 +228,7 @@ it('offers a persistent appearance switch directly in the header', () => {
 it('lets dropdown typeahead use shortcut letters without opening another feature', async () => {
   const user = userEvent.setup();
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   screen.getByRole('combobox', { name: 'Category' }).focus();
   await user.keyboard('{ArrowDown}');
   await screen.findByRole('listbox');
@@ -279,4 +285,43 @@ it('moves a checked task to the bottom of its quadrant in All tasks and restores
   ).toBeChecked();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(order()).toEqual(original);
+});
+
+it('keeps FABs absent until onboarding succeeds and ignores filtered-empty views', () => {
+  render(<App />);
+  const expectNoFabs = () => {
+    expect(screen.queryAllByRole('button', { name: /^Add a task to / })).toHaveLength(0);
+    expect(screen.queryByRole('button', { name: 'Quick add task' })).not.toBeInTheDocument();
+  };
+  expect(screen.queryByRole('button', { name: 'Add task' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Projects' })).toBeInTheDocument();
+  expectNoFabs();
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
+  expectNoFabs();
+  fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
+  expectNoFabs();
+  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+  expectNoFabs();
+  fireEvent.click(screen.getByRole('button', { name: 'Try example tasks' }));
+  expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
+  expect(screen.getByRole('button', { name: 'Quick add task' })).toBeInTheDocument();
+  fireEvent.change(screen.getByRole('textbox', { name: 'Find a task' }), {
+    target: { value: 'no matching task anywhere' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Completed' }));
+  expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
+  expect(screen.queryByRole('button', { name: 'Add your first task' })).not.toBeInTheDocument();
+});
+it('restores the starter card and removes FABs when the last task is deleted', () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
+  fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Only task' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Edit Only task' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+  expect(screen.getByRole('button', { name: 'Add your first task' })).toBeInTheDocument();
+  expect(screen.queryAllByRole('button', { name: /^Add a task to / })).toHaveLength(0);
+  expect(screen.queryByRole('button', { name: 'Quick add task' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+  expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
 });

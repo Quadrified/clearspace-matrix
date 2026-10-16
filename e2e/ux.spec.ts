@@ -178,7 +178,8 @@ for (const width of [390, 900, 1280, 1440]) {
             expect(dayBox.x + dayBox.width).toBeLessThanOrEqual(board.x);
             expect(Math.abs(board.y - dayBox.y)).toBeLessThan(1);
             expect(artBox.y).toBeGreaterThan(dateBox.y + dateBox.height);
-            await expect(page.locator('#matrixSubtitle')).toBeVisible();
+            // The subtitle gives way to the first-task prompt on an empty board.
+            await expect(page.locator('#matrixSubtitle')).toBeVisible({ visible: populated });
           } else {
             // A single line above the board, with a small illustration beside the date.
             expect(board.y).toBeGreaterThanOrEqual(dayBox.y + dayBox.height);
@@ -194,8 +195,19 @@ for (const width of [390, 900, 1280, 1440]) {
             const box = (await overview.boundingBox())!;
             expect(box.x + box.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
           } else {
+            // The first-task prompt lives in the day panel: in the rail it takes the progress
+            // card's slot; in the bar it spans the width above the board.
+            await expect(day.locator('.first-task')).toHaveCount(1);
+            await expect(page.locator('.board-column .first-task')).toHaveCount(0);
             const prompt = (await page.locator('.first-task').boundingBox())!;
-            expect(prompt.x).toBeGreaterThanOrEqual(board.x);
+            expect(prompt.x + prompt.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
+            expect(prompt.y + prompt.height).toBeLessThanOrEqual(dayBox.y + dayBox.height + 1);
+            if (width >= 1360) {
+              expect(prompt.y).toBeGreaterThan(dateBox.y + dateBox.height);
+              expect(artBox.y).toBeGreaterThanOrEqual(prompt.y + prompt.height);
+            } else {
+              expect(prompt.width).toBeCloseTo(dayBox.width, 0);
+            }
           }
           if (width <= 1200 && size <= 100) {
             // The quadrants are on the first screen, not pushed below a hero.

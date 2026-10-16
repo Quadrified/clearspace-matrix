@@ -4,7 +4,7 @@
 <h1 align="center">Clearspace</h1>
 <p align="center"><strong>Make room for what matters.</strong></p>
 <p align="center">A personal Eisenhower Matrix for sorting tasks, organizing projects, and focusing on one thing at a time.</p>
-<p align="center"><a href="https://clearspace-matrix.fastring19.chatgpt.site"><strong>Open Clearspace →</strong></a></p>
+<p align="center"><a href="https://clearspace-matrix.fastring19.chatgpt.site"><strong>Open Clearspace →</strong></a> · <a href="docs/OVERVIEW.md"><strong>How it works</strong></a></p>
 
 ![Clearspace design overview](docs/preview.svg)
 
@@ -187,6 +187,10 @@ Credentials, local deployment identity, private keys, and task backup files are 
 [The live site](https://clearspace-matrix.fastring19.chatgpt.site) is public and hosted through ChatGPT Sites. Vite emits a static frontend in `client-dist/` that can be hosted without authentication. Dev tools are compiled out of production. This repository does not automatically deploy on push.
 
 See [deployment notes](docs/deployment.md) before changing the existing hosted page.
+
+## Learn more
+
+The [project overview](docs/OVERVIEW.md) explains the whole app on one page: the tech stack, flowcharts of how data moves and how changes reach the live site, the test suites, and CI/CD. For deeper detail, see the [architecture notes](docs/architecture.md) and [deployment notes](docs/deployment.md).
 
 ## Ownership and review
 

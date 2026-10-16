@@ -685,6 +685,10 @@ header:after {
     transform 120ms var(--out),
     background-color 140ms ease;
 }
+/* Reveal newly available add controls without moving the board layout. */
+.fab-reveal {
+  animation: task-in 180ms var(--out);
+}
 .task-fab svg {
   width: 21px;
   height: 21px;
@@ -2183,7 +2187,6 @@ button,
   display: flex;
   gap: 8px;
 }
-#newTask,
 #projectsButton {
   gap: 7px;
   padding: 9px 14px;

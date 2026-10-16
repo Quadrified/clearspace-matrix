@@ -28,17 +28,20 @@ import {
 } from './helpers';
 
 test.describe('adding tasks', () => {
-  test('Add task creates a task in the Do first quadrant', async ({ page }) => {
+  test('the starter card creates a first task in the Do first quadrant', async ({ page }) => {
     await open(page, { matrix: { tasks: [], projects: [] } });
     await expect(page.getByText('Start with what needs your attention.')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Add your first task' })).toBeVisible();
-    await page.getByRole('button', { name: 'Add task', exact: true }).click();
+    await page.getByRole('button', { name: 'Add your first task', exact: true }).click();
     const dialog = editorDialog(page);
     await expect(dialog).toBeVisible();
     await dialog.getByPlaceholder('What do you need to do?').fill('Write the report');
     await dialog.getByPlaceholder(/A first step/).fill('Start with an outline');
     await dialog.getByRole('button', { name: 'Save task' }).click();
     await expect(dialog).toBeHidden();
+    await expect(page.locator('.task-fab')).toHaveCount(4);
+    await expect(page.locator('.add-floating')).toHaveCount(1);
+    await expect(page.locator('.first-task')).toHaveCount(0);
     await expect(toast(page)).toContainText('Task added.');
     const doFirst = quadrant(page, 'Do first');
     await expect(doFirst.locator('.task-title')).toHaveText(['Write the report']);
@@ -86,7 +89,7 @@ test.describe('adding tasks', () => {
   test('quadrant plus button adds to that quadrant and choosing a quadrant in the editor works', async ({
     page,
   }) => {
-    await open(page, { matrix: { tasks: [], projects: [] } });
+    await open(page, { matrix: { ...seedMatrix, tasks: seedMatrix.tasks.slice(0, 1) } });
     await page.getByRole('button', { name: 'Add a task to Schedule' }).click();
     const dialog = editorDialog(page);
     await expect(dialog.getByRole('combobox', { name: 'Where does it belong?' })).toContainText(
@@ -105,7 +108,7 @@ test.describe('adding tasks', () => {
 
   test('blank title is not saved and Cancel discards', async ({ page }) => {
     await open(page, { matrix: { tasks: [], projects: [] } });
-    await page.getByRole('button', { name: 'Add a task to Do first' }).click();
+    await page.getByRole('button', { name: 'Add your first task' }).click();
     const dialog = editorDialog(page);
     await dialog.getByRole('button', { name: 'Save task' }).click();
     await expect(dialog).toBeVisible();

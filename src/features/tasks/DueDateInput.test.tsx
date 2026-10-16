@@ -45,7 +45,7 @@ it('synchronizes typing, calendar selection, quick dates and clearing without st
 it('saves typed US dates as the existing ISO storage format and reopens them formatted', () => {
   localStorage.setItem('clearspace.tutorial.v1', 'seen');
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Review budget' } });
   fireEvent.change(screen.getByLabelText(/Due date/), { target: { value: '10/30/2026' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));

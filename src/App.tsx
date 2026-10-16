@@ -11,7 +11,7 @@ import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
 import { useToday } from './lib/useToday';
-import { Icon } from './components/Icon';
+import { AddTaskFab } from './components/AddTaskFab';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
 import { Toolbar } from './features/app/Toolbar';
@@ -186,7 +186,6 @@ export default function App() {
               resultCount={resultCount}
               onClearFilters={clearFilters}
               searchRef={searchRef}
-              onAddTask={() => openTask()}
               onProjects={() => openDialog('projects')}
             />
             <MatrixBoard
@@ -217,14 +216,9 @@ export default function App() {
           }
         />
       </div>
-      <button
-        type="button"
-        className="add-floating"
-        aria-label="Quick add task"
-        onClick={() => openTask()}
-      >
-        <Icon name="plus" />
-      </button>
+      {matrix.tasks.length > 0 && (
+        <AddTaskFab className="add-floating" label="Quick add task" onClick={() => openTask()} />
+      )}
       <SoftPresence>
         {editor && (
           <TaskEditor

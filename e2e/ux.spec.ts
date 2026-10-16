@@ -2,11 +2,12 @@
 import { test, expect } from '@playwright/test';
 import { open, seedMatrix, editorDialog, storedMatrix, openFilters } from './helpers';
 
-test('Add task opens the editor in one click and Projects opens the projects dialog', async ({
+test('quadrant add opens the editor and Projects remains available in the toolbar', async ({
   page,
 }) => {
   await open(page, { matrix: seedMatrix });
-  await page.getByRole('button', { name: 'Add task', exact: true }).click();
+  await page.getByRole('button', { name: 'Add a task to Do first', exact: true }).click();
+  await expect(page.locator('#newTask')).toHaveCount(0);
   await expect(editorDialog(page)).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(editorDialog(page)).toBeHidden();
@@ -51,14 +52,44 @@ test('an empty board offers a first task and examples, and hides the zero stats'
 }) => {
   await open(page, { matrix: { tasks: [], projects: [] } });
   await expect(page.getByRole('region', { name: 'Task overview' })).toHaveCount(0);
+  await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
   await page.getByRole('button', { name: 'Try example tasks' }).click();
   await expect(page.locator('.task')).toHaveCount(4);
+  await expect(page.locator('.task-fab')).toHaveCount(4);
+  await expect(page.locator('.add-floating')).toHaveCount(1);
   await expect(page.getByRole('region', { name: 'Task overview' })).toBeVisible();
 });
 
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(`empty-board add controls stay hidden through cancel and reveal after save (${reducedMotion})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion });
+    await open(page, { matrix: { tasks: [], projects: [] } });
+    await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Add your first task' }).click();
+    await editorDialog(page).getByRole('button', { name: 'Cancel' }).click();
+    await expect(editorDialog(page)).toBeHidden();
+    await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Add your first task' }).click();
+    await editorDialog(page).getByPlaceholder('What do you need to do?').fill('My first task');
+    await editorDialog(page).getByRole('button', { name: 'Save task' }).click();
+    await expect(page.locator('.task-fab')).toHaveCount(4);
+    await expect(page.locator('.task-fab').first()).toHaveCSS(
+      'animation-name',
+      reducedMotion === 'reduce' ? 'none' : 'task-in',
+    );
+    await expect(page.locator('.first-task')).toHaveCount(0);
+    await page.getByRole('textbox', { name: 'Find a task' }).fill('no matches');
+    await expect(page.locator('.task')).toHaveCount(0);
+    await expect(page.locator('.task-fab')).toHaveCount(4);
+    await expect(page.locator('.add-floating')).toHaveCount(1);
+  });
+}
+
 test('date chips fill the due date', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
-  await page.getByRole('button', { name: 'Add task', exact: true }).click();
+  await page.getByRole('button', { name: 'Add a task to Do first', exact: true }).click();
   const dialog = editorDialog(page);
   await dialog.getByRole('button', { name: 'Tomorrow' }).click();
   await expect(dialog.getByLabel('Due date')).toHaveValue('10/16/2026');

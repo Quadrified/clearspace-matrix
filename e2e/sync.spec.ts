@@ -82,7 +82,7 @@ test('corrupt stored JSON shows the unreadable-storage toast and blocks overwrit
   await page.keyboard.press('Escape');
 
   // Changes are allowed in memory but must not overwrite the unreadable data.
-  await page.getByRole('button', { name: 'Add a task to Do first' }).click();
+  await page.getByRole('button', { name: 'Add your first task' }).click();
   await editorDialog(page).getByPlaceholder('What do you need to do?').fill('In memory only');
   await editorDialog(page).getByRole('button', { name: 'Save task' }).click();
   await expect(page.getByRole('button', { name: 'Edit In memory only' })).toBeVisible();

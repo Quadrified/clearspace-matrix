@@ -1081,8 +1081,16 @@ div.field {
 #helpDialog {
   width: min(530px, calc(100% - 32px));
 }
+#helpDialog .dialog-top h2 {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: calc(2rem * var(--text-scale, 1));
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
 #tutorialContent {
-  margin-top: 20px;
+  margin-top: 24px;
   min-height: 220px;
 }
 #tutorialTitle {
@@ -1122,41 +1130,44 @@ div.field {
   font-weight: 600;
   margin-bottom: 6px;
 }
-.tutorial-progress {
+.tutorial-progress-header {
   display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin: 23px 0 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 12px;
 }
-.tutorial-progress button {
-  position: relative;
-  width: 24px;
+.tutorial-step-label {
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  font-weight: 500;
+}
+.tutorial-progress {
   height: 6px;
-  border: 0;
-  padding: 0;
-  border-radius: 5px;
-  background: var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+  overflow: hidden;
+  margin-top: 8px;
 }
-.tutorial-progress button:before {
-  content: '';
-  position: absolute;
-  inset: -13px 0;
-}
-.tutorial-progress .active {
+.tutorial-progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
   background: var(--green);
+  transform-origin: left center;
 }
 .tutorial-actions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 .tutorial-actions .btn {
-  min-height: 44px;
-}
-.tutorial-actions .iconbtn {
-  font-size: calc(0.875rem * var(--text-scale, 1));
-  color: var(--muted);
   min-height: 44px;
 }
 .tutorial-actions #tutorialNext {
@@ -1577,10 +1588,6 @@ div.field {
   }
   .tutorial-actions {
     flex-wrap: wrap;
-  }
-  .tutorial-actions #tutorialSkip {
-    order: 3;
-    width: 100%;
   }
   .tutorial-actions .btn {
     flex: 1;
@@ -2367,24 +2374,6 @@ button,
     width: 22px;
     height: 22px;
   }
-  .tutorial-progress {
-    gap: 4px;
-  }
-  .tutorial-progress button {
-    flex: 1;
-    width: auto;
-    min-width: 0;
-    height: 44px;
-    background: transparent;
-  }
-  .tutorial-progress button:before {
-    inset: calc(50% - 3px) 3px;
-    border-radius: 5px;
-    background: var(--line);
-  }
-  .tutorial-progress .active:before {
-    background: var(--green);
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle:active .theme-track {
@@ -2571,10 +2560,12 @@ button,
   border-color: transparent;
 }
 #tutorialSkip {
-  min-height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--ink);
+  margin-left: auto;
+  min-height: 44px;
+  padding: 8px 0 8px 12px;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  text-align: right;
 }
 .add-floating {
   display: none;

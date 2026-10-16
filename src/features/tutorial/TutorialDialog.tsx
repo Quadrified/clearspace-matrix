@@ -19,11 +19,31 @@ export function TutorialDialog({
   const step = tutorialSteps[index]!,
     last = index === tutorialSteps.length - 1;
   return (
-    <Modal
-      id="helpDialog"
-      title={`Getting started · ${index + 1} of ${tutorialSteps.length}`}
-      onClose={onClose}
-    >
+    <Modal id="helpDialog" title="Getting Started" onClose={onClose}>
+      <div className="tutorial-progress-header">
+        <span className="tutorial-step-label" aria-live="polite" aria-atomic="true">
+          Step {index + 1} of {tutorialSteps.length}
+        </span>
+        <button type="button" className="iconbtn" id="tutorialSkip" onClick={onClose}>
+          {last ? 'Use my own tasks' : 'Skip tutorial'}
+        </button>
+      </div>
+      <div
+        className="tutorial-progress"
+        role="progressbar"
+        aria-label="Tutorial progress"
+        aria-valuemin={0}
+        aria-valuemax={tutorialSteps.length}
+        aria-valuenow={index + 1}
+        aria-valuetext={`Step ${index + 1} of ${tutorialSteps.length}`}
+      >
+        <motion.span
+          className="tutorial-progress-fill"
+          initial={false}
+          animate={{ scaleX: (index + 1) / tutorialSteps.length }}
+          transition={{ duration: instant ? 0 : 0.2, ease: softEase }}
+        />
+      </div>
       <motion.div
         key={index}
         id="tutorialContent"
@@ -41,23 +61,9 @@ export function TutorialDialog({
           {step.example}
         </div>
       </motion.div>
-      <div className="tutorial-progress">
-        {tutorialSteps.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Tutorial step ${i + 1}`}
-            aria-current={index === i ? 'step' : undefined}
-            className={index === i ? 'active' : ''}
-            onClick={() => setIndex(i)}
-          />
-        ))}
-      </div>
       <div className="tutorial-actions">
         <button className="btn" disabled={index === 0} onClick={() => setIndex(index - 1)}>
           Back
-        </button>
-        <button className="iconbtn" id="tutorialSkip" onClick={onClose}>
-          {last ? 'Use my own tasks' : 'Skip tutorial'}
         </button>
         <button
           id="tutorialNext"

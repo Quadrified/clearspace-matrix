@@ -171,14 +171,18 @@ export default function App() {
           storageError={storageError}
         />
         <main className={crowded ? 'workspace' : 'workspace has-rail'}>
-          <DayPanel today={today} summary={summary} hasTasks={matrix.tasks.length > 0} />
-          <div className="board-column">
-            {matrix.tasks.length === 0 && (
+          <DayPanel
+            today={today}
+            summary={summary}
+            hasTasks={matrix.tasks.length > 0}
+            start={
               <FirstTask
                 onAdd={() => openTask()}
                 onExamples={() => change(addExamples, 'Example tasks added.')}
               />
-            )}
+            }
+          />
+          <div className="board-column">
             <Toolbar
               filters={filters}
               projectFilter={projectFilter}

@@ -2996,8 +2996,10 @@ button,
 .board-column {
   min-width: 0;
 }
-.board-column > .first-task {
-  margin-top: 18px;
+/* On an empty board the first-task prompt sits in the day panel, below the date line. */
+.day > .first-task {
+  flex-basis: 100%;
+  margin: 8px 0 0;
 }
 /* On narrower screens the headline is kept for screen readers only. */
 @media (max-width: 1199px) {
@@ -3114,8 +3116,30 @@ button,
   .workspace.has-rail .board-column {
     padding-top: 6px;
   }
-  .workspace.has-rail .board-column > .first-task {
-    margin-top: 24px;
+  /* An empty board: the prompt takes the progress card's slot in the rail. */
+  .workspace.has-rail .day.day-empty p {
+    display: none;
+  }
+  .workspace.has-rail .day > .first-task {
+    order: 3;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin: 0;
+    padding: 16px;
+    border-radius: 14px;
+    background: linear-gradient(115deg, var(--paper), var(--soft));
+  }
+  .workspace.has-rail .day > .first-task h2 {
+    font-size: calc(0.9375rem * var(--text-scale, 1));
+    line-height: 1.45;
+  }
+  .workspace.has-rail .day > .first-task .first-task-actions {
+    display: grid;
+  }
+  .workspace.has-rail .day > .first-task .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 @media (min-width: 1360px) and (min-height: 700px) {

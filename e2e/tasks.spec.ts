@@ -95,7 +95,7 @@ test.describe('adding tasks', () => {
     await dialog.getByPlaceholder('What do you need to do?').fill('Plan the trip');
     await choose(page, 'Where does it belong?', 'Let go · Neither urgent nor important', dialog);
     await choose(page, 'Category', 'Personal', dialog);
-    await dialog.getByLabel('Due date').fill('2026-10-30');
+    await dialog.getByLabel('Due date').fill('10/30/2026');
     await dialog.getByRole('button', { name: 'Save task' }).click();
     const q = quadrant(page, 'Let go');
     await expect(q.locator('.task-title')).toHaveText(['Plan the trip']);

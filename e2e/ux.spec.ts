@@ -61,9 +61,9 @@ test('date chips fill the due date', async ({ page }) => {
   await page.getByRole('button', { name: 'Add task', exact: true }).click();
   const dialog = editorDialog(page);
   await dialog.getByRole('button', { name: 'Tomorrow' }).click();
-  await expect(dialog.getByLabel('Due date')).toHaveValue('2026-10-16');
+  await expect(dialog.getByLabel('Due date')).toHaveValue('10/16/2026');
   await dialog.getByRole('button', { name: 'Next week' }).click();
-  await expect(dialog.getByLabel('Due date')).toHaveValue('2026-10-22');
+  await expect(dialog.getByLabel('Due date')).toHaveValue('10/22/2026');
   await dialog.getByRole('button', { name: 'No date' }).click();
   await expect(dialog.getByLabel('Due date')).toHaveValue('');
 });

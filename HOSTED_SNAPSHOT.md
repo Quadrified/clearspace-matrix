@@ -1,5 +1,3 @@
-# Historical hosted snapshot 23
+# Historical hosted snapshot 24
 
-Reconstructed from the Sites source snapshot `3032ef5e7a05a673d09401f4b349aee60bb951dc` recorded at 2026-10-15T13:28:17-04:00.
-
-This archive preserves historical code, including features later replaced or removed. It is not the current supported implementation. Publisher hosting identity and local secrets are omitted; personal mailbox literals, if present, are redacted. The original publisher Git history is not imported. This reconstruction does not alter main.
+Reconstructed retrospectively from Sites source `b3dba747c0070646387f71887e4429ebe1aadbd9`, recorded 2026-10-15T13:51:07-04:00. Publisher hosting identity is excluded. The current main branch and original GitHub history are unchanged.

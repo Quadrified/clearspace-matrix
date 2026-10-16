@@ -1,3 +1,4 @@
+import { SubtasksEditor } from './SubtasksEditor';
 import { newId } from '../../lib/id';
 import { SoftPresence } from '../../components/SoftPresence';
 import { Select, SelectOption } from '../../components/Select';
@@ -50,7 +51,10 @@ export function TaskEditor({
           id="taskForm"
           onSubmit={(e) => {
             e.preventDefault();
-            const result = taskSchema.safeParse(draft);
+            const result = taskSchema.safeParse({
+              ...draft,
+              subtasks: (draft.subtasks ?? []).filter((item) => item.title.trim()),
+            });
             if (!result.success) {
               setError(result.error.issues[0]?.message ?? 'Check the task details.');
               return;
@@ -178,6 +182,10 @@ export function TaskEditor({
               onChange={(e) => patch('notes', e.target.value)}
             />
           </label>
+          <SubtasksEditor
+            value={draft.subtasks ?? []}
+            onChange={(value) => patch('subtasks', value)}
+          />
           {error && <p role="alert">{error}</p>}
           <div className="dialog-actions">
             {task && (

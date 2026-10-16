@@ -67,6 +67,12 @@ const dateSchema = z
       'Invalid due date',
     ),
   );
+export const subtaskSchema = z.object({
+  id: z.string().check(z.minLength(1), z.maxLength(199)),
+  title: z.string().check(z.trim(), z.minLength(1), z.maxLength(200)),
+  done: z.boolean(),
+});
+export type Subtask = z.infer<typeof subtaskSchema>;
 export const taskSchema = z.object({
   id: z.string().check(z.minLength(1), z.maxLength(199)),
   title: z.string().check(z.trim(), z.minLength(1), z.maxLength(200)),
@@ -80,6 +86,16 @@ export const taskSchema = z.object({
   projectId: z.optional(z.string().check(z.maxLength(199))),
   isDevSample: z.optional(z.boolean()),
   completedAt: z.optional(z.nullable(z.number())),
+  // Optional so old stored tasks and version 1/2 backups remain valid.
+  subtasks: z.optional(
+    z.array(subtaskSchema).check(
+      z.maxLength(100),
+      z.refine(
+        (items) => new Set(items.map((item) => item.id)).size === items.length,
+        'Subtask identifiers must be unique within a task',
+      ),
+    ),
+  ),
 });
 export type Task = z.infer<typeof taskSchema>;
 export const projectSchema = z.object({

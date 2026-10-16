@@ -17,6 +17,7 @@ export type TaskItemProps = {
   isLastActive: boolean;
   onEdit: (task: Task) => void;
   onToggle: (id: string) => void;
+  onToggleSubtask: (taskId: string, subtaskId: string) => void;
   onCelebrate: (q: QuadrantId, taskId: string, animated: boolean) => void;
   onDragStart: (e: DragEvent, id: string) => void;
   onDragEnd: () => void;
@@ -38,6 +39,7 @@ export const TaskItem = memo(
       isLastActive,
       onEdit,
       onToggle,
+      onToggleSubtask,
       onCelebrate,
       onDragStart,
       onDragEnd,
@@ -52,7 +54,8 @@ export const TaskItem = memo(
       <TaskCardMotion ref={ref} id={task.id} dragging={dragging}>
         <article
           data-task-id={task.id}
-          className={`task${task.done ? ' done' : ''}${dragging ? ' is-dragging' : ''}${dropBefore ? ' drop-before' : ''}`}
+          aria-label={task.title}
+          className={`task${task.subtasks?.length ? ' has-subtasks' : ''}${task.done ? ' done' : ''}${dragging ? ' is-dragging' : ''}${dropBefore ? ' drop-before' : ''}`}
           draggable={draggable}
           onDragStart={(e) => onDragStart(e, task.id)}
           onDragEnd={onDragEnd}
@@ -78,7 +81,7 @@ export const TaskItem = memo(
           <button
             className="task-main"
             aria-label={`Edit ${task.title}`}
-            aria-describedby={`${detailId}-notes ${detailId}-meta`}
+            aria-describedby={`${detailId}-notes ${detailId}-meta${task.subtasks?.length ? ` ${detailId}-subtasks` : ''}`}
             onClick={() => onEdit(task)}
           >
             <span className="task-title">{task.title}</span>
@@ -88,6 +91,12 @@ export const TaskItem = memo(
               </span>
             )}
 
+            {!!task.subtasks?.length && (
+              <span className="subtask-progress" id={`${detailId}-subtasks`}>
+                {task.subtasks.filter((item) => item.done).length} of {task.subtasks.length}{' '}
+                subtasks done
+              </span>
+            )}
             <span className="meta" id={`${detailId}-meta`}>
               {task.isDevSample && <span className="tag">Dev</span>}
               {task.category && <span className="tag">{task.category}</span>}
@@ -103,6 +112,24 @@ export const TaskItem = memo(
               )}
             </span>
           </button>
+          {!!task.subtasks?.length && (
+            <ul className="card-subtasks" aria-label={`Subtasks for ${task.title}`}>
+              {task.subtasks.map((item) => (
+                <li key={item.id}>
+                  <label className={`card-subtask${item.done ? ' is-done' : ''}`}>
+                    <input
+                      type="checkbox"
+                      className="check"
+                      checked={item.done}
+                      aria-label={`${item.done ? 'Reopen' : 'Complete'} subtask: ${item.title}`}
+                      onChange={() => onToggleSubtask(task.id, item.id)}
+                    />
+                    <span>{item.title}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
         </article>
       </TaskCardMotion>
     );

@@ -10,7 +10,7 @@ import { test } from '@playwright/test';
 import type { Browser, Page } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { seedMatrix, setup, openSettings, choose, openFilters } from './helpers';
+import { seedMatrix, setup, openSettings, pickFilter } from './helpers';
 
 const dir = process.env.SHOTS_DIR;
 const empty = { tasks: [], projects: [] };
@@ -184,18 +184,16 @@ test('13 delete project confirmation', async ({ browser }) => {
     '13-delete-project',
   );
 });
-test('14 category select open, with search', async ({ browser }) => {
+test('14 filters panel open, with search', async ({ browser }) => {
   await session(
     browser,
     {},
     async (page) => {
-      await openFilters(page);
       await page.getByRole('textbox', { name: 'Find a task' }).fill('o');
-      await choose(page, 'Filter by category', 'Work');
-      await page.getByRole('combobox', { name: 'Sort tasks' }).click();
-      await page.getByRole('listbox').waitFor();
+      await pickFilter(page, 'Category', 'Work');
+      await pickFilter(page, 'Sort tasks', 'Due date');
     },
-    '14-select-open',
+    '14-filters-panel',
   );
 });
 test('15 mobile dark with settings', async ({ browser }) => {

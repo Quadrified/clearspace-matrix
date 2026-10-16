@@ -39,10 +39,9 @@ test('the active status tab is a solid highlighted pill', async ({ page }) => {
 test('filtering shows a result count and Clear filters resets it', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   await expect(page.locator('.filter-summary')).toHaveCount(0);
-  await openFilters(page);
   await page.getByRole('textbox', { name: 'Find a task' }).fill('health');
   await expect(page.locator('.filter-summary')).toContainText('2 tasks match');
-  await page.getByRole('button', { name: 'Clear filters' }).click();
+  await page.getByRole('button', { name: 'Clear all' }).click();
   await expect(page.locator('.filter-summary')).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: 'Find a task' })).toHaveValue('');
 });
@@ -99,12 +98,18 @@ test('the system dark setting is followed until a choice is saved', async ({ bro
   await context.close();
 });
 
-test('phones get a floating add button and collapsed filters', async ({ page, isMobile }) => {
+test('phones get a floating add button and a bottom-sheet filter panel', async ({
+  page,
+  isMobile,
+}) => {
   test.skip(!isMobile, 'Phone layout only');
   await open(page, { matrix: seedMatrix });
-  await expect(page.getByRole('textbox', { name: 'Find a task' })).toBeHidden();
-  await page.getByRole('button', { name: 'Search and filters' }).click();
-  await expect(page.getByRole('textbox', { name: 'Find a task' })).toBeVisible();
+  await openFilters(page);
+  const panel = await page.locator('#filtersPanel').boundingBox();
+  const viewport = page.viewportSize()!;
+  expect(panel!.y + panel!.height).toBeGreaterThan(viewport.height - 2);
+  expect(panel!.width).toBeGreaterThan(viewport.width - 2);
+  await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Quick add task' }).click();
   await expect(editorDialog(page)).toBeVisible();
 });

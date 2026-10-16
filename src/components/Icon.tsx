@@ -28,6 +28,7 @@ import {
   FolderIcon,
   ChevronDownIcon,
   ExclamationTriangleIcon,
+  AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 import type { IconName } from '../domain/models';
 
@@ -61,6 +62,7 @@ const icons = {
   folder: FolderIcon,
   chevron: ChevronDownIcon,
   alert: ExclamationTriangleIcon,
+  filter: AdjustmentsHorizontalIcon,
 } as const;
 
 export const iconLabels: Record<IconName, string> = {

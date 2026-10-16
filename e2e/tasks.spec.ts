@@ -24,7 +24,7 @@ import {
   storedMatrix,
   choose,
   editorDialog,
-  openFilters,
+  pickFilter,
 } from './helpers';
 
 test.describe('adding tasks', () => {
@@ -256,8 +256,7 @@ test.describe('drag and drop', () => {
   test('tasks are not draggable when sorted by due date', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
     await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'true');
-    await openFilters(page);
-    await choose(page, 'Sort tasks', 'Due date');
+    await pickFilter(page, 'Sort tasks', 'Due date');
     await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'false');
   });
 });

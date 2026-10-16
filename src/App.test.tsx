@@ -194,7 +194,8 @@ it('offers a persistent appearance switch directly in the header', () => {
 it('lets dropdown typeahead use shortcut letters without opening another feature', async () => {
   const user = userEvent.setup();
   render(<App />);
-  screen.getByRole('combobox', { name: 'Filter by category' }).focus();
+  fireEvent.click(screen.getByRole('button', { name: 'Add a task to Do first' }));
+  screen.getByRole('combobox', { name: 'Category' }).focus();
   await user.keyboard('{ArrowDown}');
   await screen.findByRole('listbox');
   await user.keyboard('p');
@@ -202,10 +203,10 @@ it('lets dropdown typeahead use shortcut letters without opening another feature
     expect(screen.getByRole('option', { name: 'Personal' })).toHaveAttribute('data-highlighted'),
   );
   await user.keyboard('{Enter}');
-  expect(screen.getByRole('combobox', { name: 'Filter by category' })).toHaveTextContent(
-    'Personal',
-  );
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(screen.getByRole('combobox', { name: 'Category' })).toHaveTextContent('Personal');
+  expect(
+    screen.queryByRole('dialog', { name: 'A place for your projects.' }),
+  ).not.toBeInTheDocument();
 });
 
 it('keeps browser chrome and native controls aligned with the app theme rather than the OS', () => {

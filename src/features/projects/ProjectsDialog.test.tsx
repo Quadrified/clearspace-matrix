@@ -64,8 +64,11 @@ it('warns with the total task count and two examples; Cancel preserves all data'
 });
 it('deletes only the project and its tasks; Undo restores both and their assignments', async () => {
   render(<App />);
-  await userEvent.click(screen.getByRole('combobox', { name: 'Filter by project' }));
-  await userEvent.click(await screen.findByRole('option', { name: 'Launch' }));
+  await userEvent.click(screen.getByRole('button', { name: /^Filters/ }));
+  await userEvent.click(
+    within(screen.getByRole('group', { name: 'Project' })).getByRole('button', { name: 'Launch' }),
+  );
+  expect(screen.getByRole('button', { name: 'Remove Project filter: Launch' })).toBeInTheDocument();
   openProjects();
   fireEvent.click(
     within(confirmDeletion()).getByRole('button', { name: 'Delete project and 3 tasks' }),
@@ -73,9 +76,7 @@ it('deletes only the project and its tasks; Undo restores both and their assignm
   const after = JSON.parse(localStorage.getItem(MATRIX_KEY)!);
   expect(after.projects.map((p: { id: string }) => p.id)).toEqual(['other']);
   expect(after.tasks.map((t: Task) => t.id)).toEqual(['other', 'personal']);
-  expect(screen.getByRole('combobox', { name: 'Filter by project' })).toHaveTextContent(
-    'All projects',
-  );
+  expect(screen.queryByRole('button', { name: /^Remove Project filter/ })).not.toBeInTheDocument();
   closeProjects();
   expect(screen.getByText('Plan next week')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));

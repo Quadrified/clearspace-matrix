@@ -2443,10 +2443,6 @@ button,
 .tabs .tab-count {
   position: relative;
 }
-.filters-toggle {
-  display: none;
-  justify-self: start;
-}
 .filter-summary {
   display: flex;
   align-items: center;
@@ -2607,13 +2603,6 @@ button,
   .tabs button {
     padding: 8px 6px;
   }
-  .filters-toggle {
-    display: inline-flex;
-    min-height: 44px;
-  }
-  .filters:not(.is-open) {
-    display: none;
-  }
   .axis-rail {
     display: none;
   }
@@ -2769,4 +2758,176 @@ button,
 .night .mascot-shadow {
   fill: #000;
   opacity: 0.25;
+}
+
+/* One Filters button opens a panel; applied filters stay visible as chips. */
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.filters .search {
+  flex: 1;
+  grid-column: auto;
+}
+.filters-control {
+  position: relative;
+  flex-shrink: 0;
+}
+.filters-button {
+  gap: 8px;
+  min-height: 44px;
+  height: 100%;
+  padding: 0 16px;
+  font-weight: 550;
+}
+.filters-button svg {
+  width: 19px;
+  height: 19px;
+}
+.filters-button.on {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.filters-badge {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: #fff;
+  color: var(--green);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+.filters-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  width: min(440px, calc(100vw - 32px));
+  padding: 18px 18px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #1d33231f;
+}
+.filters-section {
+  margin-bottom: 16px;
+}
+.filters-section h2 {
+  margin: 0 0 8px;
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.filters-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.opt {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.opt[aria-pressed='true'],
+.filters-seg [aria-pressed='true'] {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 650;
+}
+.filters-seg {
+  display: flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--soft);
+}
+.filters-seg button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  cursor: pointer;
+}
+.filters-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.link-button {
+  border: 0;
+  background: transparent;
+  padding: 6px 4px;
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.applied-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border-radius: 99px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+.applied-chip b {
+  color: var(--muted);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  font-weight: 600;
+}
+.applied-chip button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.applied-chip svg {
+  width: 14px;
+  height: 14px;
+}
+.night .filters-badge {
+  background: #fff;
+}
+@media (max-width: 760px) {
+  .filters-button {
+    min-height: 44px;
+  }
+  .filters-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: auto;
+    max-height: 80dvh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -12px 40px #1d332333;
+  }
 }

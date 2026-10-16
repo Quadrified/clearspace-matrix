@@ -71,7 +71,7 @@ export default function App() {
     [matrix, boardFilters],
   );
   const clearFilters = useCallback(
-    () => setFilters((f) => ({ ...f, search: '', category: '', project: '' })),
+    () => setFilters((f) => ({ ...f, search: '', category: '', project: '', sort: 'manual' })),
     [],
   );
   const openTask = useCallback((q: QuadrantId = 'do', task?: Task) => {

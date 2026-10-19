@@ -173,7 +173,15 @@ for (const width of [390, 900, 1280, 1440]) {
           await expect(art).toHaveAttribute('aria-hidden', 'true');
           expect(artBox.x + artBox.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
 
+          // At 160% text the seeded board grows too tall to keep its bottom row on the
+          // first screen beside the rail, so it takes the day bar instead.
+          const rail = width >= 1360 && !(populated && size >= 160);
           if (width >= 1360) {
+            await expect(page.locator('main.workspace')).toHaveClass(
+              rail ? /has-rail/ : /^workspace$/,
+            );
+          }
+          if (rail) {
             // A side rail: the day sits beside the board and the board starts at the top.
             expect(dayBox.x + dayBox.width).toBeLessThanOrEqual(board.x);
             expect(Math.abs(board.y - dayBox.y)).toBeLessThan(1);
@@ -202,7 +210,7 @@ for (const width of [390, 900, 1280, 1440]) {
             const prompt = (await page.locator('.first-task').boundingBox())!;
             expect(prompt.x + prompt.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
             expect(prompt.y + prompt.height).toBeLessThanOrEqual(dayBox.y + dayBox.height + 1);
-            if (width >= 1360) {
+            if (rail) {
               expect(prompt.y).toBeGreaterThan(dateBox.y + dateBox.height);
               expect(artBox.y).toBeGreaterThanOrEqual(prompt.y + prompt.height);
             } else {
@@ -253,4 +261,44 @@ test('a crowded board gives up the side rail for the day bar on wide screens', a
   await expect(page.locator('main.workspace')).toHaveClass(/has-rail/);
   expect(await inBar()).toBe(false);
   await expect(page.locator('#matrixSubtitle')).toBeVisible();
+});
+
+test('tall quadrants give up the side rail when the bottom row would fall off the first screen', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const subtasks = (id: string, n: number) =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `${id}-s${i}`,
+      title: `Step ${i + 1}`,
+      done: false,
+    }));
+  // Two tasks with long checklists, as in the report: few tasks, but tall quadrants.
+  const tasks = seedMatrix.tasks.map((t) =>
+    t.id === 't-proposal'
+      ? { ...t, subtasks: subtasks(t.id, 2) }
+      : t.id === 't-invoice'
+        ? { ...t, subtasks: subtasks(t.id, 5) }
+        : t,
+  );
+  await open(page, { matrix: { ...seedMatrix, tasks } });
+  const workspace = page.locator('main.workspace');
+  await expect(workspace).not.toHaveClass(/has-rail/);
+  // On a taller screen everything fits beside the rail, so it comes back.
+  await page.setViewportSize({ width: 1440, height: 1600 });
+  await expect(workspace).toHaveClass(/has-rail/);
+  // Back on the shorter screen, it folds again.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(workspace).not.toHaveClass(/has-rail/);
+});
+
+test('a board that fits keeps the side rail on wide screens', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await open(page);
+  await expect(page.locator('main.workspace')).toHaveClass(/has-rail/);
+  const delegate = (await page.locator('.quad[data-q="delegate"]').boundingBox())!;
+  expect(delegate.y + 72).toBeLessThanOrEqual(900);
 });

@@ -3,7 +3,13 @@ import { GitHubLink } from '../../components/GitHubLink';
 import { Icon } from '../../components/Icon';
 import { Popover } from '../../components/Popover';
 import { ThemeToggle } from '../../components/ThemeToggle';
-import type { usePreferences } from '../../lib/usePreferences';
+import type { ThemeChoice, usePreferences } from '../../lib/usePreferences';
+
+const themeChoices: [ThemeChoice, string][] = [
+  ['auto', 'Auto'],
+  ['light', 'Light'],
+  ['night', 'Dark'],
+];
 
 export type Menu = 'settings' | null;
 
@@ -78,6 +84,21 @@ export function AppHeader({
                 <Icon name="eliminate" />
                 Need a fresh start?
               </button>
+            </div>
+            <div className="settings-size" role="group" aria-labelledby="themeChoiceLabel">
+              <span id="themeChoiceLabel">Appearance</span>
+              <div className="font-controls theme-choice">
+                {themeChoices.map(([value, label]) => (
+                  <button
+                    key={value}
+                    aria-pressed={prefs.theme === value}
+                    title={value === 'auto' ? 'Follow your system setting' : undefined}
+                    onClick={() => prefs.setTheme(value)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="settings-size">
               <span>Text size</span>

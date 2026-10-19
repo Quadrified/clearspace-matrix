@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { defaultLabels, labelsSchema, quadrants } from '../domain/models';
 import type { Labels } from '../domain/models';
 export function readLabels(): Labels {
@@ -28,24 +28,34 @@ function get(key: string, fallback: string) {
     return fallback;
   }
 }
+export type ThemeChoice = 'auto' | 'light' | 'night';
+const darkQuery = '(prefers-color-scheme: dark)';
 function systemPrefersDark() {
-  try {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  } catch {
-    return false;
-  }
+  return window.matchMedia?.(darkQuery).matches ?? false;
 }
-function readNight() {
+function readTheme(): ThemeChoice {
   const saved = get('clearspace.theme', '');
-  return saved ? saved === 'night' : systemPrefersDark();
+  // No saved choice (or an unknown one) follows the operating system.
+  return saved === 'light' || saved === 'night' ? saved : 'auto';
 }
 export function usePreferences(notify: (s: string) => void) {
   const [labels, setLabels] = useState(readLabels);
-  const [night, setNight] = useState(readNight);
+  const [theme, setTheme] = useState(readTheme);
+  const [systemNight, setSystemNight] = useState(systemPrefersDark);
+  const night = theme === 'auto' ? systemNight : theme === 'night';
   const [size, setSize] = useState(() => {
     const n = Number(get('clearspace.fontSize.v1', '100'));
     return Number.isFinite(n) ? Math.max(90, Math.min(160, n)) : 100;
   });
+  useEffect(() => {
+    if (theme !== 'auto') return;
+    const query = window.matchMedia?.(darkQuery);
+    // Follow the OS live while on Auto, e.g. when it switches to dark at sunset.
+    const sync = () => setSystemNight(query?.matches ?? false);
+    sync();
+    query?.addEventListener?.('change', sync);
+    return () => query?.removeEventListener?.('change', sync);
+  }, [theme]);
   useLayoutEffect(() => {
     // Update the canvas, controls, and browser chrome in the same pre-paint commit.
     document.documentElement.classList.toggle('night', night);
@@ -67,14 +77,20 @@ export function usePreferences(notify: (s: string) => void) {
   return {
     labels,
     night,
+    theme,
     size,
     setLabels: (v: Labels) => {
       setLabels(v);
       save('clearspace.labels.v1', JSON.stringify({ quadrants: v }));
     },
+    setTheme: (v: ThemeChoice) => {
+      setTheme(v);
+      save('clearspace.theme', v);
+    },
     toggleNight: () => {
-      setNight(!night);
-      save('clearspace.theme', night ? 'light' : 'night');
+      const next = night ? 'light' : 'night';
+      setTheme(next);
+      save('clearspace.theme', next);
     },
     setSize: (v: number) => {
       const n = Math.min(160, Math.max(90, v));

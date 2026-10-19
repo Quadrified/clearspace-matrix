@@ -44,12 +44,25 @@ test('rename a project and see it on tasks and in the filter', async ({ page }) 
   await openProjects(page);
   const dialog = projectsDialog(page);
   const input = dialog.getByRole('textbox', { name: 'Project name: Launch' });
+  const save = input.locator('xpath=following-sibling::button[1]');
+  await expect(save).toBeDisabled();
+  await input.fill(' Launch ');
+  await expect(save).toBeDisabled();
+  await input.fill('Draft');
+  await expect(save).toBeEnabled();
+  await input.fill('Launch');
+  await expect(save).toBeDisabled();
   await input.fill('Home');
   await input.locator('xpath=following-sibling::button[1]').click();
   await expect(dialog.getByRole('alert')).toHaveText('A project with that name already exists.');
   await input.fill('Product launch');
   await input.locator('xpath=following-sibling::button[1]').click();
   await expect(toast(page)).toContainText('Project updated.');
+  await expect(
+    dialog
+      .getByRole('textbox', { name: 'Project name: Product launch' })
+      .locator('xpath=following-sibling::button[1]'),
+  ).toBeDisabled();
   await dialog.getByRole('button', { name: 'Close' }).click();
   await expect(dialog).toBeHidden();
   await expect(page.locator('[data-task-id="t-proposal"] .project-tag')).toHaveText(

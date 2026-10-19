@@ -160,3 +160,29 @@ it('keeps duplicate-name feedback and clears it when editing the new name', () =
   fireEvent.change(input, { target: { value: 'Another project' } });
   expect(within(dialog).queryByRole('alert')).not.toBeInTheDocument();
 });
+
+it('enables Save only for a changed project name and disables it after saving', () => {
+  render(<App />);
+  openProjects();
+  const input = screen.getByRole('textbox', { name: 'Project name: Launch' });
+  const row = input.parentElement!;
+  const save = within(row).getByRole('button', { name: 'Save' });
+  expect(save).toBeDisabled();
+  fireEvent.change(input, { target: { value: ' Launch ' } });
+  expect(save).toBeDisabled();
+  fireEvent.change(input, { target: { value: 'Draft' } });
+  expect(save).toBeEnabled();
+  fireEvent.change(input, { target: { value: 'Launch' } });
+  expect(save).toBeDisabled();
+  fireEvent.change(input, { target: { value: 'Other project' } });
+  fireEvent.click(save);
+  expect(within(row).getByRole('alert')).toHaveTextContent('already exists');
+  expect(save).toBeEnabled();
+  fireEvent.change(input, { target: { value: 'Launch' } });
+  expect(save).toBeDisabled();
+  expect(within(row).queryByRole('alert')).not.toBeInTheDocument();
+  fireEvent.change(input, { target: { value: ' New launch ' } });
+  fireEvent.click(save);
+  expect(save).toBeDisabled();
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects[0].name).toBe('New launch');
+});

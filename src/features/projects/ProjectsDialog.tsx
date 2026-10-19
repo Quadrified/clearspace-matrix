@@ -23,6 +23,7 @@ function ProjectRow({
 }) {
   const [name, setName] = useState(project.name),
     [error, setError] = useState('');
+  const hasChanges = name.trim() !== project.name;
   return (
     <div className="project-row">
       <input
@@ -31,9 +32,12 @@ function ProjectRow({
         aria-label={`Project name: ${project.name}`}
         maxLength={80}
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => {
+          setName(e.target.value);
+          setError('');
+        }}
       />
-      <button className="btn" onClick={() => setError(onRename(name))}>
+      <button className="btn" disabled={!hasChanges} onClick={() => setError(onRename(name))}>
         Save
       </button>
       <button className="iconbtn danger" aria-label={`Delete ${project.name}`} onClick={onDelete}>

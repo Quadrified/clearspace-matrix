@@ -14,11 +14,22 @@ test('create a project and validate names', async ({ page }) => {
   await open(page, { matrix: { tasks: [], projects: [] } });
   await openProjects(page);
   const dialog = projectsDialog(page);
-  await dialog.getByRole('button', { name: 'Add project' }).click();
-  await expect(dialog.getByRole('alert')).toHaveText('Write a project name first.');
+  const add = dialog.getByRole('button', { name: 'Add project' });
+  const name = dialog.getByPlaceholder('Project name');
+  await expect(add).toBeDisabled();
+  for (const value of [' ', 'G', ' G ']) {
+    await name.fill(value);
+    await expect(add).toBeDisabled();
+    await name.press('Enter');
+    await expect(dialog.getByRole('alert')).toHaveCount(0);
+    expect((await storedMatrix(page)).projects).toEqual([]);
+  }
+  await name.fill('Ga');
+  await expect(add).toBeEnabled();
   await dialog.getByPlaceholder('Project name').fill('Garden');
   await dialog.getByRole('button', { name: 'Add project' }).click();
   await expect(toast(page)).toContainText('Project added.');
+  await expect(add).toBeDisabled();
   await expect(dialog.getByRole('textbox', { name: 'Project name: Garden' })).toBeVisible();
   await dialog.getByPlaceholder('Project name').fill('garden');
   await dialog.getByRole('button', { name: 'Add project' }).click();
@@ -83,13 +94,13 @@ test('delete a project: confirm dialog warns that its tasks are deleted, cancel 
   expect((await storedMatrix(page)).projects).toHaveLength(2);
 });
 
-test('deleting an empty project says there is nothing to delete', async ({ page }) => {
+test('deleting an empty project asks for confirmation without task warnings', async ({ page }) => {
   await open(page, { matrix: { tasks: [], projects: [{ id: 'p-x', name: 'Empty one' }] } });
   await openProjects(page);
   await projectsDialog(page).getByRole('button', { name: 'Delete Empty one' }).click();
   const confirm = page.getByRole('dialog', { name: 'Delete this project?' });
   await expect(confirm.locator('.project-delete-summary')).toHaveText(
-    'Empty one contains 0 tasks. This project has no tasks to delete.',
+    'Are you sure you want to delete Empty one?',
   );
   await confirm.getByRole('button', { name: 'Delete project', exact: true }).click();
   await expect(toast(page)).toContainText('Project deleted.');

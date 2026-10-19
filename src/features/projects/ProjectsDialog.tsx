@@ -46,6 +46,7 @@ function ProjectRow({
 export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }: Props) {
   const [name, setName] = useState(''),
     [error, setError] = useState('');
+  const canAdd = name.trim().length >= 2;
   const [pending, setPending] = useState<Project | null>(null);
   const affected = pending ? matrix.tasks.filter((task) => task.projectId === pending.id) : [];
   const examples = [...affected].sort((a, b) => Number(a.done) - Number(b.done)).slice(0, 2);
@@ -57,6 +58,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            if (!canAdd) return;
             const problem = projectNameError(matrix, name);
             setError(problem);
             if (problem) return;
@@ -78,10 +80,15 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
               maxLength={80}
               placeholder="Project name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setError('');
+              }}
             />
           </label>
-          <button className="btn primary">Add project</button>
+          <button className="btn primary" disabled={!canAdd}>
+            Add project
+          </button>
           {error && <p role="alert">{error}</p>}
         </form>
         <div className="project-list">
@@ -116,10 +123,16 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
             onClose={() => setPending(null)}
           >
             <p className="project-delete-summary">
-              <strong>{pending.name}</strong> contains <strong>{taskCount}</strong>.
-              {affected.length
-                ? ' Deleting this project will also delete all of these tasks, including completed tasks.'
-                : ' This project has no tasks to delete.'}
+              {affected.length ? (
+                <>
+                  <strong>{pending.name}</strong> contains <strong>{taskCount}</strong>. Deleting
+                  this project will also delete all of these tasks, including completed tasks.
+                </>
+              ) : (
+                <>
+                  Are you sure you want to delete <strong>{pending.name}</strong>?
+                </>
+              )}
             </p>
             {examples.length > 0 && (
               <>

@@ -340,9 +340,19 @@ Recorded source time: 2026-10-18T23:34:05-04:00. Tag: `site-v37`. Deployment suc
 
 Sites source: `1eff99e20b8e936c6a277f9f37ac175cf97876c3`. GitHub target: `49c5fdaf468d28946c66d5d699a17da9acbf1df9`. Reconstructed: False.
 
-## Available GitHub history through 49c5fda
+## Hosted version 38: Project rename controls and adaptive rail layout
 
-This is the reachable Git history through `49c5fda`, the main commit deployed as hosted version 37, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-19T00:13:56-04:00. Tag: `site-v38`. Deployment succeeded; record updated 2026-10-19T00:14:26.327317-04:00 (America/Toronto).
+
+- Enable project Save only when the trimmed draft differs from the saved name; disable it after a successful rename or when edits are reverted.
+- Clear stale rename validation feedback when editing, with component and desktop/mobile browser coverage.
+- Include the latest main layout change that folds the side rail when tall quadrants hide the bottom row.
+
+Sites source: `de428bd49214ca3f2e74a592857ff8163b5f1279`. GitHub target: `e26151994e8fd2b7532eb6d6392369ea8b85f0bd`. Reconstructed: False.
+
+## Available GitHub history through e261519
+
+This is the reachable Git history through `e261519`, the main commit deployed as hosted version 38, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -414,3 +424,6 @@ This is the reachable Git history through `49c5fda`, the main commit deployed as
 - 2026-10-16T11:49:31-04:00 [0d8c75b](https://github.com/Quadrified/clearspace-matrix/commit/0d8c75b8b5d8f1ce8049bddf2d0f143ffecb819f): Record hosted release 36 and deployed source history
 - 2026-10-18T23:32:41-04:00 [27cd840](https://github.com/Quadrified/clearspace-matrix/commit/27cd840e90c4b9f0ccd4aa31be5adccbdb1ff395): Gate project creation and simplify empty-project deletion
 - 2026-10-18T23:32:41-04:00 [49c5fda](https://github.com/Quadrified/clearspace-matrix/commit/49c5fdaf468d28946c66d5d699a17da9acbf1df9): Update browser assertions for gated project creation and deletion copy
+- 2026-10-18T23:35:34-04:00 [b74ef5a](https://github.com/Quadrified/clearspace-matrix/commit/b74ef5a340c5826c3d791d52d5346670beb3c7ad): Record hosted release 37 and deployed source history
+- 2026-10-19T00:10:11-04:00 [99440e9](https://github.com/Quadrified/clearspace-matrix/commit/99440e99e6048bc9d336377f7e41a2b68aca2cd4): Fold the side rail when tall quadrants hide the bottom row
+- 2026-10-19T00:13:40-04:00 [e261519](https://github.com/Quadrified/clearspace-matrix/commit/e26151994e8fd2b7532eb6d6392369ea8b85f0bd): Disable project Save until the trimmed name changes (#21)

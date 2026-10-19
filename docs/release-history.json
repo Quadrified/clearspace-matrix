@@ -544,5 +544,21 @@
       "Use a simple named confirmation for deleting empty projects while preserving task counts and warnings for populated projects.",
       "Update component and desktop/mobile browser assertions for the revised project flows."
     ]
+  },
+  {
+    "n": 38,
+    "title": "Project rename controls and adaptive rail layout",
+    "tag": "site-v38",
+    "sha": "de428bd49214ca3f2e74a592857ff8163b5f1279",
+    "target": "e26151994e8fd2b7532eb6d6392369ea8b85f0bd",
+    "recorded_at": "2026-10-19T00:13:56-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-19T00:14:26.327317-04:00",
+    "changes": [
+      "Enable project Save only when the trimmed draft differs from the saved name; disable it after a successful rename or when edits are reverted.",
+      "Clear stale rename validation feedback when editing, with component and desktop/mobile browser coverage.",
+      "Include the latest main layout change that folds the side rail when tall quadrants hide the bottom row."
+    ]
   }
 ]

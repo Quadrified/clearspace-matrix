@@ -528,5 +528,21 @@
     "changes": [
       "Add a GitHub repository link to the header with responsive styling and component test coverage."
     ]
+  },
+  {
+    "n": 37,
+    "title": "Clearer project creation and deletion",
+    "tag": "site-v37",
+    "sha": "1eff99e20b8e936c6a277f9f37ac175cf97876c3",
+    "target": "49c5fdaf468d28946c66d5d699a17da9acbf1df9",
+    "recorded_at": "2026-10-18T23:34:05-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-18T23:35:17.401991-04:00",
+    "changes": [
+      "Disable project creation until the trimmed name has at least two characters, including keyboard submission, and clear stale duplicate-name feedback while editing.",
+      "Use a simple named confirmation for deleting empty projects while preserving task counts and warnings for populated projects.",
+      "Update component and desktop/mobile browser assertions for the revised project flows."
+    ]
   }
 ]

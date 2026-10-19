@@ -330,9 +330,19 @@ Recorded source time: 2026-10-16T11:48:17-04:00. Tag: `site-v36`. Deployment suc
 
 Sites source: `d3b4ad0f0bec1cc14c6c6def6f7dab23360c128c`. GitHub target: `5a0c8ceb9ba769404022ac7aaca2f1f1166bfa94`. Reconstructed: False.
 
-## Available GitHub history through 5a0c8ce
+## Hosted version 37: Clearer project creation and deletion
 
-This is the reachable Git history through `5a0c8ce`, the main commit deployed as hosted version 36, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-18T23:34:05-04:00. Tag: `site-v37`. Deployment succeeded; record updated 2026-10-18T23:35:17.401991-04:00 (America/Toronto).
+
+- Disable project creation until the trimmed name has at least two characters, including keyboard submission, and clear stale duplicate-name feedback while editing.
+- Use a simple named confirmation for deleting empty projects while preserving task counts and warnings for populated projects.
+- Update component and desktop/mobile browser assertions for the revised project flows.
+
+Sites source: `1eff99e20b8e936c6a277f9f37ac175cf97876c3`. GitHub target: `49c5fdaf468d28946c66d5d699a17da9acbf1df9`. Reconstructed: False.
+
+## Available GitHub history through 49c5fda
+
+This is the reachable Git history through `49c5fda`, the main commit deployed as hosted version 37, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -401,3 +411,6 @@ This is the reachable Git history through `5a0c8ce`, the main commit deployed as
 - 2026-10-16T11:09:58-04:00 [3de57a5](https://github.com/Quadrified/clearspace-matrix/commit/3de57a56bb98a441a69ef2a5b9b656fa1ac6f7d0): Move the first-task prompt into the day panel on an empty board
 - 2026-10-16T11:43:50-04:00 [008b872](https://github.com/Quadrified/clearspace-matrix/commit/008b8723358bd6ebb0e0355f34e5a99438b053fc): Record hosted release 35 and deployed source history
 - 2026-10-16T11:46:52-04:00 [5a0c8ce](https://github.com/Quadrified/clearspace-matrix/commit/5a0c8ceb9ba769404022ac7aaca2f1f1166bfa94): Add a GitHub link to the header
+- 2026-10-16T11:49:31-04:00 [0d8c75b](https://github.com/Quadrified/clearspace-matrix/commit/0d8c75b8b5d8f1ce8049bddf2d0f143ffecb819f): Record hosted release 36 and deployed source history
+- 2026-10-18T23:32:41-04:00 [27cd840](https://github.com/Quadrified/clearspace-matrix/commit/27cd840e90c4b9f0ccd4aa31be5adccbdb1ff395): Gate project creation and simplify empty-project deletion
+- 2026-10-18T23:32:41-04:00 [49c5fda](https://github.com/Quadrified/clearspace-matrix/commit/49c5fdaf468d28946c66d5d699a17da9acbf1df9): Update browser assertions for gated project creation and deletion copy

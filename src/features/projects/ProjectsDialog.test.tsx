@@ -90,8 +90,9 @@ it('confirms an empty project without inventing task examples', () => {
   render(<App />);
   openProjects();
   const confirmation = confirmDeletion();
-  expect(confirmation).toHaveTextContent('0 tasks');
-  expect(confirmation).toHaveTextContent('This project has no tasks to delete.');
+  expect(confirmation).toHaveTextContent('Are you sure you want to delete Launch?');
+  expect(confirmation).not.toHaveTextContent('0 tasks');
+  expect(confirmation).not.toHaveTextContent('no tasks to delete');
   expect(within(confirmation).queryByRole('list')).not.toBeInTheDocument();
   fireEvent.click(within(confirmation).getByRole('button', { name: 'Delete project' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects).toEqual([matrix.projects[1]]);
@@ -121,4 +122,41 @@ it('closes the editor when deleting the project that contains the edited task', 
   );
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Edit Send the proposal' })).not.toBeInTheDocument();
+});
+
+it('requires two trimmed characters to add a project without an empty-name warning', () => {
+  render(<App />);
+  openProjects();
+  const dialog = screen.getByRole('dialog', { name: 'A place for your projects.' });
+  const input = within(dialog).getByLabelText('New project');
+  const add = within(dialog).getByRole('button', { name: 'Add project' });
+  expect(add).toBeDisabled();
+  for (const value of [' ', 'a', ' a ']) {
+    fireEvent.change(input, { target: { value } });
+    expect(add).toBeDisabled();
+    fireEvent.submit(input.closest('form')!);
+    expect(within(dialog).queryByRole('alert')).not.toBeInTheDocument();
+  }
+  fireEvent.change(input, { target: { value: ' ab ' } });
+  expect(add).toBeEnabled();
+  fireEvent.click(add);
+  expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).projects).toContainEqual(
+    expect.objectContaining({ name: 'ab' }),
+  );
+  expect(input).toHaveValue('');
+  expect(add).toBeDisabled();
+});
+
+it('keeps duplicate-name feedback and clears it when editing the new name', () => {
+  render(<App />);
+  openProjects();
+  const dialog = screen.getByRole('dialog', { name: 'A place for your projects.' });
+  const input = within(dialog).getByLabelText('New project');
+  fireEvent.change(input, { target: { value: 'Launch' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Add project' }));
+  expect(within(dialog).getByRole('alert')).toHaveTextContent(
+    'A project with that name already exists.',
+  );
+  fireEvent.change(input, { target: { value: 'Another project' } });
+  expect(within(dialog).queryByRole('alert')).not.toBeInTheDocument();
 });

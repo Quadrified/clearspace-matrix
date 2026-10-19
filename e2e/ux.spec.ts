@@ -1,6 +1,6 @@
 /* UX pass: one-click add, tab counts, filter summary, first-task prompt, date chips, backup state. */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, editorDialog, storedMatrix, openFilters } from './helpers';
+import { open, seedMatrix, editorDialog, storedMatrix, openFilters, openSettings } from './helpers';
 
 test('quadrant add opens the editor and Projects remains available in the toolbar', async ({
   page,
@@ -129,6 +129,28 @@ test('the system dark setting is followed until a choice is saved', async ({ bro
   await page.reload();
   await expect(page.locator('body')).not.toHaveClass(/night/);
   await context.close();
+});
+
+test('Auto appearance switches live with the system and can be restored after a manual choice', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await open(page, { matrix: seedMatrix });
+  await expect(page.locator('body')).not.toHaveClass(/night/);
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(page.locator('body')).toHaveClass(/night/);
+  await page.getByRole('switch', { name: 'Dark mode' }).click();
+  await expect(page.locator('body')).not.toHaveClass(/night/);
+  await openSettings(page);
+  const auto = page.getByRole('button', { name: 'Auto' });
+  await expect(auto).toHaveAttribute('aria-pressed', 'false');
+  await auto.click();
+  await expect(auto).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('body')).toHaveClass(/night/);
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page.locator('body')).not.toHaveClass(/night/);
+  await page.reload();
+  await expect(page.locator('body')).not.toHaveClass(/night/);
 });
 
 test('phones get a floating add button and a bottom-sheet filter panel', async ({

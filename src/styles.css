@@ -977,6 +977,13 @@ div.field {
   background: transparent;
   font-size: 14px;
 }
+.theme-choice button {
+  padding: 4px 10px;
+}
+.theme-choice button[aria-pressed='true'] {
+  background: var(--soft);
+  font-weight: 600;
+}
 .settings-menu #saveState {
   display: block;
   font-size: calc(0.8125rem * var(--text-scale, 1));

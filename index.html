@@ -21,7 +21,9 @@
     <script>
       try {
         var saved = localStorage.getItem('clearspace.theme');
-        var dark = saved ? saved === 'night' : matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark =
+          saved === 'night' ||
+          (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
         if (dark) {
           document.documentElement.classList.add('night');
           document.body.classList.add('night');

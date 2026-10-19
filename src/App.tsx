@@ -1,6 +1,7 @@
 import { toggleSubtask } from './domain/matrix';
 import { ResetBoardDialog } from './features/settings/ResetBoardDialog';
 import { useHeaderHeight } from './lib/useHeaderHeight';
+import { useRailFits } from './lib/useRailFits';
 import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -67,6 +68,10 @@ export default function App() {
     [summary, matrix.tasks.length],
   );
   // A busy board needs the width, so the wide-screen side rail folds back into the day bar.
+  // It also folds when tall quadrants (long subtask lists) push Delegate and Let go below
+  // the first screen.
+  const workspaceRef = useRef<HTMLElement>(null);
+  const railFits = useRailFits(workspaceRef);
   const crowded = useMemo(() => isCrowded(matrix, filters.status), [matrix, filters.status]);
   const resultCount = useMemo(
     () => quadrants.reduce((n, q) => n + visibleTasks(matrix, q.id, boardFilters).length, 0),
@@ -170,7 +175,10 @@ export default function App() {
           onHelp={() => openDialog('tutorial')}
           storageError={storageError}
         />
-        <main className={crowded ? 'workspace' : 'workspace has-rail'}>
+        <main
+          ref={workspaceRef}
+          className={crowded || !railFits ? 'workspace' : 'workspace has-rail'}
+        >
           <DayPanel
             today={today}
             summary={summary}

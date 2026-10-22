@@ -101,8 +101,10 @@ test('date chips fill the due date', async ({ page }) => {
   await expect(dialog.getByLabel('Due date')).toHaveValue('');
 });
 
-test('exporting a backup records it and the footer says so', async ({ page }) => {
+test('exporting a backup records it in Settings', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
+  await expect(page.getByRole('button', { name: 'Export backup' })).toHaveCount(0);
+  await openSettings(page);
   await expect(page.locator('.backup-state')).toHaveText('Last backup: never.');
   await expect(page.locator('.backup-state')).toHaveClass(/due/);
   const download = page.waitForEvent('download');
@@ -153,7 +155,7 @@ test('Auto appearance switches live with the system and can be restored after a 
   await expect(page.locator('body')).not.toHaveClass(/night/);
 });
 
-test('phones get a floating add button and a bottom-sheet filter panel', async ({
+test('phones keep quadrant add buttons and a bottom-sheet filter panel', async ({
   page,
   isMobile,
 }) => {
@@ -165,7 +167,8 @@ test('phones get a floating add button and a bottom-sheet filter panel', async (
   expect(panel!.y + panel!.height).toBeGreaterThan(viewport.height - 2);
   expect(panel!.width).toBeGreaterThan(viewport.width - 2);
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Quick add task' }).click();
+  await expect(page.getByRole('button', { name: 'Quick add task' })).toBeHidden();
+  await page.getByRole('button', { name: 'Add a task to Do first', exact: true }).click();
   await expect(editorDialog(page)).toBeVisible();
 });
 
@@ -189,55 +192,35 @@ for (const width of [390, 900, 1280, 1440]) {
           const art = day.locator('.axis-board');
           const dayBox = (await day.boundingBox())!;
           const dateBox = (await day.locator('.date').boundingBox())!;
-          const artBox = (await art.boundingBox())!;
+          const artBox = await art.boundingBox();
           const board = (await page.locator('.board-column').boundingBox())!;
           await expect(overview).toHaveCount(populated ? 1 : 0);
           await expect(art).toHaveAttribute('aria-hidden', 'true');
-          expect(artBox.x + artBox.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
+          if (artBox)
+            expect(artBox.x + artBox.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
 
-          // At 160% text the seeded board grows too tall to keep its bottom row on the
-          // first screen beside the rail, so it takes the day bar instead.
-          const rail = width >= 1360 && !(populated && size >= 160);
-          if (width >= 1360) {
-            await expect(page.locator('main.workspace')).toHaveClass(
-              rail ? /has-rail/ : /^workspace$/,
-            );
-          }
-          if (rail) {
-            // A side rail: the day sits beside the board and the board starts at the top.
-            expect(dayBox.x + dayBox.width).toBeLessThanOrEqual(board.x);
-            expect(Math.abs(board.y - dayBox.y)).toBeLessThan(1);
-            expect(artBox.y).toBeGreaterThan(dateBox.y + dateBox.height);
-            // The subtitle gives way to the first-task prompt on an empty board.
-            await expect(page.locator('#matrixSubtitle')).toBeVisible({ visible: populated });
-          } else {
-            // A single line above the board, with a small illustration beside the date.
-            expect(board.y).toBeGreaterThanOrEqual(dayBox.y + dayBox.height);
+          await expect(page.locator('main.workspace')).not.toHaveClass(/has-rail/);
+          expect(board.y).toBeGreaterThanOrEqual(dayBox.y + dayBox.height);
+          if (artBox) {
             expect(artBox.x).toBeGreaterThanOrEqual(dateBox.x + dateBox.width);
             expect(
               Math.abs(artBox.y + artBox.height / 2 - dateBox.y - dateBox.height / 2),
             ).toBeLessThan(4);
             expect(artBox.width).toBeLessThanOrEqual(56 * (size / 100) + 1);
-            await expect(page.locator('#matrixSubtitle')).toBeHidden();
           }
+          await expect(page.locator('#matrixSubtitle')).toBeHidden();
 
           if (populated) {
             const box = (await overview.boundingBox())!;
             expect(box.x + box.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
           } else {
-            // The first-task prompt lives in the day panel: in the rail it takes the progress
-            // card's slot; in the bar it spans the width above the board.
+            // Compact starter actions stay in the day panel beside the date when they fit.
             await expect(day.locator('.first-task')).toHaveCount(1);
             await expect(page.locator('.board-column .first-task')).toHaveCount(0);
             const prompt = (await page.locator('.first-task').boundingBox())!;
             expect(prompt.x + prompt.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
             expect(prompt.y + prompt.height).toBeLessThanOrEqual(dayBox.y + dayBox.height + 1);
-            if (rail) {
-              expect(prompt.y).toBeGreaterThan(dateBox.y + dateBox.height);
-              expect(artBox.y).toBeGreaterThanOrEqual(prompt.y + prompt.height);
-            } else {
-              expect(prompt.width).toBeCloseTo(dayBox.width, 0);
-            }
+            expect(prompt.width).toBeLessThanOrEqual(dayBox.width);
           }
           if (width <= 1200 && size <= 100) {
             // The quadrants are on the first screen, not pushed below a hero.
@@ -253,74 +236,69 @@ for (const width of [390, 900, 1280, 1440]) {
   }
 }
 
-test('a crowded board gives up the side rail for the day bar on wide screens', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
-  await page.setViewportSize({ width: 1440, height: 900 });
-  const base = seedMatrix.tasks.find((t) => t.q === 'do' && !t.done)!;
-  const extra = Array.from({ length: 4 }, (_, i) => ({
-    ...base,
-    id: `t-extra-${i}`,
-    title: `Extra urgent task ${i + 1}`,
-    done: false,
-    completedAt: null,
-  }));
-  await open(page, { matrix: { ...seedMatrix, tasks: [...seedMatrix.tasks, ...extra] } });
-  const day = page.locator('.day');
-  const board = page.locator('.board-column');
-  const inBar = async () => {
-    const dayBox = (await day.boundingBox())!;
-    return (await board.boundingBox())!.y >= dayBox.y + dayBox.height;
-  };
-  // Do first now shows more than four active tasks, so the board takes the full width.
-  await expect(page.locator('main.workspace')).not.toHaveClass(/has-rail/);
-  expect(await inBar()).toBe(true);
-  await expect(page.locator('#matrixSubtitle')).toBeHidden();
-  // The Completed tab shows one task, so the rail comes back.
-  await page.getByRole('button', { name: /^Completed/ }).click();
-  await expect(page.locator('main.workspace')).toHaveClass(/has-rail/);
-  expect(await inBar()).toBe(false);
-  await expect(page.locator('#matrixSubtitle')).toBeVisible();
-});
-
-test('tall quadrants give up the side rail when the bottom row would fall off the first screen', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
-  await page.setViewportSize({ width: 1440, height: 900 });
-  const subtasks = (id: string, n: number) =>
-    Array.from({ length: n }, (_, i) => ({
-      id: `${id}-s${i}`,
-      title: `Step ${i + 1}`,
-      done: false,
-    }));
-  // Two tasks with long checklists, as in the report: few tasks, but tall quadrants.
-  const tasks = seedMatrix.tasks.map((t) =>
-    t.id === 't-proposal'
-      ? { ...t, subtasks: subtasks(t.id, 2) }
-      : t.id === 't-invoice'
-        ? { ...t, subtasks: subtasks(t.id, 5) }
-        : t,
-  );
-  await open(page, { matrix: { ...seedMatrix, tasks } });
-  const workspace = page.locator('main.workspace');
-  await expect(workspace).not.toHaveClass(/has-rail/);
-  // On a taller screen everything fits beside the rail, so it comes back.
-  await page.setViewportSize({ width: 1440, height: 1600 });
-  await expect(workspace).toHaveClass(/has-rail/);
-  // Back on the shorter screen, it folds again.
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(workspace).not.toHaveClass(/has-rail/);
-});
-
-test('a board that fits keeps the side rail on wide screens', async ({ page, isMobile }) => {
-  test.skip(!!isMobile, 'The side rail is a wide-screen layout');
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await open(page);
-  await expect(page.locator('main.workspace')).toHaveClass(/has-rail/);
-  const delegate = (await page.locator('.quad[data-q="delegate"]').boundingBox())!;
-  expect(delegate.y + 72).toBeLessThanOrEqual(900);
-});
+for (const [width, height] of [
+  [320, 568],
+  [390, 844],
+  [844, 390],
+  [900, 600],
+  [1280, 720],
+  [1440, 900],
+]) {
+  for (const size of [100, 160]) {
+    test(`four equal quadrants stay within ${width}x${height} at ${size}% with overflowing tasks`, async ({
+      page,
+      isMobile,
+    }) => {
+      test.skip(Boolean(isMobile) !== width <= 760, 'Use the matching device project');
+      await page.setViewportSize({ width, height });
+      const base = seedMatrix.tasks[0]!;
+      const tasks = ['do', 'schedule', 'delegate', 'eliminate'].flatMap((q) =>
+        Array.from({ length: 15 }, (_, i) => ({
+          ...base,
+          q,
+          id: `${q}-${i}`,
+          title: `Task ${i + 1} with a long title`,
+          subtasks: Array.from({ length: 5 }, (_, j) => ({
+            id: `${q}-${i}-${j}`,
+            title: `Step ${j + 1}`,
+            done: false,
+          })),
+        })),
+      );
+      await open(page, { matrix: { ...seedMatrix, tasks }, size });
+      const boxes = await page.locator('.quad').evaluateAll((nodes) =>
+        nodes.map((node) => {
+          const { x, y, width, height } = node.getBoundingClientRect();
+          return { x, y, width, height };
+        }),
+      );
+      expect(boxes).toHaveLength(4);
+      for (const box of boxes) {
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.y).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(width);
+        expect(box.y + box.height).toBeLessThanOrEqual(height);
+        expect(box.height).toBeGreaterThan(0);
+        expect(Math.abs(box.height - boxes[0]!.height)).toBeLessThan(1);
+        expect(Math.abs(box.width - boxes[0]!.width)).toBeLessThan(1);
+      }
+      expect(boxes[1]!.x).toBeGreaterThan(boxes[0]!.x);
+      expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
+      expect(
+        await page.evaluate(() => ({
+          horizontal: document.documentElement.scrollWidth > innerWidth,
+          vertical: document.documentElement.scrollHeight > innerHeight,
+        })),
+      ).toEqual({ horizontal: false, vertical: false });
+      const list = page.locator('.tasklist').first();
+      expect(await list.evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);
+      await list.focus();
+      await page.keyboard.press('End');
+      await expect.poll(() => list.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+      await page.getByRole('button', { name: 'Completed', exact: true }).click();
+      const after = await page.locator('.quad').first().boundingBox();
+      expect(after!.height).toBeCloseTo(boxes[0]!.height, 0);
+      expect(after!.width).toBeCloseTo(boxes[0]!.width, 0);
+    });
+  }
+}

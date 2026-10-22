@@ -1,13 +1,12 @@
 import { toggleSubtask } from './domain/matrix';
 import { ResetBoardDialog } from './features/settings/ResetBoardDialog';
 import { useHeaderHeight } from './lib/useHeaderHeight';
-import { useRailFits } from './lib/useRailFits';
 import { Toast } from './components/Toast';
 import { SoftPresence } from './components/SoftPresence';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Filters, QuadrantId, Task } from './domain/models';
 import { initialFilters, quadrants } from './domain/models';
-import { addExamples, isCrowded, moveTask, stats, toggleTask, visibleTasks } from './domain/matrix';
+import { addExamples, moveTask, stats, toggleTask, visibleTasks } from './domain/matrix';
 import { useToast } from './lib/useToast';
 import { useMatrix } from './lib/useMatrix';
 import { usePreferences } from './lib/usePreferences';
@@ -16,7 +15,7 @@ import { AddTaskFab } from './components/AddTaskFab';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
 import { Toolbar } from './features/app/Toolbar';
-import { AppFooter } from './features/app/AppFooter';
+import { BackupSettings } from './features/settings/BackupSettings';
 import { useBackup } from './features/backup/useBackup';
 import { FirstTask } from './features/tasks/FirstTask';
 import { DayPanel } from './features/app/DayPanel';
@@ -67,12 +66,6 @@ export default function App() {
     }),
     [summary, matrix.tasks.length],
   );
-  // A busy board needs the width, so the wide-screen side rail folds back into the day bar.
-  // It also folds when tall quadrants (long subtask lists) push Delegate and Let go below
-  // the first screen.
-  const workspaceRef = useRef<HTMLElement>(null);
-  const railFits = useRailFits(workspaceRef);
-  const crowded = useMemo(() => isCrowded(matrix, filters.status), [matrix, filters.status]);
   const resultCount = useMemo(
     () => quadrants.reduce((n, q) => n + visibleTasks(matrix, q.id, boardFilters).length, 0),
     [matrix, boardFilters],
@@ -171,14 +164,26 @@ export default function App() {
           menu={menu}
           setMenu={setMenu}
           onResetBoard={() => openDialog('reset')}
+          onClearCompleted={() =>
+            change(
+              (m) => ({ ...m, tasks: m.tasks.filter((t) => !t.done) }),
+              'Completed tasks cleared.',
+            )
+          }
           onLabels={openLabels}
           onHelp={() => openDialog('tutorial')}
           storageError={storageError}
+          backupSettings={
+            <BackupSettings
+              importRef={importRef}
+              lastBackup={lastBackup}
+              taskCount={matrix.tasks.length}
+              onExport={exportBackup}
+              onImport={(file) => void importBackup(file)}
+            />
+          }
         />
-        <main
-          ref={workspaceRef}
-          className={crowded || !railFits ? 'workspace' : 'workspace has-rail'}
-        >
+        <main className="workspace">
           <DayPanel
             today={today}
             summary={summary}
@@ -216,19 +221,6 @@ export default function App() {
             />
           </div>
         </main>
-        <AppFooter
-          importRef={importRef}
-          lastBackup={lastBackup}
-          taskCount={matrix.tasks.length}
-          onExport={exportBackup}
-          onImport={(file) => void importBackup(file)}
-          onClearCompleted={() =>
-            change(
-              (m) => ({ ...m, tasks: m.tasks.filter((t) => !t.done) }),
-              'Completed tasks cleared.',
-            )
-          }
-        />
       </div>
       {matrix.tasks.length > 0 && (
         <AddTaskFab className="add-floating" label="Quick add task" onClick={() => openTask()} />

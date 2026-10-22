@@ -137,7 +137,7 @@ export async function setup(page: Page, seed: Seed = {}) {
 export async function open(page: Page, seed: Seed = {}) {
   await setup(page, seed);
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Make room for what matters.' })).toBeVisible();
+  await expect(page.locator('#matrix')).toBeVisible();
 }
 
 export const quadrant = (page: Page, title: string): Locator =>
@@ -152,7 +152,8 @@ export const storedMatrix = (page: Page) =>
   page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? 'null'), MATRIX_KEY);
 
 export async function openSettings(page: Page) {
-  await page.getByRole('button', { name: 'Settings' }).click();
+  const button = page.getByRole('button', { name: 'Settings' });
+  if ((await button.getAttribute('aria-expanded')) !== 'true') await button.click();
   await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
 }
 

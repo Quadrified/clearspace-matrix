@@ -4,9 +4,8 @@ import type { stats } from '../../domain/matrix';
 import { TaskOverview } from '../tasks/TaskOverview';
 
 /**
- * Today's date and progress. A side rail beside the matrix on wide screens, and a
- * single quiet line above it everywhere else, so the quadrants lead the page. On an
- * empty board, `start` (the first-task prompt) takes the place of the progress.
+ * Today's date and progress stay above the matrix. On an empty board, `start`
+ * (the first-task prompt) takes the place of the progress.
  */
 export function DayPanel({
   today,

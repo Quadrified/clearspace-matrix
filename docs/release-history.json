@@ -612,5 +612,21 @@
       "Add a lifted, tilted drag-card preview and a one-time hint for moving tasks between quadrants.",
       "Polish Settings and backup sections and update browser coverage for the revised task editor."
     ]
+  },
+  {
+    "n": 42,
+    "title": "Larger handwriting and sketchbook favicon",
+    "tag": "site-v42",
+    "sha": "d70ed1f9f73ed3b7807a74f78dd428b95afaa88e",
+    "target": "56236f931c23fdb75132bdea214bcee42579b538",
+    "recorded_at": "2026-10-22T15:12:05-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T15:13:06.942106-04:00",
+    "changes": [
+      "Increase handwritten text sizes by 20 percent across the board, dialogs, tutorial, Settings and drag hint.",
+      "Replace the bundled Caveat font with the bolder 700-weight subset for clearer handwriting.",
+      "Redraw the favicon as four outlined colored squares on paper with a soft offset shadow to match the sketchbook logo."
+    ]
   }
 ]

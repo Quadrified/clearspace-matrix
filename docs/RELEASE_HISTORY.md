@@ -384,9 +384,19 @@ Recorded source time: 2026-10-22T14:55:18-04:00. Tag: `site-v41`. Deployment suc
 
 Sites source: `b0e59c246c84128727cda63dc5d5773323385e2f`. GitHub target: `78c73ae3594bbbe86bf2539a9d45697cc7603bc1`. Reconstructed: False.
 
-## Available GitHub history through 78c73ae
+## Hosted version 42: Larger handwriting and sketchbook favicon
 
-This is the reachable Git history through `78c73ae`, the main commit deployed as hosted version 41, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T15:12:05-04:00. Tag: `site-v42`. Deployment succeeded; record updated 2026-10-22T15:13:06.942106-04:00 (America/Toronto).
+
+- Increase handwritten text sizes by 20 percent across the board, dialogs, tutorial, Settings and drag hint.
+- Replace the bundled Caveat font with the bolder 700-weight subset for clearer handwriting.
+- Redraw the favicon as four outlined colored squares on paper with a soft offset shadow to match the sketchbook logo.
+
+Sites source: `d70ed1f9f73ed3b7807a74f78dd428b95afaa88e`. GitHub target: `56236f931c23fdb75132bdea214bcee42579b538`. Reconstructed: False.
+
+## Available GitHub history through 56236f9
+
+This is the reachable Git history through `56236f9`, the main commit deployed as hosted version 42, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -469,3 +479,5 @@ This is the reachable Git history through `78c73ae`, the main commit deployed as
 - 2026-10-22T14:16:49-04:00 [0d066e0](https://github.com/Quadrified/clearspace-matrix/commit/0d066e0a54211b2eaa5914950ad68ef6ddb6c300): Give Clearspace a softer sketchbook look and remove the focus timer (#31)
 - 2026-10-22T14:19:08-04:00 [d3be266](https://github.com/Quadrified/clearspace-matrix/commit/d3be26695d6ba6158a2d3fcb25d5329f3837da82): Record hosted release 40 and deployed sketchbook source
 - 2026-10-22T14:53:57-04:00 [78c73ae](https://github.com/Quadrified/clearspace-matrix/commit/78c73ae3594bbbe86bf2539a9d45697cc7603bc1): Rebuild dialogs to match the sketchbook mockups and add a lifted drag card
+- 2026-10-22T14:56:54-04:00 [6d0dc83](https://github.com/Quadrified/clearspace-matrix/commit/6d0dc83c48e70e95558c331aa134a26223c705bd): Record hosted release 41 and deployed dialog source
+- 2026-10-22T15:10:51-04:00 [56236f9](https://github.com/Quadrified/clearspace-matrix/commit/56236f931c23fdb75132bdea214bcee42579b538): Make handwritten text larger and bolder, and redraw the favicon

@@ -362,9 +362,20 @@ Recorded source time: 2026-10-22T12:16:40-04:00. Tag: `site-v39`. Deployment suc
 
 Sites source: `2ce626a955bbed9aecdf84b5b2468f25c72a901d`. GitHub target: `0a8ecd926acc5f0a368df1a07eea3393dd3cef97`. Reconstructed: False.
 
-## Available GitHub history through 0a8ecd9
+## Hosted version 40: Softer sketchbook design and quadrant header add buttons
 
-This is the reachable Git history through `0a8ecd9`, the main commit deployed as hosted version 39, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T14:18:08-04:00. Tag: `site-v40`. Deployment succeeded; record updated 2026-10-22T14:18:31.781661-04:00 (America/Toronto).
+
+- Apply the softer sketchbook design in light and dark appearances, including ink outlines, lined paper, tape, highlighter accents and warm offset shadows.
+- Bundle Archivo and Caveat fonts locally, with their license notices, without changing Worker or Content-Security-Policy requirements.
+- Move each quadrant add button into its header so it no longer covers task cards, retaining its existing label and behavior.
+- Remove the unused focus timer and related tests, styles and documentation while preserving task data and backup formats.
+
+Sites source: `2364efe449eb9e4d49815effc3c306bcc58a41b1`. GitHub target: `0d066e0a54211b2eaa5914950ad68ef6ddb6c300`. Reconstructed: False.
+
+## Available GitHub history through 0d066e0
+
+This is the reachable Git history through `0d066e0`, the main commit deployed as hosted version 40, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -443,3 +454,5 @@ This is the reachable Git history through `0a8ecd9`, the main commit deployed as
 - 2026-10-19T00:42:31-04:00 [9434e5d](https://github.com/Quadrified/clearspace-matrix/commit/9434e5d059a7c0057aba03a59bbd10c19bd68b7f): Add an Auto appearance that follows the system light/dark setting (#23)
 - 2026-10-22T09:14:55-04:00 [5060dcd](https://github.com/Quadrified/clearspace-matrix/commit/5060dcd2bedf9dd5ca70a2b41f0b8e492adcc146): Keep all four matrix quadrants visible and simplify Settings (#24)
 - 2026-10-22T11:17:54-04:00 [0a8ecd9](https://github.com/Quadrified/clearspace-matrix/commit/0a8ecd926acc5f0a368df1a07eea3393dd3cef97): One quiet top bar so the matrix gets the screen (#25)
+- 2026-10-22T12:18:17-04:00 [1d5eeb7](https://github.com/Quadrified/clearspace-matrix/commit/1d5eeb7f592d6e3aadbbcc5faa9d7d7eab0127ea): Record hosted release 39 and latest deployed source
+- 2026-10-22T14:16:49-04:00 [0d066e0](https://github.com/Quadrified/clearspace-matrix/commit/0d066e0a54211b2eaa5914950ad68ef6ddb6c300): Give Clearspace a softer sketchbook look and remove the focus timer (#31)

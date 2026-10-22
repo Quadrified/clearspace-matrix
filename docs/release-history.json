@@ -578,5 +578,22 @@
       "Keep compact starter actions next to the date, collapse search when empty, and move the GitHub link and appearance controls into Settings.",
       "Include Auto appearance that follows the system, retaining browser storage and backup compatibility."
     ]
+  },
+  {
+    "n": 40,
+    "title": "Softer sketchbook design and quadrant header add buttons",
+    "tag": "site-v40",
+    "sha": "2364efe449eb9e4d49815effc3c306bcc58a41b1",
+    "target": "0d066e0a54211b2eaa5914950ad68ef6ddb6c300",
+    "recorded_at": "2026-10-22T14:18:08-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T14:18:31.781661-04:00",
+    "changes": [
+      "Apply the softer sketchbook design in light and dark appearances, including ink outlines, lined paper, tape, highlighter accents and warm offset shadows.",
+      "Bundle Archivo and Caveat fonts locally, with their license notices, without changing Worker or Content-Security-Policy requirements.",
+      "Move each quadrant add button into its header so it no longer covers task cards, retaining its existing label and behavior.",
+      "Remove the unused focus timer and related tests, styles and documentation while preserving task data and backup formats."
+    ]
   }
 ]

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import type { Task, Matrix, Labels, QuadrantId } from '../../domain/models';
 import { taskSchema, categories, quadrants } from '../../domain/models';
 import { Modal } from '../../components/Modal';
+import { Icon } from '../../components/Icon';
 import { localDate } from '../../domain/matrix';
 import { ProjectsDialog } from '../projects/ProjectsDialog';
 export function TaskEditor({
@@ -47,7 +48,17 @@ export function TaskEditor({
   }
   return (
     <>
-      <Modal id="taskDialog" title={task ? 'Edit task' : 'New task'} onClose={onClose}>
+      <Modal
+        id="taskDialog"
+        title={task ? 'Edit task' : 'New task'}
+        kicker={task ? 'edit task' : 'new task'}
+        heading={
+          <mark className="hl" data-q={draft.q}>
+            {draft.title.trim() || 'What’s on your mind?'}
+          </mark>
+        }
+        onClose={onClose}
+      >
         <form
           id="taskForm"
           onSubmit={(e) => {
@@ -72,26 +83,6 @@ export function TaskEditor({
             onClose();
           }}
         >
-          <div className="field">
-            <span>Project</span>
-            <div className="project-picker">
-              <Select
-                aria-label="Project"
-                value={draft.projectId ?? ''}
-                onValueChange={(value) => patch('projectId', value)}
-              >
-                <SelectOption value="">No project</SelectOption>
-                {matrix.projects.map((p) => (
-                  <SelectOption key={p.id} value={p.id}>
-                    {p.name}
-                  </SelectOption>
-                ))}
-              </Select>
-              <button type="button" className="btn" onClick={() => setProjects(true)}>
-                Manage projects
-              </button>
-            </div>
-          </div>
           <label className="field">
             Task
             <input
@@ -106,55 +97,44 @@ export function TaskEditor({
             />
           </label>
           <label className="field">
-            Where does it belong?
-            <Select
-              aria-label="Where does it belong?"
-              value={draft.q}
-              onValueChange={(value) => patch('q', value as QuadrantId)}
-            >
-              {quadrants.map((q) => (
-                <SelectOption key={q.id} value={q.id}>
-                  {labels[q.id].title} · {q.subtitle}
-                </SelectOption>
-              ))}
-            </Select>
+            <span className="field-label">
+              Notes <small>optional</small>
+            </span>
+            <textarea
+              maxLength={3000}
+              placeholder="A first step, a link, anything helpful…"
+              value={draft.notes}
+              onChange={(e) => patch('notes', e.target.value)}
+            />
           </label>
-          <div className="row">
-            <div className="field due-field">
-              <label htmlFor="taskDue">
-                Due date <small>(optional)</small>
-              </label>
-              <DueDateInput value={draft.due} onChange={(value) => patch('due', value)} />
-              <div className="date-chips" role="group" aria-label="Pick a day">
-                {(
-                  [
-                    ['Today', 0],
-                    ['Tomorrow', 1],
-                    ['Next week', 7],
-                  ] as const
-                ).map(([label, days]) => (
-                  <button
-                    key={label}
-                    type="button"
-                    className="chip"
-                    onClick={() => {
-                      const date = new Date();
-                      date.setDate(date.getDate() + days);
-                      patch('due', localDate(date));
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-                {draft.due && (
-                  <button type="button" className="chip" onClick={() => patch('due', '')}>
-                    No date
-                  </button>
-                )}
-              </div>
+          <fieldset className="quadrant-picker">
+            <legend>Where does it belong?</legend>
+            <div className="quadrant-tiles">
+              {quadrants.map((item) => (
+                <label
+                  key={item.id}
+                  className="quadrant-tile"
+                  data-q={item.id}
+                  title={item.subtitle}
+                >
+                  <input
+                    type="radio"
+                    name="taskQuadrant"
+                    value={item.id}
+                    checked={draft.q === item.id}
+                    onChange={() => patch('q', item.id)}
+                  />
+                  <span className="swatch" aria-hidden="true" />
+                  {labels[item.id].title}
+                </label>
+              ))}
             </div>
+          </fieldset>
+          <div className="editor-grid">
             <label className="field">
-              Category <small>(optional)</small>
+              <span className="field-label">
+                Category <small>optional</small>
+              </span>
               <Select
                 aria-label="Category"
                 value={draft.category}
@@ -166,18 +146,60 @@ export function TaskEditor({
                 ))}
               </Select>
             </label>
+            <div className="field">
+              <span className="field-label">
+                Project
+                <button type="button" className="pen-link" onClick={() => setProjects(true)}>
+                  Manage projects
+                </button>
+              </span>
+              <Select
+                aria-label="Project"
+                value={draft.projectId ?? ''}
+                onValueChange={(value) => patch('projectId', value)}
+              >
+                <SelectOption value="">No project</SelectOption>
+                {matrix.projects.map((p) => (
+                  <SelectOption key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectOption>
+                ))}
+              </Select>
+            </div>
+            <div className="field due-field">
+              <label htmlFor="taskDue" className="field-label">
+                Due date <small>optional</small>
+              </label>
+              <DueDateInput value={draft.due} onChange={(value) => patch('due', value)} />
+            </div>
           </div>
-          <label className="field">
-            <span>
-              Notes <small>(optional)</small>
-            </span>
-            <textarea
-              maxLength={3000}
-              placeholder="A first step, a link, anything helpful…"
-              value={draft.notes}
-              onChange={(e) => patch('notes', e.target.value)}
-            />
-          </label>
+          <div className="date-chips" role="group" aria-label="Pick a day">
+            {(
+              [
+                ['Today', 0],
+                ['Tomorrow', 1],
+                ['Next week', 7],
+              ] as const
+            ).map(([label, days]) => (
+              <button
+                key={label}
+                type="button"
+                className="chip"
+                onClick={() => {
+                  const date = new Date();
+                  date.setDate(date.getDate() + days);
+                  patch('due', localDate(date));
+                }}
+              >
+                {label}
+              </button>
+            ))}
+            {draft.due && (
+              <button type="button" className="chip" onClick={() => patch('due', '')}>
+                No date
+              </button>
+            )}
+          </div>
           <SubtasksEditor
             value={draft.subtasks ?? []}
             onChange={(value) => patch('subtasks', value)}
@@ -196,7 +218,7 @@ export function TaskEditor({
                   onClose();
                 }}
               >
-                Delete
+                <Icon name="eliminate" /> Delete
               </button>
             )}
             <button type="button" className="btn" onClick={onClose}>

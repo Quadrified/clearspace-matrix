@@ -4,6 +4,9 @@ import { useState } from 'react';
 import type { Matrix, Project } from '../../domain/models';
 import { projectNameError, removeProject } from '../../domain/matrix';
 import { Modal } from '../../components/Modal';
+import { Icon } from '../../components/Icon';
+
+const swatches = ['do', 'schedule', 'delegate', 'eliminate'] as const;
 
 type Props = {
   matrix: Matrix;
@@ -14,10 +17,14 @@ type Props = {
 };
 function ProjectRow({
   project,
+  index,
+  count,
   onRename,
   onDelete,
 }: {
   project: Project;
+  index: number;
+  count: number;
   onRename: (name: string) => string;
   onDelete: () => void;
 }) {
@@ -26,6 +33,7 @@ function ProjectRow({
   const hasChanges = name.trim() !== project.name;
   return (
     <div className="project-row">
+      <span className="swatch" data-q={swatches[index % swatches.length]} aria-hidden="true" />
       <input
         autoCapitalize="words"
         enterKeyHint="done"
@@ -37,11 +45,14 @@ function ProjectRow({
           setError('');
         }}
       />
+      <span className="project-count">
+        {count} {count === 1 ? 'task' : 'tasks'}
+      </span>
       <button className="btn" disabled={!hasChanges} onClick={() => setError(onRename(name))}>
         Save
       </button>
       <button className="iconbtn danger" aria-label={`Delete ${project.name}`} onClick={onDelete}>
-        Delete
+        <Icon name="eliminate" />
       </button>
       {error && <p role="alert">{error}</p>}
     </div>
@@ -57,9 +68,15 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
   const taskCount = `${affected.length} ${affected.length === 1 ? 'task' : 'tasks'}`;
   return (
     <>
-      <Modal id="projectsDialog" title="A place for your projects." onClose={onClose}>
-        <p className="quiet">Group related tasks. Rename projects anytime.</p>
+      <Modal
+        id="projectsDialog"
+        title="A place for your projects."
+        kicker="projects"
+        onClose={onClose}
+      >
+        <p className="dialog-lead">Group related tasks. Rename projects anytime.</p>
         <form
+          className="project-add"
           onSubmit={(e) => {
             e.preventDefault();
             if (!canAdd) return;
@@ -76,7 +93,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
           }}
         >
           <label className="field">
-            New project
+            <span className="sr-only">New project</span>
             <input
               autoFocus
               autoCapitalize="words"
@@ -91,15 +108,17 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
             />
           </label>
           <button className="btn primary" disabled={!canAdd}>
-            Add project
+            <Icon name="plus" /> Add project
           </button>
           {error && <p role="alert">{error}</p>}
         </form>
         <div className="project-list">
-          {matrix.projects.map((project) => (
+          {matrix.projects.map((project, index) => (
             <ProjectRow
               key={project.id}
               project={project}
+              index={index}
+              count={matrix.tasks.filter((task) => task.projectId === project.id).length}
               onRename={(value) => {
                 const problem = projectNameError(matrix, value, project.id);
                 if (!problem)
@@ -124,6 +143,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
           <Modal
             id="deleteProjectDialog"
             title="Delete this project?"
+            kicker="careful"
             onClose={() => setPending(null)}
           >
             <p className="project-delete-summary">
@@ -139,8 +159,10 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
               )}
             </p>
             {examples.length > 0 && (
-              <>
-                <p className="quiet">Tasks that will be deleted include:</p>
+              <div className="sticky-note">
+                <p>
+                  <Icon name="alert" /> Tasks that will be deleted include:
+                </p>
                 <ul className="project-delete-tasks">
                   {examples.map((task) => (
                     <li key={task.id}>
@@ -155,9 +177,9 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
                     {affected.length - examples.length === 1 ? 'task' : 'tasks'}.
                   </p>
                 )}
-              </>
+              </div>
             )}
-            <p className="quiet">You can undo this deletion.</p>
+            <p className="hand-note">You can undo this deletion.</p>
             <div className="dialog-actions">
               <button type="button" className="btn" autoFocus onClick={() => setPending(null)}>
                 Cancel
@@ -175,6 +197,7 @@ export function ProjectsDialog({ matrix, change, onClose, onCreated, onDeleted }
                   onDeleted?.(id);
                 }}
               >
+                <Icon name="eliminate" />
                 {affected.length ? `Delete project and ${taskCount}` : 'Delete project'}
               </button>
             </div>

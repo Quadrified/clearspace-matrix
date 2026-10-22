@@ -23,11 +23,14 @@ export function SubtasksEditor({
   return (
     <fieldset className="subtasks-editor">
       <legend>
-        Subtasks <small>(optional)</small>
+        Subtasks <small>optional</small>
       </legend>
-      <p className="hint">
-        Break this task into smaller steps. Empty steps are skipped when you save.
-      </p>
+      {value.length > 0 && (
+        <p className="subtasks-tally">
+          {value.filter((item) => item.done).length} of {value.length} done
+        </p>
+      )}
+      <p className="hint">Break it into smaller steps. Empty steps are skipped when you save.</p>
       <ol>
         {value.map((item, index) => (
           <li key={item.id}>
@@ -72,8 +75,11 @@ export function SubtasksEditor({
           </li>
         ))}
       </ol>
-      <button type="button" className="btn" onClick={add} disabled={value.length >= 100}>
-        <Icon name="plus" /> Add subtask
+      <button type="button" className="add-step" onClick={add} disabled={value.length >= 100}>
+        <span className="add-step-box" aria-hidden="true">
+          <Icon name="plus" />
+        </span>
+        Add subtask
       </button>
       {value.length >= 100 && <p className="hint">Up to 100 subtasks per task.</p>}
     </fieldset>

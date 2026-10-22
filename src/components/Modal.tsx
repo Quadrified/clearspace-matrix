@@ -11,9 +11,15 @@ export function Modal({
   onClose,
   children,
   backdropClose = false,
+  kicker,
+  heading,
 }: {
   id: string;
   title: string;
+  /** A short handwritten line above the heading, e.g. "edit task". */
+  kicker?: string;
+  /** What the heading shows when it differs from the dialog's accessible name. */
+  heading?: ReactNode;
   onClose: () => void;
   children: ReactNode;
   backdropClose?: boolean;
@@ -55,7 +61,8 @@ export function Modal({
         inert={!present || undefined}
         ref={ref}
         id={id}
-        aria-labelledby={`${id}-title`}
+        aria-labelledby={heading ? undefined : `${id}-title`}
+        aria-label={heading ? title : undefined}
         onCancel={(e) => {
           e.preventDefault();
           onClose();
@@ -69,7 +76,14 @@ export function Modal({
         }}
       >
         <div className="dialog-top">
-          <h2 id={`${id}-title`}>{title}</h2>
+          <div className="dialog-heading">
+            {kicker && (
+              <p className="dialog-kicker" aria-hidden="true">
+                {kicker}
+              </p>
+            )}
+            <h2 id={`${id}-title`}>{heading ?? <Marked text={title} />}</h2>
+          </div>
           <button type="button" className="iconbtn" aria-label="Close" onClick={onClose}>
             <Icon name="close" />
           </button>
@@ -78,6 +92,18 @@ export function Modal({
       </motion.dialog>
       {!present &&
         createPortal(<div className="dialog-exit-backdrop" aria-hidden="true" />, document.body)}
+    </>
+  );
+}
+
+/** Puts the highlighter stroke under the last word of a heading. */
+function Marked({ text }: { text: string }) {
+  const at = text.trimEnd().lastIndexOf(' ');
+  if (at < 0) return <mark className="hl">{text}</mark>;
+  return (
+    <>
+      {text.slice(0, at + 1)}
+      <mark className="hl">{text.slice(at + 1)}</mark>
     </>
   );
 }

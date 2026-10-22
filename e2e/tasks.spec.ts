@@ -93,11 +93,9 @@ test.describe('adding tasks', () => {
     await open(page, { matrix: { ...seedMatrix, tasks: seedMatrix.tasks.slice(0, 1) } });
     await page.getByRole('button', { name: 'Add a task to Schedule' }).click();
     const dialog = editorDialog(page);
-    await expect(dialog.getByRole('combobox', { name: 'Where does it belong?' })).toContainText(
-      'Schedule',
-    );
+    await expect(dialog.getByRole('radio', { name: 'Schedule' })).toBeChecked();
     await dialog.getByPlaceholder('What do you need to do?').fill('Plan the trip');
-    await choose(page, 'Where does it belong?', 'Let go · Neither urgent nor important', dialog);
+    await dialog.getByRole('radio', { name: 'Let go' }).check();
     await choose(page, 'Category', 'Personal', dialog);
     await dialog.getByLabel('Due date').fill('10/30/2026');
     await dialog.getByRole('button', { name: 'Save task' }).click();
@@ -131,7 +129,7 @@ test.describe('existing tasks', () => {
     await expect(title).toHaveValue('Pay invoice');
     await expect(dialog.getByRole('button', { name: 'Delete' })).toBeVisible();
     await title.fill('Pay the electricity invoice');
-    await choose(page, 'Where does it belong?', 'Delegate · Urgent, not important', dialog);
+    await dialog.getByRole('radio', { name: 'Delegate' }).check();
     await dialog.getByRole('button', { name: 'Save task' }).click();
     await expect(toast(page)).toContainText('Task updated.');
     await expect(titles(quadrant(page, 'Do first'))).resolves.toEqual(['Send proposal']);

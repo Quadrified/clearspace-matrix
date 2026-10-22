@@ -28,22 +28,6 @@ export function TutorialDialog({
           {last ? 'Use my own tasks' : 'Skip tutorial'}
         </button>
       </div>
-      <div
-        className="tutorial-progress"
-        role="progressbar"
-        aria-label="Tutorial progress"
-        aria-valuemin={0}
-        aria-valuemax={tutorialSteps.length}
-        aria-valuenow={index + 1}
-        aria-valuetext={`Step ${index + 1} of ${tutorialSteps.length}`}
-      >
-        <motion.span
-          className="tutorial-progress-fill"
-          initial={false}
-          animate={{ scaleX: (index + 1) / tutorialSteps.length }}
-          transition={{ duration: instant ? 0 : 0.2, ease: softEase }}
-        />
-      </div>
       <motion.div
         key={index}
         id="tutorialContent"
@@ -51,10 +35,14 @@ export function TutorialDialog({
         animate={{ opacity: 1, transform: 'translateY(0)' }}
         transition={{ duration: instant ? 0 : 0.18, ease: softEase }}
       >
-        <div className="tutorial-icon">
-          <Icon name={'q' in step ? (labels[step.q].icon ?? step.icon) : step.icon} />
+        <div className="tutorial-heading" data-q={'q' in step ? step.q : undefined}>
+          <div className="tutorial-icon">
+            <Icon name={'q' in step ? (labels[step.q].icon ?? step.icon) : step.icon} />
+          </div>
+          <h3 id="tutorialTitle">
+            <mark className="hl">{'q' in step ? labels[step.q].title : step.title}</mark>
+          </h3>
         </div>
-        <h3 id="tutorialTitle">{'q' in step ? labels[step.q].title : step.title}</h3>
         <p id="tutorialDescription">{step.description}</p>
         <div className="tutorial-example">
           <strong>{step.exampleTitle}</strong>
@@ -62,6 +50,26 @@ export function TutorialDialog({
         </div>
       </motion.div>
       <div className="tutorial-actions">
+        <div
+          className="tutorial-progress"
+          role="progressbar"
+          aria-label="Tutorial progress"
+          aria-valuemin={0}
+          aria-valuemax={tutorialSteps.length}
+          aria-valuenow={index + 1}
+          aria-valuetext={`Step ${index + 1} of ${tutorialSteps.length}`}
+        >
+          {tutorialSteps.map((_, dot) => (
+            <motion.span
+              key={dot}
+              className="tutorial-dot"
+              data-state={dot === index ? 'current' : dot < index ? 'done' : undefined}
+              initial={false}
+              animate={{ width: dot === index ? 26 : 12 }}
+              transition={{ duration: instant ? 0 : 0.2, ease: softEase }}
+            />
+          ))}
+        </div>
         <button className="btn" disabled={index === 0} onClick={() => setIndex(index - 1)}>
           Back
         </button>

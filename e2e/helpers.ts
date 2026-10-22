@@ -157,6 +157,13 @@ export async function openSettings(page: Page) {
   await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
 }
 
+/** Picks Auto, Light or Dark under Settings > Appearance, then closes Settings. */
+export async function chooseAppearance(page: Page, name: 'Auto' | 'Light' | 'Dark') {
+  await openSettings(page);
+  await page.getByRole('button', { name, exact: true }).click();
+  await page.keyboard.press('Escape');
+}
+
 export async function choose(
   page: Page,
   selectLabel: string,

@@ -1,11 +1,10 @@
 import type { ReactNode } from 'react';
-import { AxisBoard } from '../../components/AxisBoard';
 import type { stats } from '../../domain/matrix';
 import { TaskOverview } from '../tasks/TaskOverview';
 
 /**
- * Today's date and progress stay above the matrix. On an empty board, `start`
- * (the first-task prompt) takes the place of the progress.
+ * Today's date and progress sit in the top bar, next to the logo. On an empty
+ * board, `start` (the first-task prompt) takes the place of the progress.
  */
 export function DayPanel({
   today,
@@ -18,22 +17,23 @@ export function DayPanel({
   hasTasks: boolean;
   start?: ReactNode;
 }) {
+  const date = new Date(today + 'T12:00:00');
   return (
     <section className={hasTasks ? 'day' : 'day day-empty'} aria-labelledby="matrixTitle">
-      <div className="day-heading">
-        <time className="date" dateTime={today}>
-          {new Date(today + 'T12:00:00').toLocaleDateString(undefined, {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </time>
-        <AxisBoard />
-        <div className="day-copy">
-          <h1 id="matrixTitle">Make room for what matters.</h1>
-          <p id="matrixSubtitle">Get it out of your head. Decide what deserves your time.</p>
-        </div>
-      </div>
+      <h1 id="matrixTitle" className="sr-only">
+        Make room for what matters.
+      </h1>
+      <time
+        className="date"
+        dateTime={today}
+        title={date.toLocaleDateString(undefined, {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+        })}
+      >
+        {date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+      </time>
       {hasTasks ? <TaskOverview summary={summary} /> : start}
     </section>
   );

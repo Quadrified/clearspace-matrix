@@ -1,6 +1,14 @@
 /* UX pass: one-click add, tab counts, filter summary, first-task prompt, date chips, backup state. */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, editorDialog, storedMatrix, openFilters, openSettings } from './helpers';
+import {
+  open,
+  seedMatrix,
+  editorDialog,
+  storedMatrix,
+  openFilters,
+  openSettings,
+  chooseAppearance,
+} from './helpers';
 
 test('quadrant add opens the editor and Projects remains available in the toolbar', async ({
   page,
@@ -20,21 +28,16 @@ test('status tabs show how many tasks each holds', async ({ page }) => {
   await expect(page.locator('.tabs .tab-count')).toHaveText(['7', '1', '8']);
 });
 
-test('the active status tab is a solid highlighted pill', async ({ page }) => {
+test('the status tabs are plain words with a soft highlight and one count', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   const active = page.locator('.tabs button.active');
   await expect(active).toContainText('Active');
-  await expect(active.locator('.tab-indicator')).toHaveCSS(
-    'background-image',
-    'linear-gradient(rgb(47, 132, 86), rgb(31, 98, 64))',
-  );
-  await expect(active).toHaveCSS('color', 'rgb(255, 255, 255)');
-  await page.getByRole('button', { name: 'Completed', exact: true }).click();
+  await expect(active.locator('.tab-count')).toBeVisible();
+  await expect(active.locator('.tab-indicator')).toHaveCSS('background-image', 'none');
+  await expect(page.getByRole('button', { name: /^Completed/ }).locator('.tab-count')).toBeHidden();
+  await page.getByRole('button', { name: /^Completed/ }).click();
   await expect(page.locator('.tabs button.active')).toContainText('Completed');
-  await expect(page.getByRole('button', { name: 'Active', exact: true })).not.toHaveCSS(
-    'color',
-    'rgb(255, 255, 255)',
-  );
+  await expect(page.getByRole('button', { name: /^Active/ }).locator('.tab-count')).toBeHidden();
 });
 
 test('filtering shows a result count and Clear filters resets it', async ({ page }) => {
@@ -125,9 +128,10 @@ test('overdue tasks carry an icon as well as colour', async ({ page }) => {
 test('the system dark setting is followed until a choice is saved', async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: 'dark', locale: 'en-US' });
   const page = await context.newPage();
+  await page.addInitScript(() => localStorage.setItem('clearspace.tutorial.v1', 'seen'));
   await page.goto('/');
   await expect(page.locator('body')).toHaveClass(/night/);
-  await page.getByRole('switch', { name: 'Dark mode' }).click();
+  await chooseAppearance(page, 'Light');
   await page.reload();
   await expect(page.locator('body')).not.toHaveClass(/night/);
   await context.close();
@@ -141,7 +145,7 @@ test('Auto appearance switches live with the system and can be restored after a 
   await expect(page.locator('body')).not.toHaveClass(/night/);
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('body')).toHaveClass(/night/);
-  await page.getByRole('switch', { name: 'Dark mode' }).click();
+  await chooseAppearance(page, 'Light');
   await expect(page.locator('body')).not.toHaveClass(/night/);
   await openSettings(page);
   const auto = page.getByRole('button', { name: 'Auto' });
@@ -155,7 +159,7 @@ test('Auto appearance switches live with the system and can be restored after a 
   await expect(page.locator('body')).not.toHaveClass(/night/);
 });
 
-test('phones keep quadrant add buttons and a bottom-sheet filter panel', async ({
+test('phones add from each quadrant and get a bottom-sheet filter panel', async ({
   page,
   isMobile,
 }) => {
@@ -167,6 +171,7 @@ test('phones keep quadrant add buttons and a bottom-sheet filter panel', async (
   expect(panel!.y + panel!.height).toBeGreaterThan(viewport.height - 2);
   expect(panel!.width).toBeGreaterThan(viewport.width - 2);
   await page.keyboard.press('Escape');
+  // The board fits the screen, so each quadrant's own add button replaces the floating one.
   await expect(page.getByRole('button', { name: 'Quick add task' })).toBeHidden();
   await page.getByRole('button', { name: 'Add a task to Do first', exact: true }).click();
   await expect(editorDialog(page)).toBeVisible();
@@ -176,7 +181,7 @@ for (const width of [390, 900, 1280, 1440]) {
   for (const theme of ['light', 'night'] as const) {
     for (const size of [90, 125, 160]) {
       for (const populated of [false, true]) {
-        test(`day panel at ${width}px, ${theme}, ${size}%, ${populated ? 'populated' : 'empty'}`, async ({
+        test(`top bar at ${width}px, ${theme}, ${size}%, ${populated ? 'populated' : 'empty'}`, async ({
           page,
           isMobile,
         }) => {
@@ -187,45 +192,36 @@ for (const width of [390, 900, 1280, 1440]) {
             theme,
             size,
           });
-          const day = page.locator('.day');
+          const header = (await page.locator('header').boundingBox())!;
+          const day = page.locator('header .day');
           const overview = page.getByRole('region', { name: 'Task overview' });
-          const art = day.locator('.axis-board');
-          const dayBox = (await day.boundingBox())!;
-          const dateBox = (await day.locator('.date').boundingBox())!;
-          const artBox = await art.boundingBox();
-          const board = (await page.locator('.board-column').boundingBox())!;
+          const tabs = (await page.locator('header .tabs').boundingBox())!;
+          const tools = (await page.locator('header .header-right').boundingBox())!;
+          const matrix = (await page.locator('.matrix').boundingBox())!;
+
+          // Date, progress (or the first-task prompt), tabs and tools all live in the top bar.
           await expect(overview).toHaveCount(populated ? 1 : 0);
-          await expect(art).toHaveAttribute('aria-hidden', 'true');
-          if (artBox)
-            expect(artBox.x + artBox.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
+          await expect(day.locator('.first-task')).toHaveCount(populated ? 0 : 1);
+          for (const name of ['Filters', 'Projects', 'Settings'])
+            await expect(page.getByRole('button', { name, exact: true })).toBeVisible();
+          expect(tabs.y + tabs.height).toBeLessThanOrEqual(header.y + header.height + 1);
+          expect(tools.x + tools.width).toBeLessThanOrEqual(width);
+          expect(matrix.y).toBeGreaterThanOrEqual(header.y + header.height);
 
-          await expect(page.locator('main.workspace')).not.toHaveClass(/has-rail/);
-          expect(board.y).toBeGreaterThanOrEqual(dayBox.y + dayBox.height);
-          if (artBox) {
-            expect(artBox.x).toBeGreaterThanOrEqual(dateBox.x + dateBox.width);
-            expect(
-              Math.abs(artBox.y + artBox.height / 2 - dateBox.y - dateBox.height / 2),
-            ).toBeLessThan(4);
-            expect(artBox.width).toBeLessThanOrEqual(56 * (size / 100) + 1);
-          }
-          await expect(page.locator('#matrixSubtitle')).toBeHidden();
-
-          if (populated) {
-            const box = (await overview.boundingBox())!;
-            expect(box.x + box.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
+          if (width > 760) {
+            // One row: the tabs sit beside the tools rather than below them.
+            expect(Math.abs(tabs.y + tabs.height / 2 - (tools.y + tools.height / 2))).toBeLessThan(
+              4,
+            );
+            expect(tabs.x + tabs.width).toBeLessThanOrEqual(tools.x);
+            if (size <= 100) expect(header.height).toBeLessThanOrEqual(64);
           } else {
-            // Compact starter actions stay in the day panel beside the date when they fit.
-            await expect(day.locator('.first-task')).toHaveCount(1);
-            await expect(page.locator('.board-column .first-task')).toHaveCount(0);
-            const prompt = (await page.locator('.first-task').boundingBox())!;
-            expect(prompt.x + prompt.width).toBeLessThanOrEqual(dayBox.x + dayBox.width + 1);
-            expect(prompt.y + prompt.height).toBeLessThanOrEqual(dayBox.y + dayBox.height + 1);
-            expect(prompt.width).toBeLessThanOrEqual(dayBox.width);
+            // Phones: the tabs take a second row under the date and tools.
+            expect(tabs.y).toBeGreaterThanOrEqual(tools.y + tools.height - 1);
           }
-          if (width <= 1200 && size <= 100) {
-            // The quadrants are on the first screen, not pushed below a hero.
-            const matrix = (await page.locator('.matrix').boundingBox())!;
-            expect(matrix.y).toBeLessThan(populated ? 420 : 600);
+          if (size <= 100) {
+            // Little stands between the top of the screen and the quadrants.
+            expect(matrix.y).toBeLessThan(width > 760 ? 120 : 140);
           }
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
@@ -235,6 +231,30 @@ for (const width of [390, 900, 1280, 1440]) {
     }
   }
 }
+
+test('search is a single icon until it is focused or holds a query', async ({ page }) => {
+  await open(page, { matrix: seedMatrix });
+  const search = page.locator('header .search');
+  const input = page.getByRole('textbox', { name: 'Find a task' });
+  const closed = (await search.boundingBox())!.width;
+  expect(closed).toBeLessThanOrEqual(40);
+  await input.focus();
+  await expect.poll(async () => (await search.boundingBox())!.width).toBeGreaterThan(closed + 60);
+  await input.fill('health');
+  await page.locator('.matrix').click({ position: { x: 4, y: 4 } });
+  // A query keeps the field open after focus moves away.
+  expect((await search.boundingBox())!.width).toBeGreaterThan(closed + 60);
+  await input.press('Escape');
+  await expect(input).toHaveValue('');
+});
+
+test('the theme switch and GitHub link live in Settings, not the top bar', async ({ page }) => {
+  await open(page, { matrix: seedMatrix });
+  await expect(page.getByRole('banner').getByRole('switch')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /github/i })).toHaveCount(0);
+  await openSettings(page);
+  await expect(page.getByRole('link', { name: /source on github/i })).toBeVisible();
+});
 
 for (const [width, height] of [
   [320, 568],

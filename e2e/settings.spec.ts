@@ -1,24 +1,32 @@
 /* Settings menu: dark mode, text size, labels, tutorial, reset board + Undo. */
 import { test, expect } from '@playwright/test';
-import { open, setup, seedMatrix, quadrant, storedMatrix, toast, openSettings } from './helpers';
+import type { Page } from '@playwright/test';
+import {
+  open,
+  setup,
+  seedMatrix,
+  quadrant,
+  storedMatrix,
+  toast,
+  openSettings,
+  chooseAppearance,
+} from './helpers';
 
-test('dark mode toggle persists across reload', async ({ page }) => {
+test('dark appearance persists across reload', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
-  const toggle = page.getByRole('switch', { name: 'Dark mode' });
-  await expect(toggle).toHaveAttribute('aria-checked', 'false');
   await expect(page.locator('body')).not.toHaveClass(/night/);
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-checked', 'true');
+  await chooseAppearance(page, 'Dark');
   await expect(page.locator('body')).toHaveClass(/night/);
   expect(await page.evaluate(() => document.documentElement.style.colorScheme)).toBe('dark');
   expect(await page.evaluate(() => localStorage.getItem('clearspace.theme'))).toBe('night');
   await page.reload();
-  await expect(page.getByRole('switch', { name: 'Dark mode' })).toHaveAttribute(
-    'aria-checked',
+  await expect(page.locator('body')).toHaveClass(/night/);
+  await openSettings(page);
+  await expect(page.getByRole('button', { name: 'Dark', exact: true })).toHaveAttribute(
+    'aria-pressed',
     'true',
   );
-  await expect(page.locator('body')).toHaveClass(/night/);
-  await page.getByRole('switch', { name: 'Dark mode' }).click();
+  await page.getByRole('button', { name: 'Light', exact: true }).click();
   await expect(page.locator('body')).not.toHaveClass(/night/);
   expect(await page.evaluate(() => localStorage.getItem('clearspace.theme'))).toBe('light');
 });
@@ -64,6 +72,16 @@ test('settings menu closes with Escape and shows storage information once', asyn
 });
 
 test.describe('labels dialog', () => {
+  // Phones hide the quadrant pencils to save room, so they edit labels from Settings.
+  async function editLabels(page: Page, isMobile: boolean, quadrantTitle: string) {
+    if (isMobile) {
+      await openSettings(page);
+      await page.getByRole('button', { name: 'Edit labels' }).click();
+    } else {
+      await page.getByRole('button', { name: `Edit ${quadrantTitle} title and subtitle` }).click();
+    }
+  }
+
   test('rename a quadrant, choose an icon, persist, and reset to defaults', async ({
     page,
     isMobile,
@@ -99,22 +117,16 @@ test.describe('labels dialog', () => {
     await page.reload();
     await expect(quadrant(page, 'Right now')).toBeVisible();
 
-    // Phones use Settings; wider layouts also offer the quadrant pencil.
-    if (isMobile) {
-      await openSettings(page);
-      await page.getByRole('button', { name: 'Edit labels' }).click();
-    } else {
-      await page.getByRole('button', { name: 'Edit Right now title and subtitle' }).click();
-    }
+    // The pencil on a quadrant opens the same dialog; defaults restore the originals.
+    await editLabels(page, !!isMobile, 'Right now');
     await dialog.getByRole('button', { name: 'Use defaults' }).click();
     await dialog.getByRole('button', { name: 'Save labels' }).click();
     await expect(quadrant(page, 'Do first')).toBeVisible();
   });
 
-  test('empty title is blocked by the form', async ({ page }) => {
+  test('empty title is blocked by the form', async ({ page, isMobile }) => {
     await open(page, { matrix: seedMatrix });
-    await openSettings(page);
-    await page.getByRole('button', { name: 'Edit labels' }).click();
+    await editLabels(page, !!isMobile, 'Schedule');
     const dialog = page.getByRole('dialog', { name: 'Make this matrix yours.' });
     await dialog.getByRole('textbox', { name: 'Title', exact: true }).nth(1).fill('');
     await dialog.getByRole('button', { name: 'Save labels' }).click();

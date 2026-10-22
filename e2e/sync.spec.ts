@@ -78,7 +78,7 @@ test('corrupt stored JSON shows the unreadable-storage toast and blocks overwrit
   );
   await expect(page.locator('.task')).toHaveCount(0);
   await page.getByRole('button', { name: 'Settings' }).click();
-  await expect(page.locator('#settingsMenu').getByRole('alert')).toHaveText(
+  await expect(page.locator('.settings-menu [role=alert]')).toHaveText(
     'Storage unavailable. Export to save.',
   );
   await page.keyboard.press('Escape');

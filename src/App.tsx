@@ -14,7 +14,8 @@ import { useToday } from './lib/useToday';
 import { AddTaskFab } from './components/AddTaskFab';
 import { AppHeader } from './features/app/AppHeader';
 import type { Menu } from './features/app/AppHeader';
-import { Toolbar } from './features/app/Toolbar';
+import { FilterSummary, ToolbarTools } from './features/app/Toolbar';
+import { StatusTabs } from './features/tasks/StatusTabs';
 import { BackupSettings } from './features/settings/BackupSettings';
 import { useBackup } from './features/backup/useBackup';
 import { FirstTask } from './features/tasks/FirstTask';
@@ -148,6 +149,14 @@ export default function App() {
       change((m) => moveTask(m, id, q, before), 'Task moved.'),
     [change],
   );
+  const filterProps = {
+    filters,
+    projectFilter,
+    projects: matrix.projects,
+    filter,
+    resultCount,
+    onClearFilters: clearFilters,
+  };
   return (
     <>
       <div className="wrap">
@@ -182,31 +191,37 @@ export default function App() {
               onImport={(file) => void importBackup(file)}
             />
           }
-        />
-        <main className="workspace">
-          <DayPanel
-            today={today}
-            summary={summary}
-            hasTasks={matrix.tasks.length > 0}
-            start={
-              <FirstTask
-                onAdd={() => openTask()}
-                onExamples={() => change(addExamples, 'Example tasks added.')}
-              />
-            }
-          />
-          <div className="board-column">
-            <Toolbar
-              filters={filters}
-              projectFilter={projectFilter}
-              projects={matrix.projects}
-              filter={filter}
+          day={
+            <DayPanel
+              today={today}
+              summary={summary}
+              hasTasks={matrix.tasks.length > 0}
+              start={
+                <FirstTask
+                  onAdd={() => openTask()}
+                  onExamples={() => change(addExamples, 'Example tasks added.')}
+                />
+              }
+            />
+          }
+          tabs={
+            <StatusTabs
               counts={counts}
-              resultCount={resultCount}
-              onClearFilters={clearFilters}
+              value={filters.status}
+              onChange={(value) => filter('status', value)}
+            />
+          }
+          tools={
+            <ToolbarTools
+              {...filterProps}
               searchRef={searchRef}
               onProjects={() => openDialog('projects')}
             />
+          }
+        />
+        <main className="workspace">
+          <div className="board-column">
+            <FilterSummary {...filterProps} />
             <MatrixBoard
               matrix={matrix}
               labels={prefs.labels}

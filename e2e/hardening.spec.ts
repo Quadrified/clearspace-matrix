@@ -1,13 +1,13 @@
 /* Checks for the audit fixes: recovery export, theme before paint, caching and security headers. */
 import { test, expect } from '@playwright/test';
-import { openSettings, open, seedMatrix, MATRIX_KEY } from './helpers';
+import { open, openSettings, seedMatrix, MATRIX_KEY } from './helpers';
 
 test('Export backup hands back the original unreadable data instead of an empty board', async ({
   page,
 }) => {
   await open(page, { rawMatrix: '{"tasks": broken', tutorialSeen: true });
-  const download = page.waitForEvent('download');
   await openSettings(page);
+  const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export backup' }).click();
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/^clearspace-recovery-\d{4}-\d{2}-\d{2}\.json$/);

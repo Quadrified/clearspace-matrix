@@ -910,8 +910,7 @@ div.field {
   border-color: var(--green);
   box-shadow: 0 0 0 1px var(--green);
 }
-#settingsButton,
-.repo-link {
+#settingsButton {
   width: 40px;
   height: 40px;
   border: 1px solid var(--line);
@@ -3353,4 +3352,313 @@ body,
 /* Tab selection changes color, not text width or the height left for the matrix. */
 .tabs button {
   font-weight: 650;
+}
+
+/* One quiet top bar: date and progress, status tabs, then icon tools.
+   Everything above the matrix lives in this row so the quadrants get the height. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.wrap > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-height: 0;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 0 8px;
+}
+.wrap > header:after {
+  opacity: 0.6;
+}
+header .logo {
+  grid-template-columns: repeat(2, 7px);
+  gap: 3px;
+  padding: 9px;
+  border-radius: 10px;
+}
+header .logo i {
+  width: 7px;
+  height: 7px;
+}
+header .day {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+header .day .date {
+  font-size: calc(1.125rem * var(--text-scale, 1));
+  line-height: 1.2;
+}
+header .overview {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+}
+header .overview strong {
+  color: var(--ink);
+  font-size: inherit;
+  font-weight: 600;
+}
+header .overview .completion-copy {
+  display: inline;
+  white-space: nowrap;
+}
+header .completion-ring,
+header .completion-ring svg {
+  width: 18px;
+  height: 18px;
+}
+header .day > .first-task {
+  margin: 0;
+}
+header .day > .first-task .btn {
+  min-height: 32px;
+  padding: 4px 10px;
+}
+.header-tabs {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+header .tabs {
+  gap: 2px;
+  padding: 0;
+  background: transparent;
+}
+header .tabs button {
+  min-height: 32px;
+  padding: 4px 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+header .tabs .active,
+header .tabs .active .tab-label {
+  color: var(--ink);
+}
+header .tab-indicator,
+.night header .tab-indicator {
+  background: var(--soft);
+  box-shadow: none;
+}
+/* Only the selected tab shows its count; the others stay as plain words. */
+header .tabs .tab-count {
+  display: none;
+}
+header .tabs .active .tab-count {
+  display: inline;
+  margin-left: 4px;
+  padding: 0;
+  background: none;
+  color: var(--muted);
+}
+header .header-right {
+  justify-self: end;
+  gap: 2px;
+}
+header .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+}
+header .tool-button,
+header #settingsButton {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+}
+header .tool-button:hover,
+header .tool-button[aria-expanded='true'],
+header #settingsButton:hover,
+header #settingsButton[aria-expanded='true'] {
+  background: var(--soft);
+  color: var(--ink);
+}
+header .tool-button svg,
+header #settingsButton svg {
+  width: 20px;
+  height: 20px;
+}
+header .filters-button.on {
+  background: transparent;
+  color: var(--green);
+}
+header .filters-badge,
+.night header .filters-badge {
+  position: absolute;
+  top: 3px;
+  right: 2px;
+  min-width: 15px;
+  padding: 0 4px;
+  background: var(--green);
+  color: #fff;
+  font-size: 0.625rem;
+  line-height: 15px;
+}
+/* Search is a single icon until it is focused or holds a query. */
+header .search {
+  position: relative;
+  width: 38px;
+  min-height: 38px;
+  padding: 0 9px;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transition: width 180ms var(--out);
+}
+header .search > svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+/* Collapsed, the input covers the icon so a click or Tab lands straight in it. */
+header .search input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+header .search:hover {
+  background: var(--soft);
+}
+header .search:focus-within,
+header .search.has-query {
+  width: 220px;
+  border-color: var(--line);
+  background: var(--paper);
+  cursor: text;
+}
+header .search:focus-within input,
+header .search.has-query input {
+  position: static;
+  flex: 1;
+  width: 0;
+  opacity: 1;
+  cursor: text;
+}
+header .search-clear {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 4px;
+}
+header .settings-actions .repo-link {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: transparent;
+  text-decoration: none;
+}
+.board-column > .filter-summary {
+  flex: none;
+  margin: 0 0 8px;
+}
+.board-column > .matrix-shell {
+  padding-top: 8px;
+}
+/* Phones: date, progress and tools on one row, the status tabs on a second. */
+@media (max-width: 760px) {
+  .wrap > header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 8px;
+    min-height: 0;
+  }
+  .header-tabs {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: stretch;
+  }
+  header .tabs {
+    flex: 1;
+  }
+  /* Equal, single-line tabs: moving the count between them never changes the bar height. */
+  header .tabs button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 4px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    min-height: 34px;
+  }
+  header .tabs .tab-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  header .day .date {
+    font-size: calc(1rem * var(--text-scale, 1));
+  }
+  header .overview .completion-copy {
+    display: inline;
+  }
+  header .completion-word {
+    display: none;
+  }
+  header .brand {
+    overflow: hidden;
+  }
+  header .tool-button,
+  header #settingsButton,
+  header .search {
+    width: 36px;
+    min-height: 36px;
+    height: 36px;
+  }
+  /* An open search takes the whole first row. */
+  .wrap > header:has(.search:focus-within, .search.has-query) .brand {
+    display: none;
+  }
+  .wrap > header:has(.search:focus-within, .search.has-query) .header-right {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 100%;
+  }
+  header .toolbar {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  header .search:focus-within,
+  header .search.has-query {
+    flex: 1;
+    width: auto;
+  }
+  /* On an empty board the first-task buttons need the room more than the date. */
+  header .day-empty .date,
+  header .first-task-label {
+    display: none;
+  }
+  header .day > .first-task .btn {
+    min-height: 32px;
+    padding: 4px 8px;
+    gap: 4px;
+  }
 }

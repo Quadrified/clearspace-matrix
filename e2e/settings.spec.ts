@@ -223,10 +223,12 @@ test('toast auto-dismisses and can be dismissed manually', async ({ page }) => {
   await setup(page, { matrix: seedMatrix });
   await page.clock.install({ time: new Date('2026-10-15T12:00:00Z') });
   await page.goto('/');
+  await openSettings(page);
   await page.getByRole('button', { name: 'Clear completed' }).click();
   await expect(toast(page)).toContainText('Completed tasks cleared.');
   await page.clock.runFor(10_500);
   await expect(toast(page)).toHaveCount(0);
+  await openSettings(page);
   await page.getByRole('button', { name: 'Clear completed' }).click();
   await toast(page).getByRole('button', { name: 'Dismiss notification' }).click();
   await expect(toast(page)).toHaveCount(0);

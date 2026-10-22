@@ -1,5 +1,8 @@
 import type { SVGProps } from 'react';
 import {
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
+  ArrowPathIcon,
   MagnifyingGlassIcon,
   PencilSquareIcon,
   PlusIcon,
@@ -34,6 +37,9 @@ import type { IconName } from '../domain/models';
 
 // Keep the persisted keys so existing quadrant customizations remain compatible.
 const icons = {
+  download: ArrowDownTrayIcon,
+  upload: ArrowUpTrayIcon,
+  reset: ArrowPathIcon,
   search: MagnifyingGlassIcon,
   edit: PencilSquareIcon,
   plus: PlusIcon,

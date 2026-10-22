@@ -16,6 +16,7 @@
  */
 import { test, expect } from '@playwright/test';
 import {
+  openSettings,
   open,
   seedMatrix,
   quadrant,
@@ -215,6 +216,7 @@ test.describe('existing tasks', () => {
 
   test('Clear completed removes only completed tasks', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
+    await openSettings(page);
     await page.getByRole('button', { name: 'Clear completed' }).click();
     await expect(toast(page)).toContainText('Completed tasks cleared.');
     expect((await storedMatrix(page)).tasks).toHaveLength(7);

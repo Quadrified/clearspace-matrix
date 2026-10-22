@@ -16,8 +16,8 @@ export function LabelsDialog({
     [picker, setPicker] = useState<QuadrantId | null>(null),
     [error, setError] = useState('');
   return (
-    <Modal id="labelsDialog" title="Make this matrix yours." onClose={onClose}>
-      <p className="quiet">Customize the quadrant labels and icons.</p>
+    <Modal id="labelsDialog" title="Make this matrix yours." kicker="labels" onClose={onClose}>
+      <p className="dialog-lead">Customize the quadrant labels and icons.</p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -32,58 +32,33 @@ export function LabelsDialog({
       >
         <div id="quadrantLabels">
           {quadrants.map((q) => (
-            <div className="label-section" key={q.id}>
-              <h3>{q.subtitle}</h3>
-              <div className="label-title-row">
-                <label className="field">
-                  Title
-                  <input
-                    required
-                    maxLength={60}
-                    value={draft[q.id].title}
-                    onChange={(e) =>
-                      setDraft((d) => ({ ...d, [q.id]: { ...d[q.id], title: e.target.value } }))
-                    }
-                  />
-                </label>
-                <button
-                  type="button"
-                  className="btn icon-picker-trigger"
-                  aria-expanded={picker === q.id}
-                  onClick={() => setPicker(picker === q.id ? null : q.id)}
-                >
-                  <Icon name={draft[q.id].icon ?? q.id} />
-                  Choose icon
-                </button>
-              </div>
-              {picker === q.id && (
-                <div
-                  className="icon-options"
-                  role="group"
-                  aria-label={`Icons for ${draft[q.id].title}`}
-                >
-                  {iconNames.map((icon) => (
-                    <button
-                      type="button"
-                      key={icon}
-                      className="icon-choice"
-                      aria-label={iconLabels[icon]}
-                      title={iconLabels[icon]}
-                      aria-pressed={draft[q.id].icon === icon}
-                      onClick={() => {
-                        setDraft((d) => ({ ...d, [q.id]: { ...d[q.id], icon } }));
-                        setPicker(null);
-                      }}
-                    >
-                      <Icon name={icon} />
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="label-section" key={q.id} role="group" aria-label={q.subtitle}>
+              <button
+                type="button"
+                className="icon-picker-trigger"
+                data-q={q.id}
+                aria-label={`Choose icon for ${draft[q.id].title || q.subtitle}`}
+                aria-expanded={picker === q.id}
+                onClick={() => setPicker(picker === q.id ? null : q.id)}
+              >
+                <Icon name={draft[q.id].icon ?? q.id} />
+              </button>
               <label className="field">
-                Subtitle
+                <span className="sr-only">Title</span>
+                <input
+                  required
+                  maxLength={60}
+                  value={draft[q.id].title}
+                  onChange={(e) =>
+                    setDraft((d) => ({ ...d, [q.id]: { ...d[q.id], title: e.target.value } }))
+                  }
+                />
+              </label>
+              <label className="field">
+                <span className="sr-only">Subtitle</span>
                 <input
                   maxLength={180}
+                  placeholder={q.subtitle}
                   value={draft[q.id].subtitle}
                   onChange={(e) =>
                     setDraft((d) => ({ ...d, [q.id]: { ...d[q.id], subtitle: e.target.value } }))
@@ -93,11 +68,38 @@ export function LabelsDialog({
             </div>
           ))}
         </div>
+        {picker && (
+          <div className="icon-picker">
+            <p className="icon-picker-label">Icon for “{draft[picker].title}”</p>
+            <div
+              className="icon-options"
+              role="group"
+              aria-label={`Icons for ${draft[picker].title}`}
+            >
+              {iconNames.map((icon) => (
+                <button
+                  type="button"
+                  key={icon}
+                  className="icon-choice"
+                  aria-label={iconLabels[icon]}
+                  title={iconLabels[icon]}
+                  aria-pressed={draft[picker].icon === icon}
+                  onClick={() => {
+                    setDraft((d) => ({ ...d, [picker]: { ...d[picker], icon } }));
+                    setPicker(null);
+                  }}
+                >
+                  <Icon name={icon} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         {error && <p role="alert">{error}</p>}
         <div className="dialog-actions">
           <button
             type="button"
-            className="btn push-left"
+            className="pen-link push-left"
             onClick={() => setDraft(structuredClone(defaultLabels))}
           >
             Use defaults

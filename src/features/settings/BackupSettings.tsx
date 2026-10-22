@@ -30,12 +30,7 @@ export function BackupSettings({
 }) {
   return (
     <section className="settings-backup" aria-label="Backups and data">
-      <p>
-        <Icon name="lock" /> Stored in this browser. Export to back up.{' '}
-        <span className={`backup-state${backupDue(lastBackup, taskCount) ? ' due' : ''}`}>
-          {backupText(lastBackup)}
-        </span>
-      </p>
+      <h3 className="settings-label">Backups &amp; data</h3>
       <div className="settings-actions">
         <button className="iconbtn" onClick={onExport}>
           <Icon name="download" />
@@ -55,6 +50,12 @@ export function BackupSettings({
           }}
         />
       </div>
+      <p>
+        <Icon name="lock" /> Stored in this browser. Export to back up.{' '}
+        <span className={`backup-state${backupDue(lastBackup, taskCount) ? ' due' : ''}`}>
+          {backupText(lastBackup)}
+        </span>
+      </p>
     </section>
   );
 }

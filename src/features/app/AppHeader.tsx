@@ -93,7 +93,9 @@ export function AppHeader({
               <GitHubLink />
             </div>
             <div className="settings-size" role="group" aria-labelledby="themeChoiceLabel">
-              <span id="themeChoiceLabel">Appearance</span>
+              <span id="themeChoiceLabel" className="settings-label">
+                Appearance
+              </span>
               <div className="font-controls theme-choice">
                 {themeChoices.map(([value, label]) => (
                   <button
@@ -108,7 +110,7 @@ export function AppHeader({
               </div>
             </div>
             <div className="settings-size">
-              <span>Text size</span>
+              <span className="settings-label">Text size</span>
               <div className="font-controls">
                 <button
                   aria-label="Decrease text size"

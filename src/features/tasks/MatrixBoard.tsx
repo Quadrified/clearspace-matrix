@@ -11,6 +11,43 @@ import { Icon } from '../../components/Icon';
 import { AddTaskFab } from '../../components/AddTaskFab';
 import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
+const DRAG_HINT_KEY = 'clearspace.dragHint.v1';
+
+/** Drags a tilted, lifted copy of the card; the first drag also carries a "where to" note. */
+function liftCard(e: DragEvent) {
+  const card = e.currentTarget;
+  if (!(card instanceof HTMLElement) || typeof e.dataTransfer.setDragImage !== 'function') return;
+  const ghost = document.createElement('div');
+  ghost.className = 'drag-ghost';
+  ghost.setAttribute('aria-hidden', 'true');
+  const style = getComputedStyle(card);
+  for (const name of ['--accent', '--tint'])
+    ghost.style.setProperty(name, style.getPropertyValue(name));
+  const clone = card.cloneNode(true) as HTMLElement;
+  clone.removeAttribute('id');
+  clone.querySelectorAll('[id]').forEach((node) => node.removeAttribute('id'));
+  clone.classList.remove('is-dragging', 'drop-before');
+  clone.style.width = `${card.offsetWidth}px`;
+  ghost.append(clone);
+  let firstDrag = false;
+  try {
+    firstDrag = !localStorage.getItem(DRAG_HINT_KEY);
+    if (firstDrag) localStorage.setItem(DRAG_HINT_KEY, 'seen');
+  } catch {
+    // Storage can be blocked; the hint is only a nicety.
+  }
+  if (firstDrag) {
+    const note = document.createElement('span');
+    note.className = 'drag-hint';
+    note.textContent = 'drag it to another quadrant';
+    ghost.append(note);
+  }
+  document.body.append(ghost);
+  const box = card.getBoundingClientRect();
+  e.dataTransfer.setDragImage(ghost, e.clientX - box.left + 14, e.clientY - box.top + 14);
+  setTimeout(() => ghost.remove(), 0);
+}
+
 export function MatrixBoard({
   matrix,
   labels,
@@ -65,6 +102,7 @@ export function MatrixBoard({
   const onDragStart = useCallback((e: DragEvent, id: string) => {
     e.dataTransfer.setData('text/plain', id);
     e.dataTransfer.effectAllowed = 'move';
+    liftCard(e);
     draggedRef.current = id;
     setDragged(id);
   }, []);

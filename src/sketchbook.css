@@ -9,7 +9,7 @@
 }
 @font-face {
   font-family: 'Caveat';
-  src: url('./assets/fonts/caveat-600.woff2') format('woff2');
+  src: url('./assets/fonts/caveat-700.woff2') format('woff2');
   font-weight: 400 700;
   font-display: swap;
 }
@@ -177,8 +177,8 @@ div.field,
 .field small,
 .subtasks-editor legend small {
   font-family: var(--hand);
-  font-size: 1.1em;
-  font-weight: 600;
+  font-size: 1.32em;
+  font-weight: 700;
   color: var(--muted);
 }
 .check {
@@ -255,8 +255,8 @@ header .overview strong {
 }
 header .completion-word {
   font-family: var(--hand);
-  font-size: 1.3em;
-  font-weight: 600;
+  font-size: 1.56em;
+  font-weight: 700;
 }
 header .tabs button {
   font-family: var(--display);
@@ -277,8 +277,8 @@ header .tabs .active .tab-label,
 }
 header .tabs .active .tab-count {
   font-family: var(--hand);
-  font-size: 1.2em;
-  font-weight: 600;
+  font-size: 1.44em;
+  font-weight: 700;
   color: var(--sticky-ink);
 }
 header .tool-button,
@@ -321,8 +321,8 @@ header .filters-badge,
 .axis-side,
 .axis-mobile {
   font-family: var(--hand);
-  font-size: calc(1.375rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.65rem * var(--text-scale, 1));
+  font-weight: 700;
   letter-spacing: 0;
   text-transform: lowercase;
   color: var(--muted);
@@ -332,7 +332,8 @@ header .filters-badge,
   background: transparent;
 }
 .axis-top {
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  line-height: 1;
 }
 .quad {
   --accent: #d2553f;
@@ -431,8 +432,8 @@ header .filters-badge,
 .qhead p {
   margin-top: 1px;
   font-family: var(--hand);
-  font-size: calc(1.1875rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.425rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.1;
   color: var(--muted);
 }
@@ -528,8 +529,8 @@ header .filters-badge,
 .duedate {
   padding: 0;
   font-family: var(--hand);
-  font-size: calc(1.125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.35rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.1;
   color: var(--muted);
 }
@@ -553,8 +554,8 @@ header .filters-badge,
 .subtask-progress {
   line-height: 1.15;
   font-family: var(--hand);
-  font-size: calc(1.0625rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.275rem * var(--text-scale, 1));
+  font-weight: 700;
   color: var(--muted);
 }
 .card-subtasks {
@@ -562,8 +563,8 @@ header .filters-badge,
 }
 .empty strong {
   font-family: var(--hand);
-  font-size: calc(1.375rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.65rem * var(--text-scale, 1));
+  font-weight: 700;
 }
 
 /* ---------- Dialogs and menus: taped paper ---------- */
@@ -679,8 +680,8 @@ mark.hl {
 .toast #undo {
   color: var(--sticky);
   font-family: var(--hand);
-  font-size: 1.25em;
-  font-weight: 600;
+  font-size: 1.5em;
+  font-weight: 700;
 }
 
 /* ---------- Dialog layouts from the v2 mockups ---------- */
@@ -693,8 +694,8 @@ dialog {
 .dialog-kicker {
   margin: 4px 0 -2px;
   font-family: var(--hand);
-  font-size: calc(1.3125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.575rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.1;
   color: var(--muted);
 }
@@ -713,8 +714,8 @@ dialog .dialog-top h2 {
 .hand-note {
   margin: 0 0 16px;
   font-family: var(--hand);
-  font-size: calc(1.375rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.65rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.2;
   color: var(--muted);
 }
@@ -728,8 +729,8 @@ dialog .dialog-top h2 {
   background: none;
   color: var(--stamp);
   font-family: var(--hand);
-  font-size: calc(1.25rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.5rem * var(--text-scale, 1));
+  font-weight: 700;
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
@@ -762,8 +763,8 @@ dialog .dialog-top h2 {
   box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.12);
   transform: rotate(-0.8deg);
   font-family: var(--hand);
-  font-size: calc(1.25rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.5rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.25;
 }
 .sticky-note * {
@@ -879,8 +880,8 @@ dialog .dialog-top h2 {
   min-height: 26px;
   padding: 2px 8px;
   font-family: var(--hand);
-  font-size: calc(1.0625rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.275rem * var(--text-scale, 1));
+  font-weight: 700;
   border-width: 1.2px;
 }
 .subtasks-editor {
@@ -900,15 +901,15 @@ dialog .dialog-top h2 {
   right: 0;
   margin: 0;
   font-family: var(--hand);
-  font-size: calc(1.125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.35rem * var(--text-scale, 1));
+  font-weight: 700;
   color: var(--muted);
 }
 .subtasks-editor .hint {
   margin: 2px 0 8px;
   font-family: var(--hand);
-  font-size: calc(1.125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.35rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.2;
   color: var(--muted);
 }
@@ -1046,8 +1047,8 @@ dialog .dialog-top h2 {
 .project-count {
   flex-shrink: 0;
   font-family: var(--hand);
-  font-size: calc(1.1875rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.425rem * var(--text-scale, 1));
+  font-weight: 700;
   color: var(--muted);
 }
 .project-row .btn {
@@ -1069,8 +1070,8 @@ dialog .dialog-top h2 {
 }
 #deleteProjectDialog .project-delete-summary {
   font-family: var(--hand);
-  font-size: calc(1.3125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.575rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.25;
   color: var(--muted);
 }
@@ -1202,14 +1203,14 @@ dialog .dialog-top h2 {
 }
 .tutorial-step-label {
   font-family: var(--hand);
-  font-size: calc(1.3125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.575rem * var(--text-scale, 1));
+  font-weight: 700;
   text-transform: lowercase;
 }
 #tutorialSkip {
   font-family: var(--hand);
-  font-size: calc(1.1875rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.425rem * var(--text-scale, 1));
+  font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
   border: 0;
@@ -1255,8 +1256,8 @@ dialog .dialog-top h2 {
 .night .tutorial-example {
   padding: 14px 18px;
   font-family: var(--hand);
-  font-size: calc(1.3125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.575rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.3;
 }
 .tutorial-example strong {
@@ -1306,8 +1307,8 @@ dialog .dialog-top h2 {
 .settings-menu .settings-backup h3 {
   margin: 0;
   font-family: var(--hand);
-  font-size: calc(1.3125rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.575rem * var(--text-scale, 1));
+  font-weight: 700;
   line-height: 1.1;
   color: var(--muted);
 }
@@ -1354,8 +1355,8 @@ dialog .dialog-top h2 {
 }
 .settings-backup .backup-state {
   font-family: var(--hand);
-  font-size: calc(1.1875rem * var(--text-scale, 1));
-  font-weight: 600;
+  font-size: calc(1.425rem * var(--text-scale, 1));
+  font-weight: 700;
 }
 .settings-danger {
   margin-top: 14px;
@@ -1406,8 +1407,8 @@ dialog .dialog-top h2 {
   box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.12);
   transform: rotate(3deg);
   font-family: var(--hand);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   white-space: nowrap;
 }
 

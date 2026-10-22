@@ -49,6 +49,7 @@ it('keeps existing labels and dark appearance, and does not expose editable bran
 it('all notifications dismiss after ten seconds, including Undo', () => {
   vi.useFakeTimers();
   render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
   fireEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
   expect(screen.getByRole('status')).toHaveTextContent('Completed tasks cleared.');
   act(() => {

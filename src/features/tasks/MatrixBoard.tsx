@@ -172,7 +172,13 @@ export function MatrixBoard({
                     {tasks.length}
                   </span>
                 </div>
-                <div className={`tasklist${tasks.length === 0 ? ' is-empty' : ''}`}>
+                <motion.div
+                  layoutScroll
+                  className={`tasklist${tasks.length === 0 ? ' is-empty' : ''}`}
+                  role="region"
+                  aria-label={`Tasks in ${label.title}`}
+                  tabIndex={0}
+                >
                   <TaskPresence>
                     {tasks.length ? (
                       tasks.map((task) => (
@@ -218,7 +224,7 @@ export function MatrixBoard({
                       </motion.div>
                     )}
                   </TaskPresence>
-                </div>
+                </motion.div>
                 {cleared && (
                   <QuadrantCelebration
                     key={celebration.sequence}

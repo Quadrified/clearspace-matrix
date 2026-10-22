@@ -20,9 +20,11 @@ export function AppHeader({
   menu,
   setMenu,
   onResetBoard,
+  onClearCompleted,
   onLabels,
   onHelp,
   storageError,
+  backupSettings,
 }: {
   headerRef: RefObject<HTMLElement | null>;
   devTools: ReactNode;
@@ -30,9 +32,11 @@ export function AppHeader({
   menu: Menu;
   setMenu: (menu: Menu) => void;
   onResetBoard: () => void;
+  onClearCompleted: () => void;
   onLabels: () => void;
   onHelp: () => void;
   storageError: string;
+  backupSettings: ReactNode;
 }) {
   return (
     <header ref={headerRef}>
@@ -80,10 +84,6 @@ export function AppHeader({
                 <Icon name="help" />
                 Help
               </button>
-              <button className="iconbtn danger" onClick={() => onResetBoard()}>
-                <Icon name="eliminate" />
-                Need a fresh start?
-              </button>
             </div>
             <div className="settings-size" role="group" aria-labelledby="themeChoiceLabel">
               <span id="themeChoiceLabel">Appearance</span>
@@ -122,9 +122,27 @@ export function AppHeader({
                 </button>
               </div>
             </div>
-            <span id="saveState">
-              {storageError ? 'Storage unavailable. Export to save.' : 'Saved on this browser'}
-            </span>
+            {backupSettings}
+            {storageError && (
+              <p className="hint" role="alert">
+                Storage unavailable. Export to save.
+              </p>
+            )}
+            <section className="settings-danger" aria-labelledby="dangerZoneTitle">
+              <h3 id="dangerZoneTitle">
+                <Icon name="alert" /> Danger zone
+              </h3>
+              <div className="settings-actions">
+                <button className="iconbtn danger" onClick={onClearCompleted}>
+                  <Icon name="eliminate" />
+                  Clear completed
+                </button>
+                <button className="iconbtn danger" onClick={onResetBoard}>
+                  <Icon name="reset" />
+                  Need a fresh start?
+                </button>
+              </div>
+            </section>
           </Popover>
         </div>
       </div>

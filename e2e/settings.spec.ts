@@ -64,7 +64,10 @@ test('settings menu closes with Escape and shows storage information once', asyn
 });
 
 test.describe('labels dialog', () => {
-  test('rename a quadrant, choose an icon, persist, and reset to defaults', async ({ page }) => {
+  test('rename a quadrant, choose an icon, persist, and reset to defaults', async ({
+    page,
+    isMobile,
+  }) => {
     await open(page, { matrix: seedMatrix });
     await openSettings(page);
     await page.getByRole('button', { name: 'Edit labels' }).click();
@@ -96,8 +99,13 @@ test.describe('labels dialog', () => {
     await page.reload();
     await expect(quadrant(page, 'Right now')).toBeVisible();
 
-    // The pencil on a quadrant opens the same dialog; defaults restore the originals.
-    await page.getByRole('button', { name: 'Edit Right now title and subtitle' }).click();
+    // Phones use Settings; wider layouts also offer the quadrant pencil.
+    if (isMobile) {
+      await openSettings(page);
+      await page.getByRole('button', { name: 'Edit labels' }).click();
+    } else {
+      await page.getByRole('button', { name: 'Edit Right now title and subtitle' }).click();
+    }
     await dialog.getByRole('button', { name: 'Use defaults' }).click();
     await dialog.getByRole('button', { name: 'Save labels' }).click();
     await expect(quadrant(page, 'Do first')).toBeVisible();
@@ -105,7 +113,8 @@ test.describe('labels dialog', () => {
 
   test('empty title is blocked by the form', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
-    await page.getByRole('button', { name: 'Edit Schedule title and subtitle' }).click();
+    await openSettings(page);
+    await page.getByRole('button', { name: 'Edit labels' }).click();
     const dialog = page.getByRole('dialog', { name: 'Make this matrix yours.' });
     await dialog.getByRole('textbox', { name: 'Title', exact: true }).nth(1).fill('');
     await dialog.getByRole('button', { name: 'Save labels' }).click();

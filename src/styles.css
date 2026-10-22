@@ -3349,3 +3349,8 @@ body,
   font-size: calc(0.8125rem * var(--text-scale, 1));
   font-weight: 600;
 }
+
+/* Tab selection changes color, not text width or the height left for the matrix. */
+.tabs button {
+  font-weight: 650;
+}

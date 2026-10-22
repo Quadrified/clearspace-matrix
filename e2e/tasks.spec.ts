@@ -220,6 +220,7 @@ test.describe('existing tasks', () => {
     await page.getByRole('button', { name: 'Clear completed' }).click();
     await expect(toast(page)).toContainText('Completed tasks cleared.');
     expect((await storedMatrix(page)).tasks).toHaveLength(7);
+    await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'All tasks' }).click();
     await expect(page.locator('.task')).toHaveCount(7);
   });

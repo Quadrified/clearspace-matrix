@@ -350,9 +350,21 @@ Recorded source time: 2026-10-19T00:13:56-04:00. Tag: `site-v38`. Deployment suc
 
 Sites source: `de428bd49214ca3f2e74a592857ff8163b5f1279`. GitHub target: `e26151994e8fd2b7532eb6d6392369ea8b85f0bd`. Reconstructed: False.
 
-## Available GitHub history through e261519
+## Hosted version 39: Compact top bar, fixed matrix and Settings
 
-This is the reachable Git history through `e261519`, the main commit deployed as hosted version 38, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T12:16:40-04:00. Tag: `site-v39`. Deployment succeeded; record updated 2026-10-22T12:17:11.873784-04:00 (America/Toronto).
+
+- Keep all four quadrants visible in a fixed two-by-two matrix with independently scrolling task lists and stable sizing when switching tabs.
+- Consolidate the date, progress, status tabs, search, filters, projects and Settings into a compact top bar, with a second row for tabs on phones.
+- Move backup export and import into Settings with icons and shorter storage information; group Clear completed and board reset under Danger zone.
+- Keep compact starter actions next to the date, collapse search when empty, and move the GitHub link and appearance controls into Settings.
+- Include Auto appearance that follows the system, retaining browser storage and backup compatibility.
+
+Sites source: `2ce626a955bbed9aecdf84b5b2468f25c72a901d`. GitHub target: `0a8ecd926acc5f0a368df1a07eea3393dd3cef97`. Reconstructed: False.
+
+## Available GitHub history through 0a8ecd9
+
+This is the reachable Git history through `0a8ecd9`, the main commit deployed as hosted version 39, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -427,3 +439,7 @@ This is the reachable Git history through `e261519`, the main commit deployed as
 - 2026-10-18T23:35:34-04:00 [b74ef5a](https://github.com/Quadrified/clearspace-matrix/commit/b74ef5a340c5826c3d791d52d5346670beb3c7ad): Record hosted release 37 and deployed source history
 - 2026-10-19T00:10:11-04:00 [99440e9](https://github.com/Quadrified/clearspace-matrix/commit/99440e99e6048bc9d336377f7e41a2b68aca2cd4): Fold the side rail when tall quadrants hide the bottom row
 - 2026-10-19T00:13:40-04:00 [e261519](https://github.com/Quadrified/clearspace-matrix/commit/e26151994e8fd2b7532eb6d6392369ea8b85f0bd): Disable project Save until the trimmed name changes (#21)
+- 2026-10-19T00:14:41-04:00 [7cf1cd3](https://github.com/Quadrified/clearspace-matrix/commit/7cf1cd3c5c8b6621898ba22ae97c03641ad34575): Record hosted release 38 and deployed source history
+- 2026-10-19T00:42:31-04:00 [9434e5d](https://github.com/Quadrified/clearspace-matrix/commit/9434e5d059a7c0057aba03a59bbd10c19bd68b7f): Add an Auto appearance that follows the system light/dark setting (#23)
+- 2026-10-22T09:14:55-04:00 [5060dcd](https://github.com/Quadrified/clearspace-matrix/commit/5060dcd2bedf9dd5ca70a2b41f0b8e492adcc146): Keep all four matrix quadrants visible and simplify Settings (#24)
+- 2026-10-22T11:17:54-04:00 [0a8ecd9](https://github.com/Quadrified/clearspace-matrix/commit/0a8ecd926acc5f0a368df1a07eea3393dd3cef97): One quiet top bar so the matrix gets the screen (#25)

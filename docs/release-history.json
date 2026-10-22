@@ -560,5 +560,23 @@
       "Clear stale rename validation feedback when editing, with component and desktop/mobile browser coverage.",
       "Include the latest main layout change that folds the side rail when tall quadrants hide the bottom row."
     ]
+  },
+  {
+    "n": 39,
+    "title": "Compact top bar, fixed matrix and Settings",
+    "tag": "site-v39",
+    "sha": "2ce626a955bbed9aecdf84b5b2468f25c72a901d",
+    "target": "0a8ecd926acc5f0a368df1a07eea3393dd3cef97",
+    "recorded_at": "2026-10-22T12:16:40-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T12:17:11.873784-04:00",
+    "changes": [
+      "Keep all four quadrants visible in a fixed two-by-two matrix with independently scrolling task lists and stable sizing when switching tabs.",
+      "Consolidate the date, progress, status tabs, search, filters, projects and Settings into a compact top bar, with a second row for tabs on phones.",
+      "Move backup export and import into Settings with icons and shorter storage information; group Clear completed and board reset under Danger zone.",
+      "Keep compact starter actions next to the date, collapse search when empty, and move the GitHub link and appearance controls into Settings.",
+      "Include Auto appearance that follows the system, retaining browser storage and backup compatibility."
+    ]
   }
 ]

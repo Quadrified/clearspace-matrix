@@ -992,56 +992,6 @@ div.field {
   padding-top: 12px;
   margin-top: 14px;
 }
-#focusButton {
-  white-space: normal;
-}
-#focusRemaining {
-  font-size: calc(0.875rem * var(--text-scale, 1));
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-#focusButton.focus-active {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
-.timer-number {
-  font-size: clamp(42px, 14vw, calc(4.125rem * var(--text-scale, 1)));
-  font-weight: 300;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -2px;
-  text-align: center;
-  line-height: 1.15;
-  margin: 26px 0 7px;
-  cursor: text;
-}
-.timer-actions {
-  display: flex;
-  justify-content: center;
-  gap: 9px;
-}
-.edit-time-link {
-  display: flex;
-  margin: 0 auto 18px;
-  font-size: calc(0.875rem * var(--text-scale, 1));
-  color: var(--muted);
-  min-height: 34px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-#customDurationHint {
-  display: block;
-  margin-top: 6px;
-}
-#clockEditor {
-  margin: 24px 0;
-}
-#clockInput {
-  font-size: calc(1.875rem * var(--text-scale, 1));
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
 #helpDialog {
   width: min(530px, calc(100% - 32px));
 }
@@ -1446,15 +1396,6 @@ div.field {
     margin-left: auto;
     gap: 6px;
     max-width: 100%;
-  }
-  #focusButton {
-    font-size: calc(0.875rem * var(--text-scale, 1));
-    padding: 9px;
-    flex-wrap: wrap;
-    max-width: 185px;
-  }
-  #focusRemaining {
-    font-size: calc(0.8125rem * var(--text-scale, 1));
   }
   .qhead {
     gap: 8px;

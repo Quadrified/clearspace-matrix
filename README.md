@@ -28,7 +28,6 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 - **Manage tasks.** Create, edit, complete, delete, and move tasks between quadrants. Add notes, categories, projects, and optional due dates. The due-date field uses `MM/DD/YYYY`; calendar selection and quick dates use the same display format. In All tasks, completed tasks sit below active tasks, and newly completed tasks move to the bottom of their quadrant.
 - **Break tasks into steps.** Add up to 100 subtasks in the task editor, rename or remove steps, and check them off in the editor or directly on the card. Cards show every step and a completed count. Press Enter in a step to add another. Empty steps are skipped when saving. Completing subtasks does not automatically complete their parent task. Subtasks are searchable, saved locally, included in backups, and support Undo.
 - **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
-- **Focus timer, paused for now.** The control is temporarily hidden. Its implementation and tests remain in the codebase for later use.
 - **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%. At 100%, body text is 16px, desktop task titles are 15px, and task notes are 14px.
 - **Celebrate quadrant zero.** Completing the last active task in a quadrant shows a brief checkmark and sparkle celebration. Filters, moves, deletion, and resets do not trigger it. Keyboard completion and reduced-motion preferences keep the celebration still.
 - **Stay oriented while scrolling.** Urgent and Not urgent stay below the header on wide screens. Importance labels stay beside their own rows. On phones, each quadrant keeps its own urgency label visible.
@@ -134,12 +133,13 @@ src/
 │   ├── backup/              # Export and import of JSON backups
 │   ├── tasks/               # Task editor and matrix board
 │   ├── projects/            # Project creation and editing
-│   ├── focus/               # Timer UI and time calculations
 │   ├── settings/            # Quadrant labels and icon picker
 │   ├── tutorial/            # Seven-step introduction
 │   └── dev/                 # Local-only sample-data tools
+├── assets/fonts/            # Archivo and Caveat subsets for the sketchbook look
 ├── lib/                     # Persistence, preferences, and notifications
-└── styles.css               # Responsive design and appearance preferences
+├── styles.css               # Responsive layout and appearance preferences
+└── sketchbook.css           # Sketchbook look: outlines, soft shadows, paper, tape, handwriting
 worker/handler.mjs           # Public app, hashed assets, caching, and security headers
 e2e/                         # Real-browser tests (Playwright)
 scripts/                     # Worker packaging, artifact checks, local server

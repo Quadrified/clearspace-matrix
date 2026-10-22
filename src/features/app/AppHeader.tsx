@@ -62,7 +62,6 @@ export function AppHeader({
       <div className="header-right">
         {tools}
         {devTools}
-        {/* <FocusTimer tasks={matrix.tasks} notify={show} /> */}
         <div className="settings-control">
           <button
             id="settingsButton"

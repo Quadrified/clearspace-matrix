@@ -1,0 +1,667 @@
+/* Sketchbook look: ink outlines, soft offset shadows, lined paper, tape and handwritten notes.
+   Loaded after styles.css, so it restyles the existing layout without changing it. */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('./assets/fonts/archivo-700-900.woff2') format('woff2');
+  font-weight: 700 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  src: url('./assets/fonts/caveat-600.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+:root {
+  --display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --hand: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+
+  --bg: #f2ede1;
+  --paper: #fffdf7;
+  --card: #ffffff;
+  --ink: #1f1d1a;
+  --muted: #5d574d;
+  --line: #e2d9c6;
+  --green: #2c7a34;
+  --accent-ink: #2c7a34;
+  --selected: #fbe38e;
+  --soft: #f3eee2;
+  --glass: rgba(242, 237, 225, 0.94);
+  --check-border: var(--outline);
+  --focus-ring: #2c7a34;
+
+  --outline: #2b2823;
+  --shade: #ddd3bf;
+  --shade-strong: #cfc3ab;
+  --shadow: 4px 4px 0 var(--shade);
+  --rule: #eaeef3;
+  --margin-rule: #f1c4bb;
+  --dots: #e3dccc;
+  --tape: rgba(238, 208, 120, 0.62);
+  --sticky: #fbe38e;
+  --sticky-ink: #2b2614;
+  --highlight: #f7c08f;
+  --stamp: #c64a35;
+  --primary-shade: #1f5a26;
+  --danger-shade: #8f3324;
+  --chip-category: #d3eed0;
+  --chip-project: #e3dcfb;
+}
+.night {
+  --bg: #191b1a;
+  --paper: #222624;
+  --card: #2a2f2c;
+  --ink: #f3ead6;
+  --muted: #c8bfac;
+  --line: #3a403c;
+  --green: #5cb865;
+  --accent-ink: #8fd497;
+  --selected: #d9c169;
+  --soft: #2e3430;
+  --glass: rgba(25, 27, 26, 0.94);
+  --focus-ring: #8fd497;
+
+  --outline: #d9cfb9;
+  --shade: #101211;
+  --shade-strong: #0b0c0c;
+  --rule: #282e2b;
+  --margin-rule: #4b2f2a;
+  --dots: #222624;
+  --tape: rgba(214, 182, 96, 0.5);
+  --sticky: #d9c169;
+  --sticky-ink: #1d1a10;
+  --highlight: rgba(240, 150, 90, 0.4);
+  --stamp: #ef7a62;
+  --primary-shade: #1f5a26;
+  --danger-shade: #5e2218;
+  --chip-category: rgba(95, 189, 115, 0.2);
+  --chip-project: rgba(167, 151, 238, 0.22);
+}
+
+/* ---------- Page ---------- */
+html,
+body {
+  background-color: var(--bg);
+}
+body {
+  background-image: radial-gradient(var(--dots) 1.2px, transparent 1.3px);
+  background-size: 22px 22px;
+}
+
+/* ---------- Shared controls ---------- */
+.btn {
+  border: 2px solid var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  box-shadow: 2px 3px 0 var(--shade-strong);
+}
+.btn.primary,
+.primary {
+  background: var(--green);
+  border-color: var(--outline);
+  color: #fff;
+  box-shadow: 2px 3px 0 var(--primary-shade);
+}
+.night .btn.primary,
+.night .primary {
+  color: #10180f;
+}
+.btn.reset-confirm,
+.night .btn.reset-confirm {
+  background: var(--stamp);
+  border-color: var(--outline);
+  color: #fff;
+  box-shadow: 2px 3px 0 var(--danger-shade);
+}
+.btn.ghost {
+  box-shadow: none;
+}
+.btn.danger {
+  color: var(--stamp);
+}
+.btn:active {
+  transform: translate(2px, 3px);
+  box-shadow: none;
+}
+.btn:disabled:active {
+  transform: none;
+}
+.chip {
+  border: 1.5px solid var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Inputs: white cards with an ink outline and a highlighter ring on focus. */
+.field input,
+.field .select-trigger,
+.field textarea,
+.select-trigger {
+  border: 2px solid var(--outline);
+  border-radius: 12px;
+  background-color: var(--card);
+}
+.field input,
+.field textarea,
+.field .select-trigger,
+.project-row input,
+.subtasks-editor input:not(.check) {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-weight: 400;
+}
+.project-row input,
+.subtasks-editor input:not(.check) {
+  border: 2px solid var(--outline);
+  border-radius: 12px;
+  background-color: var(--card);
+}
+.field input:focus-visible,
+.field textarea:focus-visible,
+.select-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--highlight);
+}
+label.field,
+div.field,
+.subtasks-editor legend {
+  font-family: var(--display);
+  font-weight: 700;
+}
+.field small,
+.subtasks-editor legend small {
+  font-family: var(--hand);
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--muted);
+}
+.check {
+  width: 21px;
+  height: 21px;
+  border: 2px solid var(--outline);
+  border-radius: 6px;
+  background-color: var(--card);
+}
+.check:checked {
+  border-color: var(--outline);
+  background-color: var(--green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  background-size: 80%;
+}
+
+/* ---------- Top bar: one taped strip of paper ---------- */
+.wrap > header {
+  top: 8px;
+  margin-top: 12px;
+  padding: 6px 12px;
+  background: var(--paper);
+  border: 2px solid var(--outline);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.wrap > header:after {
+  display: none;
+}
+.wrap > header::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 26px;
+  width: 74px;
+  height: 22px;
+  background: var(--tape);
+  transform: rotate(-5deg);
+  pointer-events: none;
+}
+header .logo {
+  border: 2px solid var(--outline);
+  background: var(--card);
+  padding: 7px;
+}
+header .logo i {
+  border: 1.5px solid var(--outline);
+  border-radius: 3px;
+  opacity: 1;
+}
+header .logo i:nth-child(1) {
+  background: #e4614b;
+}
+header .logo i:nth-child(2) {
+  background: #3f9a55;
+}
+header .logo i:nth-child(3) {
+  background: #dfa21f;
+}
+header .logo i:nth-child(4) {
+  background: #8a78d6;
+}
+header .day .date {
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+header .overview strong {
+  font-family: var(--display);
+  font-weight: 800;
+}
+header .completion-word {
+  font-family: var(--hand);
+  font-size: 1.3em;
+  font-weight: 600;
+}
+header .tabs button {
+  font-family: var(--display);
+  font-weight: 700;
+}
+header .tab-indicator,
+.night header .tab-indicator {
+  background: var(--sticky);
+  border: 2px solid var(--outline);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 var(--shade-strong);
+}
+header .tabs .active,
+header .tabs .active .tab-label,
+.night header .tabs .active,
+.night header .tabs .active .tab-label {
+  color: var(--sticky-ink);
+}
+header .tabs .active .tab-count {
+  font-family: var(--hand);
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--sticky-ink);
+}
+header .tool-button,
+header #settingsButton,
+header .search {
+  border: 2px solid transparent;
+  color: var(--ink);
+}
+header .tool-button:hover,
+header .tool-button[aria-expanded='true'],
+header #settingsButton:hover,
+header #settingsButton[aria-expanded='true'],
+header .search:hover {
+  border-color: var(--outline);
+  background: var(--card);
+  box-shadow: 2px 2px 0 var(--shade-strong);
+}
+header .search:focus-within,
+header .search.has-query {
+  border-color: var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 2px 2px 0 var(--shade-strong);
+}
+header .filters-button.on {
+  color: var(--ink);
+}
+header .filters-badge,
+.night header .filters-badge {
+  top: -3px;
+  right: -3px;
+  border: 1.5px solid var(--outline);
+  background: var(--stamp);
+  font-family: var(--display);
+  font-weight: 800;
+}
+
+/* ---------- Matrix ---------- */
+.axis-top,
+.axis-side,
+.axis-mobile {
+  font-family: var(--hand);
+  font-size: calc(1.375rem * var(--text-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  color: var(--muted);
+}
+.axis-top,
+.axis-side {
+  background: transparent;
+}
+.axis-top {
+  margin-bottom: 6px;
+}
+.quad {
+  --accent: #d2553f;
+  --tint: #ffd8cd;
+  padding-bottom: 10px;
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(180deg, transparent 0 27px, var(--rule) 27px 28.2px);
+  border: 2px solid var(--outline);
+  border-radius: 16px 19px 15px 18px / 18px 15px 19px 16px;
+  box-shadow: var(--shadow);
+}
+.quad[data-q='schedule'] {
+  --accent: #3f9a55;
+  --tint: #d3eed0;
+}
+.quad[data-q='delegate'] {
+  --accent: #b9820f;
+  --tint: #fbe6ad;
+}
+.quad[data-q='eliminate'] {
+  --accent: #7563c9;
+  --tint: #e3dcfb;
+}
+.night .quad {
+  --accent: #f07a63;
+  --tint: rgba(240, 122, 99, 0.24);
+}
+.night .quad[data-q='schedule'] {
+  --accent: #5fbd73;
+  --tint: rgba(95, 189, 115, 0.22);
+}
+.night .quad[data-q='delegate'] {
+  --accent: #ecb53c;
+  --tint: rgba(236, 181, 60, 0.22);
+}
+.night .quad[data-q='eliminate'] {
+  --accent: #a797ee;
+  --tint: rgba(167, 151, 238, 0.24);
+}
+.quad.dragover {
+  border: 2px dashed var(--outline);
+  background-color: var(--tint);
+}
+.qhead {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 10px;
+  padding: 16px 16px 12px;
+}
+.qicon {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--outline);
+  border-radius: 12px;
+  background: var(--tint);
+  color: var(--accent);
+}
+.night .qicon {
+  color: var(--ink);
+}
+.qicon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.8;
+}
+.qtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.qhead h2 {
+  min-width: 0;
+  margin: 0;
+  padding: 0 3px;
+  font-family: var(--display);
+  font-size: calc(1.375rem * var(--text-scale, 1));
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  background: linear-gradient(transparent 55%, var(--tint) 55%, var(--tint) 92%, transparent 92%);
+}
+.qhead p {
+  margin-top: 1px;
+  font-family: var(--hand);
+  font-size: calc(1.1875rem * var(--text-scale, 1));
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--muted);
+}
+.qhead .count {
+  flex: none;
+  min-width: 26px;
+  min-height: 24px;
+  padding: 0 7px;
+  border: 1.5px solid var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  font-family: var(--display);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+  font-weight: 800;
+  line-height: 21px;
+}
+.qhead .label-edit {
+  color: var(--muted);
+}
+/* The add button sits in the quadrant header, beside edit, and never covers a card. */
+.quad .task-fab,
+.night .quad .task-fab {
+  position: static;
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--outline);
+  border-radius: 11px;
+  background: var(--tint);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--shade-strong);
+}
+.quad .task-fab:hover,
+.quad .task-fab:focus-visible {
+  background: var(--tint);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--shade-strong);
+}
+.quad .task-fab:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+.quad .task-fab svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.4;
+}
+
+@media (max-width: 760px) {
+  .qhead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    padding: 10px 10px 8px;
+  }
+  .qhead h2 {
+    font-size: calc(1.0625rem * var(--text-scale, 1));
+    overflow-wrap: normal;
+  }
+  .quad .task-fab,
+  .night .quad .task-fab {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+}
+
+/* ---------- Task cards ---------- */
+.task {
+  border: 1.8px solid var(--outline);
+  border-radius: 12px 14px 11px 13px;
+  background: var(--card);
+  box-shadow: 2px 2px 0 var(--shade);
+  margin-bottom: 10px;
+}
+.task-title {
+  font-weight: 600;
+}
+.task.done .task-title {
+  text-decoration-thickness: 2px;
+}
+.tag {
+  padding: 1px 8px;
+  border: 1.5px solid var(--outline);
+  border-radius: 10px;
+  background: var(--chip-category);
+  color: var(--ink);
+  font-weight: 600;
+}
+.project-tag,
+.night .project-tag {
+  background: var(--chip-project);
+  color: var(--ink);
+}
+.duedate {
+  padding: 0;
+  font-family: var(--hand);
+  font-size: calc(1.125rem * var(--text-scale, 1));
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--muted);
+}
+/* Overdue reads as a tilted rubber stamp. */
+.duedate.overdue {
+  align-self: center;
+  padding: 1px 6px;
+  border: 2px solid var(--stamp);
+  border-radius: 5px;
+  transform: rotate(-3deg);
+  color: var(--stamp);
+  font-family: var(--display);
+  font-size: calc(0.6875rem * var(--text-scale, 1));
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.duedate.overdue .overdue-icon {
+  display: none;
+}
+.subtask-progress {
+  line-height: 1.15;
+  font-family: var(--hand);
+  font-size: calc(1.0625rem * var(--text-scale, 1));
+  font-weight: 600;
+  color: var(--muted);
+}
+.card-subtasks {
+  border-color: var(--line);
+}
+.empty strong {
+  font-family: var(--hand);
+  font-size: calc(1.375rem * var(--text-scale, 1));
+  font-weight: 600;
+}
+
+/* ---------- Dialogs and menus: taped paper ---------- */
+dialog {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 15px,
+      var(--margin-rule) 15px,
+      var(--margin-rule) 16.5px,
+      transparent 16.5px
+    ),
+    repeating-linear-gradient(180deg, transparent 0 27px, var(--rule) 27px 28.2px);
+  border: 2px solid var(--outline);
+  border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--shade-strong);
+}
+dialog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 34px;
+  width: 84px;
+  height: 18px;
+  background: var(--tape);
+  pointer-events: none;
+}
+dialog::backdrop {
+  background: rgba(31, 29, 26, 0.35);
+}
+dialog h2 {
+  font-family: var(--display);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.dialog-top h2 {
+  padding: 0 3px;
+  background: linear-gradient(
+    transparent 58%,
+    var(--highlight) 58%,
+    var(--highlight) 92%,
+    transparent 92%
+  );
+}
+.dialog-top > .iconbtn {
+  border: 2px solid var(--outline);
+  background: var(--card);
+  color: var(--ink);
+}
+.settings-menu,
+.add-menu,
+.filters-panel,
+.select-popup {
+  background: var(--paper);
+  border: 2px solid var(--outline);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--shade-strong);
+}
+.settings-menu h2,
+.filters-panel h2 {
+  font-family: var(--display);
+  font-weight: 900;
+}
+.font-controls {
+  border: 2px solid var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  overflow: hidden;
+}
+.font-controls button {
+  border-radius: 0;
+  font-family: var(--display);
+  font-weight: 700;
+}
+.theme-choice button[aria-pressed='true'],
+.night .theme-choice button[aria-pressed='true'] {
+  background: var(--sticky);
+  color: var(--sticky-ink);
+}
+.settings-danger {
+  border: 2px dashed var(--stamp);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+.settings-danger h3 {
+  color: var(--stamp);
+  font-family: var(--display);
+  font-weight: 800;
+}
+
+/* ---------- Notes: sticky paper ---------- */
+.tutorial-example,
+.night .tutorial-example {
+  background: var(--sticky);
+  color: var(--sticky-ink);
+  border: 1.5px solid rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.12);
+  transform: rotate(-0.8deg);
+}
+.tutorial-example * {
+  color: inherit;
+}
+.toast {
+  border: 2px solid var(--outline);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--green);
+}
+.toast #undo {
+  color: var(--sticky);
+  font-family: var(--hand);
+  font-size: 1.25em;
+  font-weight: 600;
+}

@@ -25,7 +25,6 @@ import { TaskEditor } from './features/tasks/TaskEditor';
 import { ProjectsDialog } from './features/projects/ProjectsDialog';
 import { LabelsDialog } from './features/settings/LabelsDialog';
 // Temporarily hidden. Uncomment this import and the header control to restore Focus.
-// import { FocusTimer } from './features/focus/FocusTimer';
 import { TutorialDialog } from './features/tutorial/TutorialDialog';
 // Vite removes this import and its sample data from production builds.
 const DevTools = import.meta.env.DEV ? lazy(() => import('./features/dev/DevTools')) : null;

@@ -41,16 +41,6 @@ Storage events refresh task and project state across tabs on the same origin. Wh
 
 Import merges tasks by ID and reconciles projects by case-insensitive name. Deleting a project asks for confirmation with the total task count and up to two task titles, then removes the project and all of its tasks. Undo restores both. A task editor closes if its persisted task was deleted; new drafts drop the deleted project assignment. Reset board removes all tasks and projects while retaining labels and appearance preferences. The confirmation requires typing `Reset` exactly before its button is enabled. Undo restores tasks and projects together. Notifications, including Undo, dismiss after ten seconds; hovering or focusing the toast pauses dismissal and starts a fresh timeout when interaction ends.
 
-## Focus timer, currently hidden
-
-The Focus import and header control are disabled in the current app. The implementation and regression tests remain for possible restoration; the following describes that retained implementation, not an available screen.
-
-The focus feature owns its state independently of the matrix, so a timer tick does not re-render the task board. A running session uses a target timestamp. Remaining seconds are derived from the wall clock; intervals only refresh the UI.
-
-Start and resume close the controls and show a header countdown. Closing the popup leaves the session running. Direct clock editing pauses temporarily, accepts minutes or MM:SS, and resumes if it was running. Editing remaining time preserves the selected session length. Reset uses that selection. Completion sound is optional, and background-tab throttling can delay visual updates or sound.
-
-Sessions last only for the current page and do not survive reloads.
-
 ## Local Dev tools
 
 `App.tsx` conditionally imports the Dev panel using Vite's compile-time `import.meta.env.DEV` flag. The development server shows a Dev button automatically. Production builds remove that import, the panel, and the sample generator, so a URL, browser flag, or localStorage value cannot enable the tools in production.

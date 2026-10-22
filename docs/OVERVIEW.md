@@ -17,7 +17,7 @@ The date and progress appear in a day bar, or a side rail on screens at least 13
 
 On an empty board, the starter card offers Add your first task and Try example tasks. Quadrant FABs and mobile quick-add appear after tasks exist. Cancelling leaves the starter card intact; clearing all tasks restores it. Filtered-empty views keep the add controls. Projects remains in the toolbar, and N opens task creation.
 
-Settings offers themes, text sizes from 90% to 160%, quadrant labels/icons and Help. The seven-step tutorial has a progress bar and optional example tasks at the end. The focus timer is currently hidden; its implementation and tests remain.
+Settings offers themes, text sizes from 90% to 160%, quadrant labels/icons and Help. The seven-step tutorial has a progress bar and optional example tasks at the end.
 
 ## Tech stack
 

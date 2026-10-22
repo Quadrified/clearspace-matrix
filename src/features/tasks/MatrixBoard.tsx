@@ -158,7 +158,12 @@ export function MatrixBoard({
                     <Icon name={label.icon ?? q.id} />
                   </span>
                   <div>
-                    <h2>{label.title}</h2>
+                    <div className="qtitle">
+                      <h2>{label.title}</h2>
+                      <span className="count" role="img" aria-label={`${tasks.length} tasks`}>
+                        {tasks.length}
+                      </span>
+                    </div>
                     <p>{label.subtitle}</p>
                   </div>
                   <button
@@ -168,9 +173,14 @@ export function MatrixBoard({
                   >
                     <Icon name="edit" />
                   </button>
-                  <span className="count" role="img" aria-label={`${tasks.length} tasks`}>
-                    {tasks.length}
-                  </span>
+                  {/* Adding lives in the header so it never covers the last card. */}
+                  {matrix.tasks.length > 0 && (
+                    <AddTaskFab
+                      className="task-fab"
+                      label={`Add a task to ${label.title}`}
+                      onClick={() => onAdd(q.id)}
+                    />
+                  )}
                 </div>
                 <motion.div
                   layoutScroll
@@ -230,13 +240,6 @@ export function MatrixBoard({
                     key={celebration.sequence}
                     title={label.title}
                     animated={celebration.animated}
-                  />
-                )}
-                {matrix.tasks.length > 0 && (
-                  <AddTaskFab
-                    className="task-fab"
-                    label={`Add a task to ${label.title}`}
-                    onClick={() => onAdd(q.id)}
                   />
                 )}
               </motion.section>

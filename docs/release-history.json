@@ -595,5 +595,22 @@
       "Move each quadrant add button into its header so it no longer covers task cards, retaining its existing label and behavior.",
       "Remove the unused focus timer and related tests, styles and documentation while preserving task data and backup formats."
     ]
+  },
+  {
+    "n": 41,
+    "title": "Sketchbook dialogs and lifted drag cards",
+    "tag": "site-v41",
+    "sha": "b0e59c246c84128727cda63dc5d5773323385e2f",
+    "target": "78c73ae3594bbbe86bf2539a9d45697cc7603bc1",
+    "recorded_at": "2026-10-22T14:55:18-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T14:56:25.060741-04:00",
+    "changes": [
+      "Rebuild task, project, label and tutorial dialogs to match the sketchbook design, with highlighted headings and handwritten section labels.",
+      "Reorganize task editing and subtask controls while preserving accessible dialog names and existing task fields.",
+      "Add a lifted, tilted drag-card preview and a one-time hint for moving tasks between quadrants.",
+      "Polish Settings and backup sections and update browser coverage for the revised task editor."
+    ]
   }
 ]

@@ -373,9 +373,20 @@ Recorded source time: 2026-10-22T14:18:08-04:00. Tag: `site-v40`. Deployment suc
 
 Sites source: `2364efe449eb9e4d49815effc3c306bcc58a41b1`. GitHub target: `0d066e0a54211b2eaa5914950ad68ef6ddb6c300`. Reconstructed: False.
 
-## Available GitHub history through 0d066e0
+## Hosted version 41: Sketchbook dialogs and lifted drag cards
 
-This is the reachable Git history through `0d066e0`, the main commit deployed as hosted version 40, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T14:55:18-04:00. Tag: `site-v41`. Deployment succeeded; record updated 2026-10-22T14:56:25.060741-04:00 (America/Toronto).
+
+- Rebuild task, project, label and tutorial dialogs to match the sketchbook design, with highlighted headings and handwritten section labels.
+- Reorganize task editing and subtask controls while preserving accessible dialog names and existing task fields.
+- Add a lifted, tilted drag-card preview and a one-time hint for moving tasks between quadrants.
+- Polish Settings and backup sections and update browser coverage for the revised task editor.
+
+Sites source: `b0e59c246c84128727cda63dc5d5773323385e2f`. GitHub target: `78c73ae3594bbbe86bf2539a9d45697cc7603bc1`. Reconstructed: False.
+
+## Available GitHub history through 78c73ae
+
+This is the reachable Git history through `78c73ae`, the main commit deployed as hosted version 41, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -456,3 +467,5 @@ This is the reachable Git history through `0d066e0`, the main commit deployed as
 - 2026-10-22T11:17:54-04:00 [0a8ecd9](https://github.com/Quadrified/clearspace-matrix/commit/0a8ecd926acc5f0a368df1a07eea3393dd3cef97): One quiet top bar so the matrix gets the screen (#25)
 - 2026-10-22T12:18:17-04:00 [1d5eeb7](https://github.com/Quadrified/clearspace-matrix/commit/1d5eeb7f592d6e3aadbbcc5faa9d7d7eab0127ea): Record hosted release 39 and latest deployed source
 - 2026-10-22T14:16:49-04:00 [0d066e0](https://github.com/Quadrified/clearspace-matrix/commit/0d066e0a54211b2eaa5914950ad68ef6ddb6c300): Give Clearspace a softer sketchbook look and remove the focus timer (#31)
+- 2026-10-22T14:19:08-04:00 [d3be266](https://github.com/Quadrified/clearspace-matrix/commit/d3be26695d6ba6158a2d3fcb25d5329f3837da82): Record hosted release 40 and deployed sketchbook source
+- 2026-10-22T14:53:57-04:00 [78c73ae](https://github.com/Quadrified/clearspace-matrix/commit/78c73ae3594bbbe86bf2539a9d45697cc7603bc1): Rebuild dialogs to match the sketchbook mockups and add a lifted drag card

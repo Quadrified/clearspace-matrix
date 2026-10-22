@@ -62,10 +62,11 @@ test('text size control: step, clamp, reset and persist', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Increase text size' })).toBeDisabled();
 });
 
-test('settings menu closes with Escape and shows the save state', async ({ page }) => {
+test('settings menu closes with Escape and shows storage information once', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   await openSettings(page);
   await expect(page.locator('.settings-backup')).toContainText('Stored in this browser.');
+  await expect(page.getByText('Saved on this browser', { exact: true })).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeHidden();
 });

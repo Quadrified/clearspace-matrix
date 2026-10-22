@@ -137,7 +137,7 @@ export async function setup(page: Page, seed: Seed = {}) {
 export async function open(page: Page, seed: Seed = {}) {
   await setup(page, seed);
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Make room for what matters.' })).toBeVisible();
+  await expect(page.locator('#matrix')).toBeVisible();
 }
 
 export const quadrant = (page: Page, title: string): Locator =>

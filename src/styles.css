@@ -3349,6 +3349,11 @@ body,
   font-weight: 600;
 }
 
+/* Tab selection changes color, not text width or the height left for the matrix. */
+.tabs button {
+  font-weight: 650;
+}
+
 /* One quiet top bar: date and progress, status tabs, then icon tools.
    Everything above the matrix lives in this row so the quadrants get the height. */
 .sr-only {
@@ -3446,7 +3451,6 @@ header .tabs button {
 header .tabs .active,
 header .tabs .active .tab-label {
   color: var(--ink);
-  font-weight: 600;
 }
 header .tab-indicator,
 .night header .tab-indicator {
@@ -3595,9 +3599,20 @@ header .settings-actions .repo-link {
   header .tabs {
     flex: 1;
   }
+  /* Equal, single-line tabs: moving the count between them never changes the bar height. */
   header .tabs button {
-    flex: 1;
-    padding: 4px 8px;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 4px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    min-height: 34px;
+  }
+  header .tabs .tab-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   header .day .date {
     font-size: calc(1rem * var(--text-scale, 1));

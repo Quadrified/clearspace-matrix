@@ -104,8 +104,9 @@ test('date chips fill the due date', async ({ page }) => {
   await expect(dialog.getByLabel('Due date')).toHaveValue('');
 });
 
-test('exporting a backup records it and Settings says so', async ({ page }) => {
+test('exporting a backup records it in Settings', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
+  await expect(page.getByRole('button', { name: 'Export backup' })).toHaveCount(0);
   await openSettings(page);
   await expect(page.locator('.backup-state')).toHaveText('Last backup: never.');
   await expect(page.locator('.backup-state')).toHaveClass(/due/);
@@ -254,3 +255,70 @@ test('the theme switch and GitHub link live in Settings, not the top bar', async
   await openSettings(page);
   await expect(page.getByRole('link', { name: /source on github/i })).toBeVisible();
 });
+
+for (const [width, height] of [
+  [320, 568],
+  [390, 844],
+  [844, 390],
+  [900, 600],
+  [1280, 720],
+  [1440, 900],
+]) {
+  for (const size of [100, 160]) {
+    test(`four equal quadrants stay within ${width}x${height} at ${size}% with overflowing tasks`, async ({
+      page,
+      isMobile,
+    }) => {
+      test.skip(Boolean(isMobile) !== width <= 760, 'Use the matching device project');
+      await page.setViewportSize({ width, height });
+      const base = seedMatrix.tasks[0]!;
+      const tasks = ['do', 'schedule', 'delegate', 'eliminate'].flatMap((q) =>
+        Array.from({ length: 15 }, (_, i) => ({
+          ...base,
+          q,
+          id: `${q}-${i}`,
+          title: `Task ${i + 1} with a long title`,
+          subtasks: Array.from({ length: 5 }, (_, j) => ({
+            id: `${q}-${i}-${j}`,
+            title: `Step ${j + 1}`,
+            done: false,
+          })),
+        })),
+      );
+      await open(page, { matrix: { ...seedMatrix, tasks }, size });
+      const boxes = await page.locator('.quad').evaluateAll((nodes) =>
+        nodes.map((node) => {
+          const { x, y, width, height } = node.getBoundingClientRect();
+          return { x, y, width, height };
+        }),
+      );
+      expect(boxes).toHaveLength(4);
+      for (const box of boxes) {
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.y).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(width);
+        expect(box.y + box.height).toBeLessThanOrEqual(height);
+        expect(box.height).toBeGreaterThan(0);
+        expect(Math.abs(box.height - boxes[0]!.height)).toBeLessThan(1);
+        expect(Math.abs(box.width - boxes[0]!.width)).toBeLessThan(1);
+      }
+      expect(boxes[1]!.x).toBeGreaterThan(boxes[0]!.x);
+      expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
+      expect(
+        await page.evaluate(() => ({
+          horizontal: document.documentElement.scrollWidth > innerWidth,
+          vertical: document.documentElement.scrollHeight > innerHeight,
+        })),
+      ).toEqual({ horizontal: false, vertical: false });
+      const list = page.locator('.tasklist').first();
+      expect(await list.evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);
+      await list.focus();
+      await page.keyboard.press('End');
+      await expect.poll(() => list.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+      await page.getByRole('button', { name: 'Completed', exact: true }).click();
+      const after = await page.locator('.quad').first().boundingBox();
+      expect(after!.height).toBeCloseTo(boxes[0]!.height, 0);
+      expect(after!.width).toBeCloseTo(boxes[0]!.width, 0);
+    });
+  }
+}

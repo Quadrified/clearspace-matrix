@@ -2,7 +2,6 @@ import type { ReactNode, RefObject } from 'react';
 import { GitHubLink } from '../../components/GitHubLink';
 import { Icon } from '../../components/Icon';
 import { Popover } from '../../components/Popover';
-import { ThemeToggle } from '../../components/ThemeToggle';
 import type { ThemeChoice, usePreferences } from '../../lib/usePreferences';
 
 const themeChoices: [ThemeChoice, string][] = [
@@ -25,6 +24,9 @@ export function AppHeader({
   onHelp,
   storageError,
   backupSettings,
+  day,
+  tabs,
+  tools,
 }: {
   headerRef: RefObject<HTMLElement | null>;
   devTools: ReactNode;
@@ -37,6 +39,12 @@ export function AppHeader({
   onHelp: () => void;
   storageError: string;
   backupSettings: ReactNode;
+  /** Date and progress, beside the logo. */
+  day: ReactNode;
+  /** Status tabs, centred. */
+  tabs: ReactNode;
+  /** Search, filters and projects, before Settings. */
+  tools: ReactNode;
 }) {
   return (
     <header ref={headerRef}>
@@ -47,21 +55,20 @@ export function AppHeader({
           <i />
           <i />
         </span>
-        <div className="brand-copy">
-          <span className="brand-name">clearspace</span>
-          <span className="brand-tagline">your personal matrix</span>
-        </div>
+        <span className="sr-only">clearspace</span>
+        {day}
       </div>
+      <div className="header-tabs">{tabs}</div>
       <div className="header-right">
+        {tools}
         {devTools}
         {/* <FocusTimer tasks={matrix.tasks} notify={show} /> */}
-        <ThemeToggle night={prefs.night} onToggle={prefs.toggleNight} />
-        <GitHubLink />
         <div className="settings-control">
           <button
             id="settingsButton"
-            className="iconbtn"
+            className="iconbtn tool-button"
             aria-label="Settings"
+            title="Settings"
             aria-expanded={menu === 'settings'}
             aria-controls="settingsMenu"
             onClick={() => setMenu(menu === 'settings' ? null : 'settings')}
@@ -84,6 +91,7 @@ export function AppHeader({
                 <Icon name="help" />
                 Help
               </button>
+              <GitHubLink />
             </div>
             <div className="settings-size" role="group" aria-labelledby="themeChoiceLabel">
               <span id="themeChoiceLabel">Appearance</span>

@@ -25,6 +25,7 @@ import {
   choose,
   editorDialog,
   pickFilter,
+  openSettings,
 } from './helpers';
 
 test.describe('adding tasks', () => {
@@ -149,20 +150,20 @@ test.describe('existing tasks', () => {
     await open(page, { matrix: seedMatrix });
     const doFirst = quadrant(page, 'Do first');
     await expect(doFirst.locator('.duedate')).toHaveText(['Today', 'Overdue · Oct 10']);
-    await expect(page.getByText('Due today')).toBeVisible();
   });
 
   test('complete, then reopen, moving completed tasks to the bottom', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
     const doFirst = quadrant(page, 'Do first');
     await expect(doFirst.locator('.task-title')).toHaveText(['Send proposal', 'Pay invoice']);
-    await expect(page.locator('.completion-copy small')).toHaveText('1 of 8 tasks');
+    const progress = page.getByRole('progressbar', { name: 'Completion' });
+    await expect(progress).toHaveAttribute('aria-valuetext', '1 of 8 tasks completed');
 
     await page.getByRole('checkbox', { name: 'Complete Send proposal' }).click();
     await expect(toast(page)).toContainText('Task updated.');
     // Active tab hides it...
     await expect(doFirst.locator('.task-title')).toHaveText(['Pay invoice']);
-    await expect(page.locator('.completion-copy small')).toHaveText('2 of 8 tasks');
+    await expect(progress).toHaveAttribute('aria-valuetext', '2 of 8 tasks completed');
     // ...and the All tab lists it after the active one, with completed tasks last.
     await page.getByRole('button', { name: 'All tasks' }).click();
     await expect(doFirst.locator('.task-title')).toHaveText([
@@ -195,7 +196,7 @@ test.describe('existing tasks', () => {
     await open(page, { matrix: seedMatrix });
     await page.getByRole('checkbox', { name: 'Complete Scroll the feed' }).click();
     await expect(page.getByText('All clear here.')).toBeVisible();
-    await expect(page.locator('.overview-stat').filter({ hasText: 'Completed' })).toContainText(
+    await expect(page.getByRole('button', { name: /^Completed/ }).locator('.tab-count')).toHaveText(
       '2',
     );
   });
@@ -215,8 +216,10 @@ test.describe('existing tasks', () => {
 
   test('Clear completed removes only completed tasks', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
+    await openSettings(page);
     await page.getByRole('button', { name: 'Clear completed' }).click();
     await expect(toast(page)).toContainText('Completed tasks cleared.');
+    await page.keyboard.press('Escape');
     expect((await storedMatrix(page)).tasks).toHaveLength(7);
     await page.getByRole('button', { name: 'All tasks' }).click();
     await expect(page.locator('.task')).toHaveCount(7);

@@ -209,19 +209,19 @@ it('local Dev generates samples without API calls and removes only marked tasks'
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(25);
 });
 
-it('offers a persistent appearance switch directly in the header', () => {
+it('keeps the top bar to icons and moves the appearance switch into Settings', () => {
   render(<App />);
-  const toggle = screen.getByRole('switch', { name: 'Dark mode' });
-  expect(toggle.closest('header')).not.toBeNull();
-  expect(toggle).toHaveAttribute('aria-checked', 'false');
-  fireEvent.click(toggle);
-  expect(toggle).toHaveAttribute('aria-checked', 'true');
+  const header = screen.getByRole('banner');
+  expect(within(header).queryByRole('switch')).not.toBeInTheDocument();
+  expect(within(header).queryByRole('link', { name: /github/i })).not.toBeInTheDocument();
+  for (const name of ['Filters', 'Projects', 'Settings'])
+    expect(within(header).getByRole('button', { name })).toBeInTheDocument();
+  expect(within(header).getByRole('textbox', { name: 'Find a task' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
   expect(document.body).toHaveClass('night');
   expect(localStorage.getItem('clearspace.theme')).toBe('night');
-  fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
-  expect(screen.queryByRole('button', { name: 'Toggle dark mode' })).not.toBeInTheDocument();
-  fireEvent.click(toggle);
-  expect(toggle).toHaveAttribute('aria-checked', 'false');
+  fireEvent.click(screen.getByRole('button', { name: 'Light' }));
   expect(document.body).not.toHaveClass('night');
   expect(localStorage.getItem('clearspace.theme')).toBe('light');
 });
@@ -257,7 +257,8 @@ it('keeps browser chrome and native controls aligned with the app theme rather t
     render(<App />);
     expect(tags.map((meta) => meta.content)).toEqual(['#f4f6ef', '#f4f6ef']);
     expect(document.documentElement.style.colorScheme).toBe('light');
-    fireEvent.click(screen.getByRole('switch', { name: 'Dark mode' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     expect(tags.map((meta) => meta.content)).toEqual(['#12271e', '#12271e']);
     expect(document.documentElement.style.colorScheme).toBe('dark');
   } finally {
@@ -327,9 +328,10 @@ it('restores the starter card and removes FABs when the last task is deleted', (
   expect(screen.getAllByRole('button', { name: /^Add a task to / })).toHaveLength(4);
 });
 
-it('header links to the open-source repository in a new tab', () => {
+it('Settings links to the open-source repository in a new tab', () => {
   render(<App />);
-  const link = screen.getByRole('link', { name: /open source on github/i });
+  fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
+  const link = screen.getByRole('link', { name: /source on github/i });
   expect(link).toHaveAttribute('href', 'https://github.com/Quadrified/clearspace-matrix');
   expect(link).toHaveAttribute('target', '_blank');
   expect(link).toHaveAttribute('rel', 'noopener noreferrer');

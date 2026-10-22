@@ -152,8 +152,16 @@ export const storedMatrix = (page: Page) =>
   page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? 'null'), MATRIX_KEY);
 
 export async function openSettings(page: Page) {
-  await page.getByRole('button', { name: 'Settings' }).click();
+  const button = page.getByRole('button', { name: 'Settings' });
+  if ((await button.getAttribute('aria-expanded')) !== 'true') await button.click();
   await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+}
+
+/** Picks Auto, Light or Dark under Settings > Appearance, then closes Settings. */
+export async function chooseAppearance(page: Page, name: 'Auto' | 'Light' | 'Dark') {
+  await openSettings(page);
+  await page.getByRole('button', { name, exact: true }).click();
+  await page.keyboard.press('Escape');
 }
 
 export async function choose(

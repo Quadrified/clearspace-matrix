@@ -1,6 +1,6 @@
 /* Export backup download and Import (valid, legacy v1, invalid) . */
 import { test, expect } from '@playwright/test';
-import { open, seedMatrix, storedMatrix, toast } from './helpers';
+import { open, openSettings, seedMatrix, storedMatrix, toast } from './helpers';
 
 const IMPORT_ERROR =
   'This backup could not be imported. Check that it is a Clearspace JSON backup.';
@@ -16,6 +16,7 @@ const task = (o: Record<string, unknown>) => ({
 
 test('Export backup downloads a v2 JSON file with the whole board', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
+  await openSettings(page);
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     page.getByRole('button', { name: 'Export backup' }).click(),
@@ -33,6 +34,7 @@ test('Export backup downloads a v2 JSON file with the whole board', async ({ pag
 
 test('Import merges a valid v2 backup (and remaps same-named projects)', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
+  await openSettings(page);
   const backup = {
     version: 2,
     projects: [
@@ -78,6 +80,7 @@ test('Import merges a valid v2 backup (and remaps same-named projects)', async (
 
 test('Import accepts a legacy v1 backup', async ({ page }) => {
   await open(page, { matrix: { tasks: [], projects: [] } });
+  await openSettings(page);
   await page.locator('input[type=file]').setInputFiles({
     name: 'old.json',
     mimeType: 'application/json',
@@ -107,6 +110,7 @@ for (const [name, content] of [
 ] as const) {
   test(`Import rejects an invalid file: ${name}`, async ({ page }) => {
     await open(page, { matrix: seedMatrix });
+    await openSettings(page);
     await page.locator('input[type=file]').setInputFiles({
       name: 'bad.json',
       mimeType: 'application/json',
@@ -123,6 +127,7 @@ for (const [name, content] of [
 
 test('the same file can be imported twice in a row (input is reset)', async ({ page }) => {
   await open(page, { matrix: { tasks: [], projects: [] } });
+  await openSettings(page);
   const file = {
     name: 'again.json',
     mimeType: 'application/json',
@@ -133,10 +138,13 @@ test('the same file can be imported twice in a row (input is reset)', async ({ p
   await page.locator('input[type=file]').setInputFiles(file);
   await expect(page.locator('.task')).toHaveCount(1);
   await page.getByRole('button', { name: 'Dismiss notification' }).click();
+  await openSettings(page);
   await page.getByRole('button', { name: 'Clear completed' }).click();
+  await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Edit Once' }).click();
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.locator('.task')).toHaveCount(0);
+  await openSettings(page);
   await page.locator('input[type=file]').setInputFiles(file);
   await expect(page.locator('.task')).toHaveCount(1);
 });

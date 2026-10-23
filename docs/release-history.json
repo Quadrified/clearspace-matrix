@@ -628,5 +628,22 @@
       "Replace the bundled Caveat font with the bolder 700-weight subset for clearer handwriting.",
       "Redraw the favicon as four outlined colored squares on paper with a soft offset shadow to match the sketchbook logo."
     ]
+  },
+  {
+    "n": 43,
+    "title": "Clear code layers and polished task flows",
+    "tag": "site-v43",
+    "sha": "9601f8cc55f18a450e388ab64d3cbeb1b239f588",
+    "target": "a5641bada0954b742053987d9ffe278cb62cb26d",
+    "recorded_at": "2026-10-22T21:10:52-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T21:11:16.500900-04:00",
+    "changes": [
+      "Organize application composition, features, state, pure domain rules and shared components into clear layers; centralize browser storage access without changing keys or backup formats.",
+      "Split base styles into ordered stylesheets, remove unused rail code and selectors, and refresh architecture, overview and deployment documentation.",
+      "Shorten Export backup to Export, align export/import icons with their direction, and improve tutorial navigation and endings for populated versus empty boards.",
+      "Give side axis labels more space and disable task saving until the trimmed title has at least two characters, including keyboard submission."
+    ]
   }
 ]

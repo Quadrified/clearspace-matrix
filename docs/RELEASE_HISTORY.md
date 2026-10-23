@@ -394,9 +394,20 @@ Recorded source time: 2026-10-22T15:12:05-04:00. Tag: `site-v42`. Deployment suc
 
 Sites source: `d70ed1f9f73ed3b7807a74f78dd428b95afaa88e`. GitHub target: `56236f931c23fdb75132bdea214bcee42579b538`. Reconstructed: False.
 
-## Available GitHub history through 56236f9
+## Hosted version 43: Clear code layers and polished task flows
 
-This is the reachable Git history through `56236f9`, the main commit deployed as hosted version 42, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T21:10:52-04:00. Tag: `site-v43`. Deployment succeeded; record updated 2026-10-22T21:11:16.500900-04:00 (America/Toronto).
+
+- Organize application composition, features, state, pure domain rules and shared components into clear layers; centralize browser storage access without changing keys or backup formats.
+- Split base styles into ordered stylesheets, remove unused rail code and selectors, and refresh architecture, overview and deployment documentation.
+- Shorten Export backup to Export, align export/import icons with their direction, and improve tutorial navigation and endings for populated versus empty boards.
+- Give side axis labels more space and disable task saving until the trimmed title has at least two characters, including keyboard submission.
+
+Sites source: `9601f8cc55f18a450e388ab64d3cbeb1b239f588`. GitHub target: `a5641bada0954b742053987d9ffe278cb62cb26d`. Reconstructed: False.
+
+## Available GitHub history through a5641ba
+
+This is the reachable Git history through `a5641ba`, the main commit deployed as hosted version 43, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -481,3 +492,6 @@ This is the reachable Git history through `56236f9`, the main commit deployed as
 - 2026-10-22T14:53:57-04:00 [78c73ae](https://github.com/Quadrified/clearspace-matrix/commit/78c73ae3594bbbe86bf2539a9d45697cc7603bc1): Rebuild dialogs to match the sketchbook mockups and add a lifted drag card
 - 2026-10-22T14:56:54-04:00 [6d0dc83](https://github.com/Quadrified/clearspace-matrix/commit/6d0dc83c48e70e95558c331aa134a26223c705bd): Record hosted release 41 and deployed dialog source
 - 2026-10-22T15:10:51-04:00 [56236f9](https://github.com/Quadrified/clearspace-matrix/commit/56236f931c23fdb75132bdea214bcee42579b538): Make handwritten text larger and bolder, and redraw the favicon
+- 2026-10-22T15:13:33-04:00 [6833c96](https://github.com/Quadrified/clearspace-matrix/commit/6833c966ae30657791aeb38287b35c2f1369e4ca): Record hosted release 42 and deployed typography source
+- 2026-10-22T21:04:28-04:00 [de14f7f](https://github.com/Quadrified/clearspace-matrix/commit/de14f7f0343298250c8720617e7cda4330ae1c5f): Polish Export/Import, tutorial navigation, axis spacing and task saving (#34)
+- 2026-10-22T21:07:18-04:00 [a5641ba](https://github.com/Quadrified/clearspace-matrix/commit/a5641bada0954b742053987d9ffe278cb62cb26d): Organize the codebase into clear layers and refresh the docs (#35)

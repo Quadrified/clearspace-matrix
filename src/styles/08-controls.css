@@ -66,10 +66,10 @@
   margin-right: 3px;
   vertical-align: -2px;
 }
-.task[draggable='true'] {
-  cursor: grab;
+.task[data-draggable='true'] {
+  cursor: var(--cursor-pointer);
 }
-.task[draggable='true']::after {
+.task[data-draggable='true']::after {
   content: '⋮⋮';
   position: absolute;
   top: 8px;
@@ -82,8 +82,8 @@
 .task {
   position: relative;
 }
-.task[draggable='true']:hover::after,
-.task[draggable='true']:focus-within::after {
+.task[data-draggable='true']:hover::after,
+.task[data-draggable='true']:focus-within::after {
   opacity: 0.55;
 }
 .task-fab:focus-visible,

@@ -41,46 +41,64 @@ function setup(reducedMotion = false) {
   render(<App />);
   const source = screen.getByRole('button', { name: 'Edit Move this task' }).closest('article')!;
   const destination = screen.getByRole('region', { name: 'Schedule, Important, not urgent' });
-  let data = '';
-  const dataTransfer = {
-    setData: (_type: string, value: string) => {
-      data = value;
-    },
-    getData: () => data,
-    effectAllowed: '',
-    dropEffect: '',
-  };
-  return { source, destination, dataTransfer, animate };
+  return { source, destination, animate };
+}
+/** Presses on the card and moves the mouse over `over` (jsdom has no layout, so hit-testing is stubbed). */
+function startDrag(source: HTMLElement, over: Element) {
+  document.elementFromPoint = () => over;
+  fireEvent.pointerDown(source, { pointerType: 'mouse', button: 0, clientX: 10, clientY: 10 });
+  fireEvent.pointerMove(window, { pointerType: 'mouse', clientX: 60, clientY: 40 });
+}
+/** Releases the mouse; browsers follow with a click, which the board swallows after a drag. */
+function endDrag() {
+  fireEvent.pointerUp(window);
+  fireEvent.click(document.body);
 }
 afterEach(() => {
   vi.restoreAllMocks();
   delete (HTMLElement.prototype as Partial<HTMLElement>).animate;
+  delete (document as Partial<Document>).elementFromPoint;
 });
 it('highlights the destination, saves the move, and supports Undo', () => {
-  const { source, destination, dataTransfer } = setup();
-  fireEvent.dragStart(source, { dataTransfer });
+  const { source, destination } = setup();
+  startDrag(source, destination);
   expect(source).toHaveClass('is-dragging');
-  fireEvent.dragOver(destination, { dataTransfer });
   expect(destination).toHaveClass('dragover');
-  fireEvent.drop(destination, { dataTransfer });
+  expect(document.documentElement).toHaveClass('card-dragging');
+  endDrag();
   expect(destination).not.toHaveClass('dragover');
+  expect(document.documentElement).not.toHaveClass('card-dragging');
+  expect(document.querySelector('.drag-ghost')).not.toBeInTheDocument();
   expect(destination).toContainElement(screen.getByRole('button', { name: 'Edit Move this task' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('schedule');
   fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('do');
 });
+it('opens the editor on a plain click but not after a drag', () => {
+  const { source, destination } = setup();
+  const card = screen.getByRole('button', { name: 'Edit Move this task' });
+  startDrag(source, document.body);
+  fireEvent.pointerUp(window);
+  fireEvent.click(card);
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(destination).not.toContainElement(card);
+  fireEvent.pointerDown(source, { pointerType: 'mouse', button: 0, clientX: 10, clientY: 10 });
+  fireEvent.pointerUp(window);
+  fireEvent.click(card);
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+});
 it('moves data without positional animation when reduced motion is requested', () => {
-  const { source, destination, dataTransfer, animate } = setup(true);
-  fireEvent.dragStart(source, { dataTransfer });
-  fireEvent.drop(destination, { dataTransfer });
+  const { source, destination, animate } = setup(true);
+  startDrag(source, destination);
+  endDrag();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('schedule');
   expect(animate).not.toHaveBeenCalled();
 });
-it('clears feedback when a drag is cancelled', () => {
-  const { source, destination, dataTransfer } = setup();
-  fireEvent.dragStart(source, { dataTransfer });
-  fireEvent.dragOver(destination, { dataTransfer });
-  fireEvent.dragEnd(source, { dataTransfer });
+it('clears feedback when a drag is cancelled with Escape', () => {
+  const { source, destination } = setup();
+  startDrag(source, destination);
+  fireEvent.keyDown(document.body, { key: 'Escape' });
+  endDrag();
   expect(source).not.toHaveClass('is-dragging');
   expect(destination).not.toHaveClass('dragover');
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks[0].q).toBe('do');
@@ -112,9 +130,9 @@ it('cancels a celebration when Undo reopens the task', () => {
   expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
 });
 it('does not celebrate a quadrant cleared by moving a task', () => {
-  const { source, destination, dataTransfer } = setup();
-  fireEvent.dragStart(source, { dataTransfer });
-  fireEvent.drop(destination, { dataTransfer });
+  const { source, destination } = setup();
+  startDrag(source, destination);
+  endDrag();
   expect(screen.queryByRole('status', { name: 'Quadrant cleared' })).not.toBeInTheDocument();
 });
 it('does not celebrate finishing only the visible tasks while another active task is filtered out', () => {

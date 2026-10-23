@@ -1,5 +1,5 @@
 import { forwardRef, memo, useId } from 'react';
-import type { DragEvent } from 'react';
+import type { PointerEvent } from 'react';
 import { Icon } from '../../components/Icon';
 import { TaskCardMotion } from './TaskCardMotion';
 import type { QuadrantId, Task } from '../../domain/models';
@@ -19,10 +19,7 @@ type TaskItemProps = {
   onToggle: (id: string) => void;
   onToggleSubtask: (taskId: string, subtaskId: string) => void;
   onCelebrate: (q: QuadrantId, taskId: string, animated: boolean) => void;
-  onDragStart: (e: DragEvent, id: string) => void;
-  onDragEnd: () => void;
-  onDragOverTask: (e: DragEvent, q: QuadrantId, id: string) => void;
-  onDropOnTask: (e: DragEvent, q: QuadrantId, id: string) => void;
+  onPointerDown: (e: PointerEvent<HTMLElement>, id: string) => void;
 };
 
 // Memoized so typing in search or dragging elsewhere does not re-render (or re-measure) every card.
@@ -41,10 +38,7 @@ export const TaskItem = memo(
       onToggle,
       onToggleSubtask,
       onCelebrate,
-      onDragStart,
-      onDragEnd,
-      onDragOverTask,
-      onDropOnTask,
+      onPointerDown,
     },
     ref,
   ) {
@@ -56,11 +50,8 @@ export const TaskItem = memo(
           data-task-id={task.id}
           aria-label={task.title}
           className={`task${task.subtasks?.length ? ' has-subtasks' : ''}${task.done ? ' done' : ''}${dragging ? ' is-dragging' : ''}${dropBefore ? ' drop-before' : ''}`}
-          draggable={draggable}
-          onDragStart={(e) => onDragStart(e, task.id)}
-          onDragEnd={onDragEnd}
-          onDragOver={(e) => onDragOverTask(e, q, task.id)}
-          onDrop={(e) => onDropOnTask(e, q, task.id)}
+          data-draggable={draggable}
+          onPointerDown={draggable ? (e) => onPointerDown(e, task.id) : undefined}
         >
           <label className="task-check-target">
             <input

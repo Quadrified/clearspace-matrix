@@ -86,18 +86,19 @@ body {
   background-color: var(--bg);
 }
 
-/* Drawn cursors: a paper arrow, and a sticky-yellow one with action lines over anything clickable.
-   Only for mouse and trackpad; text fields keep the I-beam and drags keep the hand. */
+/* Drawn cursors: a paper arrow, and a matching pointing hand over anything clickable or draggable.
+   Only for mouse and trackpad; text fields keep the I-beam. The hand stays on while a card is dragged. */
 @media (pointer: fine) {
   :root {
     --cursor-default: url('../assets/cursors/arrow.svg') 7 6, default;
-    --cursor-pointer: url('../assets/cursors/pointer.svg') 7 6, pointer;
-  }
-  .night {
-    --cursor-pointer: url('../assets/cursors/pointer-night.svg') 7 6, pointer;
+    --cursor-pointer: url('../assets/cursors/hand.svg') 12 3, pointer;
   }
   html {
     cursor: var(--cursor-default);
+  }
+  html.card-dragging,
+  html.card-dragging * {
+    cursor: var(--cursor-pointer) !important;
   }
   a[href],
   summary,
@@ -1456,8 +1457,8 @@ dialog .dialog-top h2 {
 
 /* Drag: the card lifts and tilts, and leaves a dashed space behind. */
 @media (hover: hover) and (pointer: fine) {
-  .task[draggable='true'] {
-    cursor: grab;
+  .task[data-draggable='true'] {
+    cursor: var(--cursor-pointer);
   }
 }
 .task.is-dragging,
@@ -1469,10 +1470,14 @@ dialog .dialog-top h2 {
 }
 .drag-ghost {
   position: fixed;
-  top: -2000px;
+  top: 0;
   left: 0;
+  z-index: 1000;
   padding: 14px 120px 28px 14px;
   pointer-events: none;
+}
+html.card-dragging {
+  user-select: none;
 }
 .drag-ghost > .task {
   transform: rotate(-2deg);

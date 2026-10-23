@@ -231,7 +231,7 @@ test.describe('existing tasks', () => {
 
 test.describe('drag and drop', () => {
   test('drag a task to another quadrant', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'HTML5 drag and drop is desktop-only; phones use the editor');
+    test.skip(isMobile, 'Mouse drag is desktop-only; phones use the editor');
     await open(page, { matrix: seedMatrix });
     const source = page.locator('[data-task-id="t-invoice"]');
     const target = quadrant(page, 'Schedule').locator('.qhead');
@@ -249,7 +249,7 @@ test.describe('drag and drop', () => {
   });
 
   test('drop onto a specific task inserts before it', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'HTML5 drag and drop is desktop-only');
+    test.skip(isMobile, 'Mouse drag is desktop-only');
     await open(page, { matrix: seedMatrix });
     await page
       .locator('[data-task-id="t-feed"]')
@@ -264,8 +264,14 @@ test.describe('drag and drop', () => {
 
   test('tasks are not draggable when sorted by due date', async ({ page }) => {
     await open(page, { matrix: seedMatrix });
-    await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'true');
+    await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute(
+      'data-draggable',
+      'true',
+    );
     await pickFilter(page, 'Sort tasks', 'Due date');
-    await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute('draggable', 'false');
+    await expect(page.locator('[data-task-id="t-invoice"]')).toHaveAttribute(
+      'data-draggable',
+      'false',
+    );
   });
 });

@@ -1,5 +1,5 @@
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
-import type { DragEvent } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 import { LayoutGroup, motion } from 'motion/react';
 import { TaskPresence } from './TaskCardMotion';
 import { TaskItem } from './TaskItem';
@@ -13,10 +13,8 @@ import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
 import { readStorage, STORAGE_KEYS, writeStorage } from '../../state/storage';
 
-/** Drags a tilted, lifted copy of the card; the first drag also carries a "where to" note. */
-function liftCard(e: DragEvent) {
-  const card = e.currentTarget;
-  if (!(card instanceof HTMLElement) || typeof e.dataTransfer.setDragImage !== 'function') return;
+/** Builds the tilted, lifted copy of the card that follows the pointer; the first drag also carries a "where to" note. */
+function liftCard(card: HTMLElement) {
   const ghost = document.createElement('div');
   ghost.className = 'drag-ghost';
   ghost.setAttribute('aria-hidden', 'true');
@@ -39,9 +37,17 @@ function liftCard(e: DragEvent) {
     ghost.append(note);
   }
   document.body.append(ghost);
-  const box = card.getBoundingClientRect();
-  e.dataTransfer.setDragImage(ghost, e.clientX - box.left + 14, e.clientY - box.top + 14);
-  setTimeout(() => ghost.remove(), 0);
+  return ghost;
+}
+
+/** Swallows the click that the browser fires after a drag ends on the card. */
+function swallowNextClick() {
+  const stop = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  window.addEventListener('click', stop, { capture: true, once: true });
+  setTimeout(() => window.removeEventListener('click', stop, true), 0);
 }
 
 export function MatrixBoard({
@@ -75,17 +81,23 @@ export function MatrixBoard({
   const { instant } = useMotionSettings();
   const [dragged, setDragged] = useState<string | null>(null);
   const [target, setTarget] = useState<{ q: QuadrantId; before?: string } | null>(null);
-  // Mirrors `dragged` so drag handlers stay stable and cards can stay memoized mid-drag.
+  // Mirror `dragged` and `target` so drag handlers stay stable and cards can stay memoized mid-drag.
   const draggedRef = useRef<string | null>(null);
+  const targetRef = useRef<{ q: QuadrantId; before?: string } | null>(null);
+  const endDragRef = useRef<(() => void) | null>(null);
   const taskIds = useMemo(() => new Set(matrix.tasks.map((task) => task.id)), [matrix.tasks]);
   const finishDrag = useCallback(() => {
     draggedRef.current = null;
+    targetRef.current = null;
     setDragged(null);
     setTarget(null);
   }, []);
-  const aim = useCallback((q: QuadrantId, before?: string) => {
-    // Dragover fires many times a second; only re-render when the drop point really changes.
-    setTarget((t) => (t && t.q === q && t.before === before ? t : { q, before }));
+  const aim = useCallback((q: QuadrantId | null, before?: string) => {
+    // Pointer moves fire many times a second; only re-render when the drop point really changes.
+    const t = targetRef.current;
+    if (t ? t.q === q && t.before === before : q === null) return;
+    targetRef.current = q ? { q, before } : null;
+    setTarget(targetRef.current);
   }, []);
   const drop = useCallback(
     (id: string, q: QuadrantId, before?: string) => {
@@ -95,32 +107,72 @@ export function MatrixBoard({
     },
     [finishDrag, onMove, taskIds],
   );
-  const onDragStart = useCallback((e: DragEvent, id: string) => {
-    e.dataTransfer.setData('text/plain', id);
-    e.dataTransfer.effectAllowed = 'move';
-    liftCard(e);
-    draggedRef.current = id;
-    setDragged(id);
-  }, []);
-  const onDragOverTask = useCallback(
-    (e: DragEvent, q: QuadrantId, id: string) => {
-      if (draggedRef.current) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.dataTransfer.dropEffect = 'move';
-        aim(q, id);
-      }
+  const dropRef = useRef(drop);
+  dropRef.current = drop;
+  // Cards are dragged with pointer events rather than native drag and drop, so the page keeps
+  // its own cursor throughout. Touch is left alone: phones move tasks from the editor.
+  const onPointerDownTask = useCallback(
+    (e: ReactPointerEvent<HTMLElement>, id: string) => {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if ((e.target as Element).closest('input, label, .card-subtasks')) return;
+      const card = e.currentTarget;
+      const startX = e.clientX,
+        startY = e.clientY;
+      let ghost: HTMLElement | null = null;
+      let offsetX = 0,
+        offsetY = 0;
+      const move = (ev: PointerEvent) => {
+        if (!ghost) {
+          if (Math.hypot(ev.clientX - startX, ev.clientY - startY) < 5) return;
+          const box = card.getBoundingClientRect();
+          // The ghost has 14px of padding around the card.
+          offsetX = startX - box.left + 14;
+          offsetY = startY - box.top + 14;
+          ghost = liftCard(card);
+          document.documentElement.classList.add('card-dragging');
+          // The press may have started a text selection; a drag should not leave one behind.
+          window.getSelection()?.removeAllRanges();
+          draggedRef.current = id;
+          setDragged(id);
+        }
+        ghost.style.transform = `translate(${ev.clientX - offsetX}px, ${ev.clientY - offsetY}px)`;
+        const hit = document.elementFromPoint(ev.clientX, ev.clientY);
+        const quad = hit?.closest<HTMLElement>('.quad[data-q]');
+        const over = hit?.closest<HTMLElement>('[data-task-id]');
+        aim(
+          (quad?.dataset.q as QuadrantId | undefined) ?? null,
+          over && quad?.contains(over) ? over.dataset.taskId : undefined,
+        );
+      };
+      const end = (commit: boolean) => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', onUp);
+        window.removeEventListener('pointercancel', onCancel);
+        window.removeEventListener('keydown', onKey);
+        endDragRef.current = null;
+        if (!ghost) return;
+        ghost.remove();
+        document.documentElement.classList.remove('card-dragging');
+        swallowNextClick();
+        const t = targetRef.current;
+        if (commit && t) dropRef.current(id, t.q, t.before);
+        else finishDrag();
+      };
+      const onUp = () => end(true);
+      const onCancel = () => end(false);
+      const onKey = (ev: KeyboardEvent) => {
+        if (ev.key === 'Escape') end(false);
+      };
+      endDragRef.current?.();
+      endDragRef.current = onCancel;
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', onUp);
+      window.addEventListener('pointercancel', onCancel);
+      window.addEventListener('keydown', onKey);
     },
-    [aim],
+    [aim, finishDrag],
   );
-  const onDropOnTask = useCallback(
-    (e: DragEvent, q: QuadrantId, id: string) => {
-      e.preventDefault();
-      e.stopPropagation();
-      drop(e.dataTransfer.getData('text/plain'), q, id);
-    },
-    [drop],
-  );
+  useEffect(() => () => endDragRef.current?.(), []);
   const onCelebrate = useCallback((q: QuadrantId, taskId: string, animated: boolean) => {
     const sequence = ++celebrationSequence.current;
     setCelebrations((current) => ({ ...current, [q]: { taskId, sequence, animated } }));
@@ -164,20 +216,6 @@ export function MatrixBoard({
                 className={`quad${target?.q === q.id ? ' dragover' : ''}`}
                 data-q={q.id}
                 aria-label={`${label.title}, ${q.subtitle}`}
-                onDragOver={(e) => {
-                  if (dragged) {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                    aim(q.id);
-                  }
-                }}
-                onDragLeave={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget as Node)) setTarget(null);
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  drop(e.dataTransfer.getData('text/plain'), q.id);
-                }}
               >
                 <div className="axis-rail" aria-hidden="true">
                   <span className="axis-side">
@@ -240,10 +278,7 @@ export function MatrixBoard({
                           onToggle={onToggle}
                           onToggleSubtask={onToggleSubtask}
                           onCelebrate={onCelebrate}
-                          onDragStart={onDragStart}
-                          onDragEnd={finishDrag}
-                          onDragOverTask={onDragOverTask}
-                          onDropOnTask={onDropOnTask}
+                          onPointerDown={onPointerDownTask}
                         />
                       ))
                     ) : (

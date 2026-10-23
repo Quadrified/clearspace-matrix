@@ -2,6 +2,16 @@
 
 The public site is https://clearspace-matrix.fastring19.chatgpt.site. The publisher keeps Site identity in a local, Git-ignored `.openai/hosting.json`. The repository includes `.openai/hosting.example.json` with no assigned identity. The manifest omits `static.directory` because a Worker serves the app and favicon.
 
+## At a glance
+
+1. Pushes and merges run CI only. Nothing deploys until the owner explicitly asks.
+2. Pick the exact GitHub commit to publish and confirm its CI run is green.
+3. Build it (`npm ci && npm run build`); optionally preview with `npm run serve:worker`.
+4. Publish that build to the existing Site through the Sites workflow and confirm the deployment succeeded.
+5. Record the release in `docs/release-history.json`, `docs/RELEASE_HISTORY.md` and a `site-vN` GitHub release.
+
+The sections below give the detail for each step.
+
 ## Select source and verify
 
 Use Node.js 22.12 or newer, with Node.js 24 used in CI. Select the exact GitHub commit requested for publication and check its CI result. If publishing a merged PR, confirm that the selected main source matches the reviewed changes. Do not include unrelated workspace edits or an older snapshot branch.

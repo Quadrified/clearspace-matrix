@@ -13,18 +13,18 @@ Clearspace is a browser-local task planner built around the Eisenhower Matrix. T
 
 Tasks support notes, subtasks, due dates, categories and optional projects. Users can edit, complete, delete, search, filter and reorder tasks. Desktop drag-and-drop moves tasks between quadrants; phones use the editor's quadrant picker. Subtask completion is independent of its parent. Due dates display as MM/DD/YYYY and remain ISO dates in storage.
 
-The date and progress appear in a day bar, or a side rail on screens at least 1360px wide. If a quadrant contains more than four tasks in the selected status tab, the rail folds away to give the board more width. Search and project/category filters do not trigger that change.
+One quiet top bar holds today's date and progress, the Active / Completed / All tasks tabs, and icon buttons for search, filters, projects and Settings. The four quadrants share the rest of the screen equally, and only their task lists scroll. Phones put the tabs on a second row.
 
-On an empty board, the starter card offers Add your first task and Try example tasks. Quadrant FABs and mobile quick-add appear after tasks exist. Cancelling leaves the starter card intact; clearing all tasks restores it. Filtered-empty views keep the add controls. Projects remains in the toolbar, and N opens task creation.
+On an empty board, the top bar offers Add task and Examples in place of progress. Each quadrant's + button appears once a task exists. Cancelling the editor leaves the board empty; clearing every task brings the starter buttons back. Filtered-empty views keep the add controls. N opens a new task and P opens projects.
 
-Settings offers themes, text sizes from 90% to 160%, quadrant labels/icons and Help. The seven-step tutorial has a progress bar and optional example tasks at the end.
+Settings offers Auto, Light and Dark appearance, text sizes from 90% to 160%, quadrant labels and icons, Help, Export and Import, Clear completed and a guarded board reset. The seven-step tutorial shows progress as dots; on a board that is still empty, its last step offers example tasks.
 
 ## Tech stack
 
 | Area              | Tools                                                                     |
 | ----------------- | ------------------------------------------------------------------------- |
 | App               | React 19, strict TypeScript, Vite 8                                       |
-| Interface         | CSS, Base UI selects, Heroicons, Motion                                   |
+| Interface         | CSS (sketchbook theme), Base UI selects, Heroicons, Motion                |
 | State and data    | React hooks/reducer, pure domain functions, Zod, localStorage             |
 | Production server | Worker serving the page, favicon and hashed assets                        |
 | Tests             | Vitest, Testing Library, Node test runner, Playwright, axe-core           |
@@ -36,9 +36,9 @@ Settings offers themes, text sizes from 90% to 160%, quadrant labels/icons and H
 ```mermaid
 flowchart LR
   server["Sites Worker"] -->|"Page and assets"| ui["React interface"]
-  store[(localStorage)] -->|"Read and validate"| state["useMatrix"]
+  store[(localStorage)] -->|"Read and validate"| state["state/useMatrix"]
   state -->|"Current board"| ui
-  ui -->|"Task or project action"| rules["Pure domain operations"]
+  ui -->|"Task or project action"| rules["domain/operations"]
   rules -->|"Next matrix"| state
   state -->|"Validate and persist"| store
   ui -->|"Undo previous matrix"| state
@@ -46,7 +46,7 @@ flowchart LR
   backup -->|"Parse and merge"| rules
 ```
 
-The Worker supplies the app without receiving task data. React reads saved state, validates it and displays the board. Task/project actions compute a new matrix; `useMatrix` validates it, saves one previous snapshot for Undo and persists changes in an effect. Search, filters and progress are derived from state. Appearance preferences use a separate hook.
+The Worker supplies the app without receiving task data. React reads saved state, validates it and displays the board. Every task or project action is a pure function in `domain/operations.ts` that returns a new matrix; `useMatrix` validates it, keeps one previous snapshot for Undo and saves it in an effect. Search, filters and progress are derived on render by `domain/queries.ts`. Labels, theme and text size live in `usePreferences`.
 
 Tasks, projects and preferences stay in the current browser and origin. There is no account system, task database or cross-device sync. Tabs on the same origin receive matrix updates through storage events. Incoming updates wait while a dialog is open; a later local save takes precedence.
 
@@ -54,16 +54,21 @@ Backups contain tasks, subtasks and projects, excluding appearance settings. Imp
 
 ## Finding your way around
 
-| Path                                | Responsibility                                                        |
-| ----------------------------------- | --------------------------------------------------------------------- |
-| `src/App.tsx`                       | Screen composition and cross-feature actions                          |
-| `src/features/`                     | Tasks, projects, day panel, settings, backups, tutorial and Dev tools |
-| `src/domain/`                       | Types, validation and pure board operations                           |
-| `src/lib/`                          | Persistence, preferences, date, motion and notification hooks         |
-| `src/components/`, `src/styles.css` | Shared controls, illustrations and responsive styling                 |
-| `worker/`, `scripts/`               | Public server, packaging, artifact checks and preview                 |
-| `e2e/`, `tests/`                    | Browser and Worker tests; component tests sit beside source           |
-| `.github/`                          | Workflow, Dependabot, CODEOWNERS and PR template                      |
+| Path              | Responsibility                                                         |
+| ----------------- | ---------------------------------------------------------------------- |
+| `src/app/`        | `App.tsx` composition root, top bar, shortcuts and crash recovery      |
+| `src/features/`   | Tasks, filters, projects, settings, backups, tutorial and Dev tools    |
+| `src/domain/`     | Types, validation and pure board operations, queries and serialization |
+| `src/state/`      | Board, preferences and toast hooks, plus every localStorage key        |
+| `src/components/` | Shared dialogs, popovers, selects, icons and illustrations             |
+| `src/lib/`        | Browser helpers: IDs, motion, dates, downloads                         |
+| `src/styles/`     | Global CSS in cascade order, ending with the sketchbook theme          |
+| `worker/`         | Public server: page, assets, caching and security headers              |
+| `scripts/`        | Packaging, size budget, artifact checks and local preview              |
+| `e2e/`, `tests/`  | Browser and Worker tests; unit and component tests sit beside source   |
+| `.github/`        | Workflow, Dependabot, CODEOWNERS and PR template                       |
+
+The [architecture notes](architecture.md) draw these layers and follow one change from a click to storage.
 
 ```sh
 npm ci                # dependencies and hook installation

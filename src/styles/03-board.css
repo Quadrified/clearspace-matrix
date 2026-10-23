@@ -1,0 +1,317 @@
+/* The matrix: axis labels, quadrants, task cards, checkboxes and add buttons. */
+.matrix-shell {
+  min-width: 0;
+  margin-left: 30px;
+}
+.axis-top,
+.axis-side,
+.axis-mobile {
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+.axis-top {
+  position: sticky;
+  top: var(--app-header-height, var(--header-height-fallback));
+  z-index: 8;
+  min-height: var(--matrix-axis-height);
+  align-items: center;
+  padding: 8px 0;
+  background: var(--bg);
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  text-align: center;
+  margin-bottom: 11px;
+  color: var(--muted);
+}
+.axis-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -30px;
+  width: 24px;
+  pointer-events: none;
+}
+.axis-side {
+  position: sticky;
+  display: block;
+  top: calc(
+    var(--app-header-height, var(--header-height-fallback)) + var(--matrix-axis-height) + 16px
+  );
+  margin-top: 24px;
+  width: max-content;
+  height: max-content;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: var(--accent-ink);
+  background: var(--bg);
+  padding: 6px 3px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.axis-mobile {
+  display: none;
+}
+.quad:nth-child(even) > .axis-rail {
+  display: none;
+}
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.quad {
+  --accent: #b55f47;
+  --tint: #f8ece6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 305px;
+  min-width: 0;
+  padding-bottom: 74px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+.quad[data-q='schedule'] {
+  --accent: #527b60;
+  --tint: #eaf2e6;
+}
+.quad[data-q='delegate'] {
+  --accent: #a47e3d;
+  --tint: #f7f0df;
+}
+.quad[data-q='eliminate'] {
+  --accent: #7b7695;
+  --tint: #f0eef7;
+}
+.quad.dragover {
+  border: 2px dashed var(--accent);
+  background: var(--tint);
+}
+.qhead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 14px;
+}
+.qhead > div {
+  min-width: 0;
+}
+.qicon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: var(--tint);
+  color: var(--accent);
+  border-radius: 11px;
+}
+.qicon svg {
+  width: 26px;
+  height: 26px;
+}
+.qhead h2 {
+  font-size: calc(1.1875rem * var(--text-scale, 1));
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  margin: 0 0 2px;
+  overflow-wrap: anywhere;
+}
+.qhead p {
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  line-height: 1.4;
+  color: var(--muted);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.label-edit {
+  color: var(--muted);
+  width: 36px;
+  height: 36px;
+  padding: 9px;
+}
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 30px;
+  padding: 4px 9px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid #88888818;
+  border-radius: 9px;
+  font-size: calc(1.0625rem * var(--text-scale, 1));
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.tasklist {
+  padding: 0 15px;
+  min-height: 125px;
+  flex: 1;
+}
+/* Outgoing empty states remain mounted during fades; current data owns layout. */
+.tasklist.is-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px 0;
+  text-align: center;
+  line-height: 1.5;
+  width: 100%;
+}
+.empty-art {
+  width: 152px;
+  height: 85px;
+  max-width: 100%;
+  color: var(--accent);
+  margin: 0 0 5px;
+}
+.empty strong {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  line-height: 1.5;
+}
+.empty > span {
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+}
+.task {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: grab;
+  min-width: 0;
+}
+.task-main {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 1px 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+.task-title {
+  display: block;
+  font-size: calc(0.9375rem * var(--text-scale, 1));
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+/* Keep notes useful at a glance without letting long text stretch a card. */
+.task-notes {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-height: 3em;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: calc(0.875rem * var(--text-scale, 1));
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.task.done .task-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.check {
+  appearance: none;
+  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+  margin: 3px 0 0;
+  border: 1.5px solid var(--check-border);
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Check and select-chevron artwork comes from Heroicons 24px outline. */
+.check:checked {
+  background-color: var(--green);
+  border-color: var(--green);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4.5 12.75 6 6 9-13.5'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 90%;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: calc(0.75rem * var(--text-scale, 1));
+  line-height: 1.4;
+}
+.tag {
+  background: var(--soft);
+  padding: 3px 6px;
+  border-radius: 5px;
+  color: var(--muted);
+}
+.project-tag {
+  background: #eaf0f8;
+  color: #4c6890;
+}
+.duedate {
+  padding: 3px 0;
+}
+.overdue {
+  color: #b43b32;
+}
+.task-fab {
+  position: absolute;
+  right: 17px;
+  bottom: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 9px #00000013;
+  padding: 0;
+  transition:
+    transform 120ms var(--out),
+    background-color 140ms ease;
+}
+/* Reveal newly available add controls without moving the board layout. */
+.fab-reveal {
+  animation: task-in 180ms var(--out);
+}
+.task-fab svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.5;
+}

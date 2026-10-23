@@ -1,4 +1,4 @@
-export const REPO_URL = 'https://github.com/Quadrified/clearspace-matrix';
+const REPO_URL = 'https://github.com/Quadrified/clearspace-matrix';
 
 // Heroicons has no brand marks, so this inlines the official GitHub mark. It lives in Settings.
 export function GitHubLink() {

@@ -1,7 +1,7 @@
-import type { stats } from '../../domain/matrix';
+import type { BoardStats } from '../../domain/queries';
 
 /** One quiet progress figure. The status tabs already carry the active and completed counts. */
-export function TaskOverview({ summary }: { summary: ReturnType<typeof stats> }) {
+export function TaskOverview({ summary }: { summary: BoardStats }) {
   const total = summary.active + summary.done;
   const detail = `${summary.done} of ${total} tasks completed`;
   return (

@@ -8,7 +8,7 @@ const SECURITY_HEADERS = {
 // Hashed assets never change, so browsers can keep them for a year.
 const IMMUTABLE = 'public, max-age=31536000, immutable';
 
-export function contentSecurityPolicy(scriptHashes = []) {
+function contentSecurityPolicy(scriptHashes = []) {
   const scripts = ["'self'", ...scriptHashes.map((hash) => `'${hash}'`)].join(' ');
   return [
     "default-src 'none'",

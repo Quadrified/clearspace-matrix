@@ -1,9 +1,9 @@
-import { readFile } from 'node:fs/promises';
+import { readBaseStyles } from '../../test/readBaseStyles';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import App from '../../App';
+import App from '../../app/App';
 import { MotionProvider } from '../../lib/motion';
-import { MATRIX_KEY } from '../../domain/matrix';
+import { MATRIX_KEY } from '../../state/storage';
 import { createSamples } from '../dev/samples';
 
 afterEach(() => {
@@ -20,7 +20,7 @@ it('keeps task cards in normal block flow while an outgoing empty state is still
     addEventListener() {},
     removeEventListener() {},
   }));
-  const css = await readFile('src/styles.css', 'utf8');
+  const css = await readBaseStyles();
   const style = document.createElement('style');
   style.id = 'task-layout-test-styles';
   const layoutCss = (css.match(/\.tasklist[^{}]*\{[^{}]*\}/g) ?? []).join('\n');

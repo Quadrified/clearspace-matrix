@@ -1,0 +1,44 @@
+/* Dark theme colors (the .night class on <html> and <body>). */
+.night {
+  --bg: #12271e;
+  --paper: #1b3528;
+  --card: #223e30;
+  --ink: #eef4e8;
+  --muted: #b0c6af;
+  --line: #385740;
+  --green: #417a52;
+  --accent-ink: #b3d9a8;
+  --selected: #365c42;
+  --focus-ring: #8cc89f;
+  --soft: #294736;
+  --glass: rgba(18, 39, 30, 0.92);
+  --shadow: 0 4px 20px #07160d18;
+  color-scheme: dark;
+}
+.night .quad {
+  --tint: #3c3e2b;
+  --accent: #d99478;
+}
+.night .quad[data-q='schedule'] {
+  --tint: #24492f;
+  --accent: #8bb292;
+}
+.night .quad[data-q='delegate'] {
+  --tint: #45422a;
+  --accent: #d0b373;
+}
+.night .quad[data-q='eliminate'] {
+  --tint: #343d3a;
+  --accent: #b0a5cb;
+}
+.night .project-tag {
+  background: #2b4b35;
+  color: #c0dfb2;
+}
+.night .icon-choice[aria-pressed='true'] {
+  background: #293b2c;
+  color: #a6d6b1;
+}
+.night .tutorial-example {
+  background: var(--bg);
+}

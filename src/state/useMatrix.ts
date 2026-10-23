@@ -1,8 +1,17 @@
+/**
+ * The board's single source of truth. `useMatrix` holds the current tasks and projects, applies
+ * changes from the pure functions in `domain/operations`, validates every result, saves it to
+ * localStorage, keeps one step of Undo, and picks up changes made in other tabs.
+ */
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { emptyMatrix, matrixSchema } from '../domain/models';
 import type { Matrix } from '../domain/models';
-import { DIALOG_CLOSED } from './dialogEvents';
-import { MATRIX_KEY, parseStoredMatrix, serializeMatrix } from '../domain/matrix';
+import { parseStoredMatrix, serializeMatrix } from '../domain/serialization';
+import { DIALOG_CLOSED } from '../lib/dialogEvents';
+import { MATRIX_KEY, readStorage, writeStorage } from './storage';
+
+/** Applies a change to the board and shows `message` in a toast with Undo. */
+export type ChangeMatrix = (update: (m: Matrix) => Matrix, message: string) => void;
 type State = {
   present: Matrix;
   previous: Matrix | null;
@@ -15,14 +24,8 @@ type Action =
   | { type: 'change'; update: (m: Matrix) => Matrix }
   | { type: 'undo' }
   | { type: 'external'; value: Matrix };
-function readRaw() {
-  try {
-    return localStorage.getItem(MATRIX_KEY) ?? '';
-  } catch {
-    return '';
-  }
-}
 function initialize(): State {
+  // Blocked storage and unreadable data both land in the catch, which keeps edits in memory only.
   try {
     return {
       present: parseStoredMatrix(localStorage.getItem(MATRIX_KEY)),
@@ -38,7 +41,7 @@ function initialize(): State {
       dirty: false,
       error:
         'Saved tasks could not be read. Export or recover your browser data before making changes.',
-      rawStored: readRaw(),
+      rawStored: readStorage(MATRIX_KEY) ?? '',
     };
   }
 }
@@ -62,11 +65,8 @@ export function useMatrix(notify: (s: string, undo?: boolean) => void) {
   const editedSinceWaiting = useRef(false);
   useEffect(() => {
     if (!state.dirty || state.error) return;
-    try {
-      localStorage.setItem(MATRIX_KEY, serializeMatrix(state.present));
-    } catch {
+    if (!writeStorage(MATRIX_KEY, serializeMatrix(state.present)))
       notifyRef.current('Browser storage is unavailable. Export a backup before leaving.');
-    }
   }, [state.present, state.dirty, state.error]);
   useEffect(() => {
     if (state.error) notifyRef.current(state.error);

@@ -28,22 +28,20 @@ Get tasks out of your head and give each one a place. Clearspace combines the fo
 - **Manage tasks.** Create, edit, complete, delete, and move tasks between quadrants. Add notes, categories, projects, and optional due dates. The due-date field uses `MM/DD/YYYY`; calendar selection and quick dates use the same display format. In All tasks, completed tasks sit below active tasks, and newly completed tasks move to the bottom of their quadrant.
 - **Break tasks into steps.** Add up to 100 subtasks in the task editor, rename or remove steps, and check them off in the editor or directly on the card. Cards show every step and a completed count. Press Enter in a step to add another. Empty steps are skipped when saving. Completing subtasks does not automatically complete their parent task. Subtasks are searchable, saved locally, included in backups, and support Undo.
 - **Organize projects.** Create and rename projects, filter their tasks, and review the task count and example titles before deleting a project and its tasks.
-- **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, switch to dark mode, and adjust text size from 90% to 160%. At 100%, body text is 16px, desktop task titles are 15px, and task notes are 14px.
+- **Make it yours.** Customize quadrant titles, subtitles, and icons. Choose from 15 icons, pick Auto (follow your system), Light, or Dark appearance, and adjust text size from 90% to 160%.
 - **Celebrate quadrant zero.** Completing the last active task in a quadrant shows a brief checkmark and sparkle celebration. Filters, moves, deletion, and resets do not trigger it. Keyboard completion and reduced-motion preferences keep the celebration still.
-- **Stay oriented while scrolling.** Urgent and Not urgent stay below the header on wide screens. Importance labels stay beside their own rows. On phones, each quadrant keeps its own urgency label visible.
-- **See your progress.** Compact cards show active tasks, tasks due today, completed tasks, and completion percentage.
-- **Recover and back up.** Undo task changes, export and import JSON backups, or reset all tasks and projects with confirmation. Notifications dismiss after 10 seconds.
-- **Learn as you go.** A first-visit tutorial explains the matrix with examples. Replay it from Settings → Help.
+- **See the whole board at once.** "Urgent / not urgent" runs across the top and "important / not important" down the side. The four quadrants share the screen equally and only their task lists scroll.
+- **See your progress.** The top bar shows today's date and a completion ring; the status tabs carry the active and completed counts.
+- **Recover and back up.** Undo task changes, Export and Import JSON backups, or reset all tasks and projects with confirmation. Notifications dismiss after 10 seconds.
+- **Learn as you go.** A seven-step Getting Started tutorial opens on your first visit and can be replayed from Settings → Help. Dots show your progress; on an empty board, the last step offers example tasks.
 
-The seven-step Getting Started walkthrough is available on first use and through Help. A progress bar tracks the current step, with Skip tutorial beside the step label and Back/Next below the content.
+The matrix leads the page. One quiet top bar holds the logo, date and progress, the Active / Completed / All tasks tabs, and icon buttons for search, filters, projects and Settings. On phones the tabs move to a second row. On an empty board, Add task and Examples take the place of progress.
 
-The matrix leads the page. On wide screens, the date, progress, task counts and illustration sit in a side rail beside the board. On other screens they fold into one line above the board: the date with a small illustration beside it, then progress and counts. Once any quadrant shows more than four tasks in the current tab, wide screens use that line too, so the board gets the full width. They also use it whenever tall quadrants (for example, long subtask lists) would push Delegate and Let go below the first screen beside the rail. On an empty board, the first-task prompt takes the progress slot: inside the rail on wide screens, and full width under the date line elsewhere. The welcome headline shows on screens 1200 px and wider, and stays available to screen readers on smaller ones.
-
-The interface uses sage and forest green themes, system body typography, a serif date, custom SVG illustrations, a translucent header, and responsive layouts. The theme switch, sliding task tabs, dropdowns, dialogs, notifications, and task layouts use short, interruptible transitions. Filtering and task changes animate in place. Keyboard interactions stay immediate, and reduced-motion preferences disable movement. Reduced transparency and increased contrast are also supported.
+The interface uses a sketchbook look: ink outlines, soft offset shadows, lined paper, tape, and handwritten notes in Caveat, with Archivo headings. Dialogs, tabs, dropdowns, notifications, and task moves use short, interruptible transitions, and dragging a card lifts and tilts it. Keyboard interactions stay immediate, and reduced-motion preferences disable movement. Reduced transparency and increased contrast are also supported.
 
 ## Built with React
 
-The app uses React 19, TypeScript in strict mode, and Vite. Custom dropdowns use Base UI for keyboard navigation, typeahead, and focus handling. Dragging highlights the destination and insertion point, then animates cards into place. Interface icons use the official [Heroicons](https://github.com/tailwindlabs/heroicons) React package and its 24px outline style. Feature components own task editing, projects, focus sessions, customization, onboarding, and Dev tools. Pure domain functions handle filtering, moving tasks, backup merging, and metrics. Zod validates data at storage, import, and API boundaries.
+The app uses React 19, TypeScript in strict mode, and Vite. Custom dropdowns use Base UI for keyboard navigation, typeahead, and focus handling. Dragging highlights the destination and insertion point, then animates cards into place. Interface icons use the official [Heroicons](https://github.com/tailwindlabs/heroicons) React package and its 24px outline style. The code is layered: `app/` composes the screen, `features/` own each area of the product, `state/` holds the board and preferences, and `domain/` contains the rules as pure, framework-free functions. Zod validates every change, every read from storage, and every imported backup. See the [architecture notes](docs/architecture.md) for a diagram and a walkthrough of one change.
 
 Vitest and React Testing Library exercise actual React components. A separate Node test suite checks public server routes. ESLint, Prettier, a committed dependency lockfile, and GitHub Actions keep changes reviewable.
 
@@ -99,15 +97,13 @@ Changes are developed and verified locally. Deployment happens only when explici
 
 ## Everyday shortcuts
 
-| Shortcut                         | Action                                     |
-| -------------------------------- | ------------------------------------------ |
-| `N`                              | Add a task.                                |
-| `P`                              | Add or manage projects.                    |
-| Double-click the timer           | Edit remaining time as minutes or `MM:SS`. |
-| `Enter` while editing the timer  | Save the new remaining time.               |
-| `Escape` while editing the timer | Cancel the edit.                           |
+| Shortcut | Action                  |
+| -------- | ----------------------- |
+| `N`      | Add a task.             |
+| `P`      | Add or manage projects. |
+| `Escape` | Clear and leave search. |
 
-Task and project shortcuts are inactive while typing or while a dialog is open. The **Projects** button sits beside the Active, Completed, and All tasks tabs. On an empty board, use **Add your first task**, **Try example tasks**, or the `N` shortcut. The four quadrant **+** buttons and the phone's floating quick-add button appear after a task is saved or examples are added, with a brief reveal that respects reduced motion and keyboard input. Cancelling the editor keeps the starter card visible. Clearing every task restores that empty-board experience; filters do not affect button availability. On a phone, use the task editor's quadrant selector to move a task.
+Shortcuts are inactive while typing or while a dialog is open. On an empty board, use **Add task**, **Examples**, or the `N` shortcut. Each quadrant's **+** button appears after a task is saved or examples are added, with a brief reveal that respects reduced motion and keyboard input. Cancelling the editor keeps the board empty. Clearing every task restores that empty-board experience; filters do not affect button availability. On a phone, use the task editor's quadrant selector to move a task.
 
 ## Your data
 
@@ -116,35 +112,35 @@ Tasks, projects, quadrant labels, appearance preferences, and tutorial dismissal
 - Every browser and site origin has its own data. Localhost and the hosted site do not share storage.
 - Tasks do not sync across devices or people. Sharing the website shares the tool, not your tasks.
 - Clearing browser data removes saved work. Export backups regularly.
-- JSON backups include tasks and projects. They do not include label, appearance, or timer settings.
+- JSON backups include tasks, subtasks, and projects. They do not include label or appearance settings.
 - Import merges tasks by ID and supports older task-only backups.
-- Focus sessions run in the current page. Reloading or closing the page stops the session.
 
 ## Project structure
 
 ```text
 src/
-├── App.tsx                  # Screen composition and cross-feature actions
-├── main.tsx                 # Entry point with a crash-recovery error boundary
-├── components/              # Dialog, popover, icons, and illustrations
-├── domain/                  # Typed models, schemas, and pure matrix operations
+├── main.tsx                 # Entry point: error boundary, motion provider, styles
+├── app/                     # Composition root: App, top bar, shortcuts, crash recovery
 ├── features/
-│   ├── app/                 # Header, toolbar, and footer
+│   ├── tasks/               # Matrix board, task cards, task editor, subtasks
+│   ├── filters/             # Search, filters panel, status tabs
+│   ├── projects/            # Project creation, renaming, deletion
+│   ├── settings/            # Settings menu, labels, backups, reset
 │   ├── backup/              # Export and import of JSON backups
-│   ├── tasks/               # Task editor and matrix board
-│   ├── projects/            # Project creation and editing
-│   ├── settings/            # Quadrant labels and icon picker
-│   ├── tutorial/            # Seven-step introduction
+│   ├── tutorial/            # Seven-step Getting Started
 │   └── dev/                 # Local-only sample-data tools
-├── assets/fonts/            # Archivo and Caveat subsets for the sketchbook look
-├── lib/                     # Persistence, preferences, and notifications
-├── styles.css               # Responsive layout and appearance preferences
-└── sketchbook.css           # Sketchbook look: outlines, soft shadows, paper, tape, handwriting
+├── domain/                  # Models, pure operations, queries, serialization (no React)
+├── state/                   # useMatrix, usePreferences, useToast, localStorage keys
+├── components/              # Shared dialog, popover, select, icons, illustrations
+├── lib/                     # Browser helpers: ids, motion, dates, downloads
+├── styles/                  # Global CSS in cascade order, ending with the sketchbook theme
+└── assets/fonts/            # Archivo and Caveat subsets
 worker/handler.mjs           # Public app, hashed assets, caching, and security headers
+tests/                       # Worker tests (Node test runner)
 e2e/                         # Real-browser tests (Playwright)
-scripts/                     # Worker packaging, artifact checks, local server
+scripts/                     # Worker packaging, size budget, artifact checks, local server
 public/favicon.svg
-.github/workflows/checks.yml # Format, type-check, lint, test, and production build
+.github/workflows/checks.yml # Format, type-check, lint, test, browser tests, and production build
 ```
 
 Resetting the board through Settings → "Need a fresh start?" clears every task and project. Type `Reset` exactly to enable confirmation. Labels and appearance preferences stay, and the toast offers Undo.
@@ -172,9 +168,9 @@ GitHub Actions runs on pushes and pull request creation, updates, reopening, and
 
 Runs have timeouts and read-only repository permissions. New commits cancel older runs on the same branch. Actions are pinned to commit hashes. Dependabot proposes weekly dependency and GitHub Actions updates after its configuration reaches the default branch. Nothing deploys automatically. CI reports failures, but blocking merges requires GitHub branch protection, which remains unavailable on this private repository's current plan.
 
-The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, tutorial examples, Dev generation and cleanup, reset, ten-second toast dismissal, and timer editing and countdown behavior. The server suite checks public access and confirms that former Dev routes and APIs are unavailable. The build validator also checks that production excludes the Dev panel and sample generator.
+The React suite checks legacy storage and backup compatibility, Undo, project assignment while preserving drafts, preferences, the tutorial, Dev generation and cleanup, reset, ten-second toast dismissal, and cross-tab updates. The server suite checks public access and confirms that former Dev routes and APIs are unavailable. The build validator also checks that production excludes the Dev panel and sample generator.
 
-These are automated DOM and server checks. Native dialog focus, drag-and-drop, responsive layout, still need browser and device testing. Browser visual verification was unavailable during the React migration.
+These are automated DOM and server checks. The Playwright suite covers native dialogs, drag-and-drop, and layouts in Chromium at desktop and phone sizes; real phones, screen readers, and motion quality still need manual review.
 
 The original implementation is preserved in the Git tag `backup/pre-react-migration`. The React migration retains the existing localStorage keys and backup formats.
 

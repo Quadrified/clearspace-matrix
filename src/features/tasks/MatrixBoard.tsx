@@ -6,12 +6,12 @@ import { TaskItem } from './TaskItem';
 import { softEase, useMotionSettings } from '../../lib/motion';
 import type { Task, Matrix, Labels, Filters, QuadrantId } from '../../domain/models';
 import { quadrants } from '../../domain/models';
-import { visibleTasks } from '../../domain/matrix';
+import { visibleTasks } from '../../domain/queries';
 import { Icon } from '../../components/Icon';
 import { AddTaskFab } from '../../components/AddTaskFab';
 import { QuadrantCelebration } from './QuadrantCelebration';
 import { EmptyIllustration } from '../../components/EmptyIllustration';
-const DRAG_HINT_KEY = 'clearspace.dragHint.v1';
+import { readStorage, STORAGE_KEYS, writeStorage } from '../../state/storage';
 
 /** Drags a tilted, lifted copy of the card; the first drag also carries a "where to" note. */
 function liftCard(e: DragEvent) {
@@ -29,13 +29,9 @@ function liftCard(e: DragEvent) {
   clone.classList.remove('is-dragging', 'drop-before');
   clone.style.width = `${card.offsetWidth}px`;
   ghost.append(clone);
-  let firstDrag = false;
-  try {
-    firstDrag = !localStorage.getItem(DRAG_HINT_KEY);
-    if (firstDrag) localStorage.setItem(DRAG_HINT_KEY, 'seen');
-  } catch {
-    // Storage can be blocked; the hint is only a nicety.
-  }
+  // Blocked storage counts as "seen": the hint is only a nicety.
+  const firstDrag = !readStorage(STORAGE_KEYS.dragHint, 'seen');
+  if (firstDrag) writeStorage(STORAGE_KEYS.dragHint, 'seen');
   if (firstDrag) {
     const note = document.createElement('span');
     note.className = 'drag-hint';

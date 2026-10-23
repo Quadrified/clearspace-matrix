@@ -8,8 +8,10 @@ import type { Task, Matrix, Labels, QuadrantId } from '../../domain/models';
 import { taskSchema, categories, quadrants } from '../../domain/models';
 import { Modal } from '../../components/Modal';
 import { Icon } from '../../components/Icon';
-import { localDate } from '../../domain/matrix';
+import { localDate } from '../../domain/dates';
+import { addTask, deleteTask, updateTask } from '../../domain/operations';
 import { ProjectsDialog } from '../projects/ProjectsDialog';
+import type { ChangeMatrix } from '../../state/useMatrix';
 // Save stays disabled until the title has this many non-space characters.
 const MIN_TITLE_LENGTH = 2;
 export function TaskEditor({
@@ -25,7 +27,7 @@ export function TaskEditor({
   matrix: Matrix;
   labels: Labels;
   onClose: () => void;
-  change: (fn: (m: Matrix) => Matrix, message: string) => void;
+  change: ChangeMatrix;
 }) {
   const [draft, setDraft] = useState<Task>(() =>
     task
@@ -73,15 +75,8 @@ export function TaskEditor({
               setError(result.error.issues[0]?.message ?? 'Check the task details.');
               return;
             }
-            change(
-              (m) => ({
-                ...m,
-                tasks: task
-                  ? m.tasks.map((t) => (t.id === task.id ? result.data : t))
-                  : [...m.tasks, result.data],
-              }),
-              task ? 'Task updated.' : 'Task added.',
-            );
+            if (task) change((m) => updateTask(m, result.data), 'Task updated.');
+            else change((m) => addTask(m, result.data), 'Task added.');
             onClose();
           }}
         >
@@ -213,10 +208,7 @@ export function TaskEditor({
                 type="button"
                 className="btn danger ghost push-left"
                 onClick={() => {
-                  change(
-                    (m) => ({ ...m, tasks: m.tasks.filter((t) => t.id !== task.id) }),
-                    'Task deleted.',
-                  );
+                  change((m) => deleteTask(m, task.id), 'Task deleted.');
                   onClose();
                 }}
               >

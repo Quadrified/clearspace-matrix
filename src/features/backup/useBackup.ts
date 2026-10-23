@@ -1,19 +1,16 @@
 import { useRef, useState } from 'react';
-import { mergeMatrix, parseBackup, serializeMatrix } from '../../domain/matrix';
+import { mergeMatrix, parseBackup, serializeMatrix } from '../../domain/serialization';
 import type { Matrix } from '../../domain/models';
 import { datedFilename, downloadJson } from '../../lib/download';
+import { readStorage, STORAGE_KEYS, writeStorage } from '../../state/storage';
+import type { ChangeMatrix } from '../../state/useMatrix';
 
 // A UTF-8 character is at most 4 bytes; parseBackup enforces the exact 5,000,000-character cap.
 const MAX_BACKUP_BYTES = 5_000_000 * 4;
-const BACKUP_KEY = 'clearspace.lastBackup.v1';
 
 function readLastBackup() {
-  try {
-    const value = Number(localStorage.getItem(BACKUP_KEY));
-    return Number.isFinite(value) && value > 0 ? value : 0;
-  } catch {
-    return 0;
-  }
+  const value = Number(readStorage(STORAGE_KEYS.lastBackup));
+  return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
 export function useBackup({
@@ -26,7 +23,7 @@ export function useBackup({
   matrix: Matrix;
   rawStored: string;
   storageError: string;
-  change: (update: (m: Matrix) => Matrix, message: string) => void;
+  change: ChangeMatrix;
   notify: (message: string) => void;
 }) {
   const importRef = useRef<HTMLInputElement>(null);
@@ -37,11 +34,8 @@ export function useBackup({
     else downloadJson(datedFilename('clearspace'), serializeMatrix(matrix));
     const now = Date.now();
     setLastBackup(now);
-    try {
-      localStorage.setItem(BACKUP_KEY, String(now));
-    } catch {
-      /* The backup file was still downloaded. */
-    }
+    // If storage refuses the timestamp, the backup file was still downloaded.
+    writeStorage(STORAGE_KEYS.lastBackup, String(now));
     notify('Backup exported.');
   }
   async function importBackup(file?: File) {

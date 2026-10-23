@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import App from '../../App';
-import { MATRIX_KEY } from '../../domain/matrix';
+import App from '../../app/App';
+import { MATRIX_KEY } from '../../state/storage';
 
 function setup(reducedMotion = false) {
   localStorage.setItem('clearspace.tutorial.v1', 'seen');

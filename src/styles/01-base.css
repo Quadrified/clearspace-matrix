@@ -1,0 +1,97 @@
+/* Design tokens, element resets, typography and focus rings. */
+:root {
+  --header-height-fallback: calc(88px + env(safe-area-inset-top, 0px));
+  --matrix-axis-height: calc(36px * var(--text-scale, 1));
+  --bg: #f4f6ef;
+  --paper: #fcfdf8;
+  --card: #ffffff;
+  --ink: #203b2a;
+  --muted: #627566;
+  --line: #d4e0ce;
+  --green: #315e43;
+  --accent-ink: #315e43;
+  --selected: #dbe8d3;
+  --focus-ring: #54845f;
+  --soft: #e4eddf;
+  --glass: rgba(244, 246, 239, 0.9);
+  --shadow: 0 3px 18px #24482d0a;
+  --out: cubic-bezier(0.23, 1, 0.32, 1);
+  --check-border: #aaaab1;
+  --search-focus: #5496d8;
+  --search-focus-glow: #5496d815;
+  font:
+    100%/1.5 -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Text',
+    'Segoe UI',
+    sans-serif;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: calc(1rem * var(--text-scale, 1));
+  -webkit-font-smoothing: antialiased;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+input,
+textarea {
+  min-width: 0;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+svg {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+p {
+  line-height: 1.6;
+}

@@ -1,13 +1,15 @@
 import { SoftPresence } from '../../components/SoftPresence';
 import { useState } from 'react';
 import { Modal } from '../../components/Modal';
-import { localDate, mergeMatrix } from '../../domain/matrix';
+import { localDate } from '../../domain/dates';
+import { mergeMatrix } from '../../domain/serialization';
 import type { Matrix } from '../../domain/models';
 import { createSamples } from './samples';
+import type { ChangeMatrix } from '../../state/useMatrix';
 
 type Props = {
   matrix: Matrix;
-  change: (update: (matrix: Matrix) => Matrix, message: string) => void;
+  change: ChangeMatrix;
   notify: (message: string) => void;
 };
 

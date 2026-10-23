@@ -2,15 +2,16 @@ import { newId } from '../../lib/id';
 import { SoftPresence } from '../../components/SoftPresence';
 import { useState } from 'react';
 import type { Matrix, Project } from '../../domain/models';
-import { projectNameError, removeProject } from '../../domain/matrix';
+import { projectNameError, removeProject } from '../../domain/operations';
 import { Modal } from '../../components/Modal';
 import { Icon } from '../../components/Icon';
+import type { ChangeMatrix } from '../../state/useMatrix';
 
 const swatches = ['do', 'schedule', 'delegate', 'eliminate'] as const;
 
 type Props = {
   matrix: Matrix;
-  change: (fn: (m: Matrix) => Matrix, message: string) => void;
+  change: ChangeMatrix;
   onClose: () => void;
   onCreated?: (id: string) => void;
   onDeleted?: (id: string) => void;

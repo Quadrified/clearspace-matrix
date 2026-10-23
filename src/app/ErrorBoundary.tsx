@@ -1,15 +1,7 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { MATRIX_KEY } from '../domain/matrix';
+import { MATRIX_KEY, readStorage } from '../state/storage';
 import { datedFilename, downloadJson } from '../lib/download';
-
-function savedData() {
-  try {
-    return localStorage.getItem(MATRIX_KEY);
-  } catch {
-    return null;
-  }
-}
 
 // Last line of defense: a render error must never leave a blank page with no way to save tasks.
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -22,7 +14,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   }
   render() {
     if (!this.state.failed) return this.props.children;
-    const data = savedData();
+    const data = readStorage(MATRIX_KEY);
     return (
       <div className="wrap" role="alert">
         <h1>Something went wrong.</h1>

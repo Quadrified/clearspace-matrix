@@ -6,7 +6,7 @@ import type { QuadrantId, Task } from '../../domain/models';
 
 const dueFormat = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
 
-export type TaskItemProps = {
+type TaskItemProps = {
   task: Task;
   q: QuadrantId;
   projectName?: string;

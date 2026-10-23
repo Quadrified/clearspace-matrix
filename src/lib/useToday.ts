@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { localDate } from '../domain/matrix';
+import { localDate } from '../domain/dates';
 
 // Keeps "today" correct in a tab that stays open past midnight or wakes from sleep.
 export function useToday() {

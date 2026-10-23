@@ -1,0 +1,17 @@
+/*
+ * Clearspace styles, in cascade order. Later files refine earlier ones, so keep this order.
+ * 01–11 build the base layout; the sketchbook theme on top restyles it with ink outlines,
+ * lined paper and handwritten notes.
+ */
+@import './01-base.css';
+@import './02-layout.css';
+@import './03-board.css';
+@import './04-dialogs.css';
+@import './05-dark-mode.css';
+@import './06-responsive.css';
+@import './07-interaction.css';
+@import './08-controls.css';
+@import './09-day-bar.css';
+@import './10-viewport.css';
+@import './11-top-bar.css';
+@import './sketchbook.css';

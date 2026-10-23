@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import type { stats } from '../../domain/matrix';
-import { TaskOverview } from '../tasks/TaskOverview';
+import type { BoardStats } from '../domain/queries';
+import { TaskOverview } from '../features/tasks/TaskOverview';
 
 /**
  * Today's date and progress sit in the top bar, next to the logo. On an empty
@@ -13,7 +13,7 @@ export function DayPanel({
   start,
 }: {
   today: string;
-  summary: ReturnType<typeof stats>;
+  summary: BoardStats;
   hasTasks: boolean;
   start?: ReactNode;
 }) {

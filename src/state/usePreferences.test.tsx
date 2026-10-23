@@ -8,11 +8,11 @@ afterEach(() => {
   document.documentElement.classList.remove('night');
 });
 
-it('applies the saved theme and both directions of a toggle before layout observers run', () => {
+it('applies the saved theme and each switch between light and dark before layout observers run', () => {
   localStorage.setItem('clearspace.theme', 'night');
   const frames: boolean[][] = [];
   function Probe() {
-    const { night, toggleNight } = usePreferences(vi.fn());
+    const { night, setTheme } = usePreferences(vi.fn());
     useLayoutEffect(() => {
       frames.push([
         night,
@@ -20,11 +20,16 @@ it('applies the saved theme and both directions of a toggle before layout observ
         document.documentElement.classList.contains('night'),
       ]);
     }, [night]);
-    return <button onClick={toggleNight}>Toggle theme</button>;
+    return (
+      <>
+        <button onClick={() => setTheme('light')}>Light</button>
+        <button onClick={() => setTheme('night')}>Dark</button>
+      </>
+    );
   }
   render(<Probe />);
-  fireEvent.click(screen.getByRole('button'));
-  fireEvent.click(screen.getByRole('button'));
+  fireEvent.click(screen.getByRole('button', { name: 'Light' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
   expect(frames).toEqual([
     [true, true, true],
     [false, false, false],

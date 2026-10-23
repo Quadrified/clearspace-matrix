@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { DueDateInput, displayDueDate, parseDueDate } from './DueDateInput';
-import App from '../../App';
-import { MATRIX_KEY, parseStoredMatrix } from '../../domain/matrix';
+import App from '../../app/App';
+import { MATRIX_KEY } from '../../state/storage';
+import { parseStoredMatrix } from '../../domain/serialization';
 
 it('displays month/day/year and validates real calendar dates', () => {
   expect(displayDueDate('2026-10-15')).toBe('10/15/2026');

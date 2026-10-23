@@ -90,7 +90,7 @@ export const iconLabels: Record<IconName, string> = {
   clock: 'Clock',
 };
 
-export type IconKey = keyof typeof icons;
+type IconKey = keyof typeof icons;
 
 export function Icon({ name, ...props }: { name: IconKey } & SVGProps<SVGSVGElement>) {
   const Component = icons[name];

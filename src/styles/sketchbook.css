@@ -3,13 +3,13 @@
 
 @font-face {
   font-family: 'Archivo';
-  src: url('./assets/fonts/archivo-700-900.woff2') format('woff2');
+  src: url('../assets/fonts/archivo-700-900.woff2') format('woff2');
   font-weight: 700 900;
   font-display: swap;
 }
 @font-face {
   font-family: 'Caveat';
-  src: url('./assets/fonts/caveat-700.woff2') format('woff2');
+  src: url('../assets/fonts/caveat-700.woff2') format('woff2');
   font-weight: 400 700;
   font-display: swap;
 }
@@ -629,7 +629,6 @@ mark.hl {
   color: var(--ink);
 }
 .settings-menu,
-.add-menu,
 .filters-panel,
 .select-popup {
   background: var(--paper);

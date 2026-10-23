@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { MATRIX_KEY } from '../domain/matrix';
+import { MATRIX_KEY } from '../state/storage';
 import { ErrorBoundary } from './ErrorBoundary';
 
 function Boom(): never {

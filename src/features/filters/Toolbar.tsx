@@ -1,15 +1,15 @@
-import { useCallback, useState } from 'react';
-import type { RefObject } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Icon } from '../../components/Icon';
 import { Popover } from '../../components/Popover';
 import { categories } from '../../domain/models';
 import type { Filters, Project } from '../../domain/models';
+import type { SetFilter } from './useBoardFilters';
 
 type FilterProps = {
   filters: Filters;
   projectFilter: string;
   projects: Project[];
-  filter: <K extends keyof Filters>(key: K, value: Filters[K]) => void;
+  filter: SetFilter;
   resultCount: number;
   onClearFilters: () => void;
 };
@@ -25,12 +25,11 @@ export function ToolbarTools({
   filter,
   resultCount,
   onClearFilters,
-  searchRef,
   onProjects,
 }: FilterProps & {
-  searchRef: RefObject<HTMLInputElement | null>;
   onProjects: () => void;
 }) {
+  const searchRef = useRef<HTMLInputElement>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const closePanel = useCallback(() => setPanelOpen(false), []);
   const appliedCount =

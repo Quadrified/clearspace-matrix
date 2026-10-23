@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, expect, it } from 'vitest';
-import App from '../../App';
-import { MATRIX_KEY, parseStoredMatrix } from '../../domain/matrix';
+import App from '../../app/App';
+import { MATRIX_KEY } from '../../state/storage';
+import { parseStoredMatrix } from '../../domain/serialization';
 
 beforeEach(() => localStorage.setItem('clearspace.tutorial.v1', 'seen'));
 const stored = () => parseStoredMatrix(localStorage.getItem(MATRIX_KEY));

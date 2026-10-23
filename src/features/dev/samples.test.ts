@@ -1,7 +1,7 @@
 import { it, expect, vi } from 'vitest';
 import { createSamples } from './samples';
 import { categories, matrixSchema, quadrantIds } from '../../domain/models';
-import { mergeMatrix } from '../../domain/matrix';
+import { mergeMatrix } from '../../domain/serialization';
 
 it('generates 24 valid marked tasks, three projects and realistic testing states', () => {
   const data = matrixSchema.parse(createSamples('2026-10-15'));

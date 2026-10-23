@@ -1,15 +1,9 @@
 import { expect, it } from 'vitest';
 import { initialFilters, taskSchema } from './models';
 import type { Matrix } from './models';
-import {
-  mergeMatrix,
-  moveTask,
-  parseBackup,
-  parseStoredMatrix,
-  serializeMatrix,
-  toggleSubtask,
-  visibleTasks,
-} from './matrix';
+import { mergeMatrix, parseBackup, parseStoredMatrix, serializeMatrix } from './serialization';
+import { moveTask, toggleSubtask } from './operations';
+import { visibleTasks } from './queries';
 
 const task = {
   id: 'parent',

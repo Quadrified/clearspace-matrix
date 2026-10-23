@@ -1,9 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
-import { MATRIX_KEY, serializeMatrix } from '../domain/matrix';
+import { MATRIX_KEY } from './storage';
+import { serializeMatrix } from '../domain/serialization';
 import type { Matrix } from '../domain/models';
-import { DIALOG_CLOSED } from './dialogEvents';
-import { useMatrix } from './useMatrix';
+import { DIALOG_CLOSED } from '../lib/dialogEvents';
+import { matrixReducer, useMatrix } from './useMatrix';
 
 const task = (id: string, title: string) => ({
   id,
@@ -92,4 +93,12 @@ it('returns stable callbacks so memoized children are not re-rendered', () => {
   rerender();
   expect(result.current.change).toBe(change);
   expect(result.current.undo).toBe(undo);
+});
+it('Undo restores tasks and projects together after reset', () => {
+  const before = { tasks: [task('one', 'Ship')], projects: [{ id: 'p', name: 'Launch' }] };
+  const changed = matrixReducer(
+    { present: before, previous: null, dirty: false, error: '', rawStored: '' },
+    { type: 'change', update: (m) => ({ ...m, tasks: [] }) },
+  );
+  expect(matrixReducer(changed, { type: 'undo' }).present).toEqual(before);
 });

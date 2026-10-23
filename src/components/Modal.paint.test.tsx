@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react';
-import { readFile } from 'node:fs/promises';
+import { readBaseStyles } from '../test/readBaseStyles';
 import { fireEvent, render } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { Modal } from './Modal';
@@ -13,7 +13,7 @@ afterEach(() => {
 it('does not restart the backdrop fade when switching from typing to clicking an input', async () => {
   // jsdom cannot compute pseudo-element styles. Apply the actual global backdrop
   // declarations to an ordinary probe so the same cascade can be measured.
-  const css = await readFile('src/styles.css', 'utf8');
+  const css = await readBaseStyles();
   const rules = [...css.matchAll(/^(?:\.keyboard-input )?dialog::backdrop\s*\{[^}]*\}/gm)];
   const style = document.createElement('style');
   style.id = 'backdrop-regression-style';

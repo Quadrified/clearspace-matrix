@@ -1,50 +1,55 @@
+/**
+ * Appearance and personalization that live outside the board: quadrant labels, light/dark theme
+ * and text size. Each is saved to localStorage and applied to the page before it paints.
+ */
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { defaultLabels, labelsSchema, quadrants } from '../domain/models';
 import type { Labels } from '../domain/models';
-export function readLabels(): Labels {
+import { readStorage, STORAGE_KEYS, writeStorage } from './storage';
+
+// Stock subtitles from earlier versions. Saved copies switch to today's wording; custom text stays.
+const LEGACY_SUBTITLES = [
+  'Handle what needs you now.',
+  'Make time for the things that matter.',
+  'You don’t have to do it all.',
+  'Less noise. More room to think.',
+  "You don't have to do it all.",
+];
+
+function readLabels(): Labels {
   try {
-    const raw = JSON.parse(localStorage.getItem('clearspace.labels.v1') ?? 'null') as unknown;
+    const raw = JSON.parse(readStorage(STORAGE_KEYS.labels) ?? 'null') as unknown;
     const saved = raw as { quadrants?: unknown } | null;
     const parsed = labelsSchema.safeParse(saved?.quadrants ?? raw);
     if (!parsed.success) return structuredClone(defaultLabels);
-    const old = [
-      'Handle what needs you now.',
-      'Make time for the things that matter.',
-      'You don’t have to do it all.',
-      'Less noise. More room to think.',
-      "You don't have to do it all.",
-    ];
     for (const q of quadrants)
-      if (old.includes(parsed.data[q.id].subtitle)) parsed.data[q.id].subtitle = q.subtitle;
+      if (LEGACY_SUBTITLES.includes(parsed.data[q.id].subtitle))
+        parsed.data[q.id].subtitle = q.subtitle;
     return parsed.data;
   } catch {
     return structuredClone(defaultLabels);
   }
 }
-function get(key: string, fallback: string) {
-  try {
-    return localStorage.getItem(key) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
+const get = (key: string, fallback: string) => readStorage(key) ?? fallback;
 export type ThemeChoice = 'auto' | 'light' | 'night';
 const darkQuery = '(prefers-color-scheme: dark)';
 function systemPrefersDark() {
   return window.matchMedia?.(darkQuery).matches ?? false;
 }
 function readTheme(): ThemeChoice {
-  const saved = get('clearspace.theme', '');
+  const saved = get(STORAGE_KEYS.theme, '');
   // No saved choice (or an unknown one) follows the operating system.
   return saved === 'light' || saved === 'night' ? saved : 'auto';
 }
+export type Preferences = ReturnType<typeof usePreferences>;
+
 export function usePreferences(notify: (s: string) => void) {
   const [labels, setLabels] = useState(readLabels);
   const [theme, setTheme] = useState(readTheme);
   const [systemNight, setSystemNight] = useState(systemPrefersDark);
   const night = theme === 'auto' ? systemNight : theme === 'night';
   const [size, setSize] = useState(() => {
-    const n = Number(get('clearspace.fontSize.v1', '100'));
+    const n = Number(get(STORAGE_KEYS.fontSize, '100'));
     return Number.isFinite(n) ? Math.max(90, Math.min(160, n)) : 100;
   });
   useEffect(() => {
@@ -68,11 +73,7 @@ export function usePreferences(notify: (s: string) => void) {
     document.documentElement.style.setProperty('--text-scale', String(size / 100));
   }, [night, size]);
   function save(key: string, value: string) {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      notify('Preferences could not be saved in this browser.');
-    }
+    if (!writeStorage(key, value)) notify('Preferences could not be saved in this browser.');
   }
   return {
     labels,
@@ -81,21 +82,16 @@ export function usePreferences(notify: (s: string) => void) {
     size,
     setLabels: (v: Labels) => {
       setLabels(v);
-      save('clearspace.labels.v1', JSON.stringify({ quadrants: v }));
+      save(STORAGE_KEYS.labels, JSON.stringify({ quadrants: v }));
     },
     setTheme: (v: ThemeChoice) => {
       setTheme(v);
-      save('clearspace.theme', v);
-    },
-    toggleNight: () => {
-      const next = night ? 'light' : 'night';
-      setTheme(next);
-      save('clearspace.theme', next);
+      save(STORAGE_KEYS.theme, v);
     },
     setSize: (v: number) => {
       const n = Math.min(160, Math.max(90, v));
       setSize(n);
-      save('clearspace.fontSize.v1', String(n));
+      save(STORAGE_KEYS.fontSize, String(n));
     },
   };
 }

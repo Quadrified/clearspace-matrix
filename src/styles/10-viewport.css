@@ -1,0 +1,289 @@
+/* The viewport owns the board size; only task lists and open panels scroll. */
+/* The viewport owns the board size. Only task lists and open panels scroll. */
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+.wrap {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.wrap > header {
+  flex: none;
+}
+.workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.board-column,
+.matrix-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.toolbar,
+.day,
+.axis-top {
+  flex: none;
+}
+.toolbar {
+  margin: 12px 0;
+  gap: 8px;
+}
+.axis-top {
+  position: static;
+  margin-bottom: 6px;
+}
+.matrix {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.quad {
+  min-height: 0;
+  padding-bottom: 0;
+}
+.qhead {
+  flex: none;
+  max-height: 50%;
+  overflow: hidden;
+  padding: 12px;
+}
+.tasklist {
+  position: relative;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  padding: 0 12px 64px;
+  border-radius: 0 0 18px 18px;
+}
+.tasklist.is-empty {
+  align-items: safe center;
+  padding-bottom: 12px;
+}
+.axis-side {
+  position: absolute;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%) rotate(180deg);
+}
+.task-fab {
+  right: 12px;
+  bottom: 12px;
+}
+.add-floating {
+  display: none;
+}
+.settings-backup {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.settings-backup p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+}
+.settings-backup .backup-state {
+  display: block;
+  margin-top: 6px;
+}
+@media (max-width: 760px) {
+  .wrap {
+    --page-gutter: 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  .wrap > header {
+    min-height: 60px;
+    padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    padding-bottom: 8px;
+  }
+  .logo {
+    display: none;
+  }
+  .header-right {
+    width: auto;
+  }
+  .day {
+    padding-top: 8px;
+    gap: 4px;
+  }
+  .day .date {
+    font-size: calc(1rem * var(--text-scale, 1));
+  }
+  .tabs {
+    flex-basis: auto;
+  }
+  .matrix {
+    gap: 8px;
+  }
+  .matrix-shell {
+    margin-left: 0;
+  }
+  .quad:nth-child(n) > .axis-rail,
+  .quad > .axis-mobile {
+    display: none;
+  }
+  .quad {
+    border-radius: 12px;
+  }
+  .qhead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 8px;
+    gap: 4px;
+  }
+  .qhead .qicon,
+  .qhead .label-edit {
+    display: none;
+  }
+  .qhead > div {
+    grid-row: auto;
+  }
+  .qhead h2 {
+    font-size: calc(0.9375rem * var(--text-scale, 1));
+  }
+  .qhead p {
+    display: none;
+  }
+  .qhead .count {
+    grid-column: 2;
+    grid-row: auto;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px 5px;
+    font-size: calc(0.75rem * var(--text-scale, 1));
+  }
+  .tasklist {
+    padding: 0 6px 56px;
+    border-radius: 0 0 12px 12px;
+    scrollbar-gutter: auto;
+  }
+  .task {
+    padding: 8px;
+    gap: 6px;
+  }
+  .empty {
+    padding: 6px;
+  }
+  .empty-art {
+    width: 80px;
+    height: 45px;
+  }
+  .task-fab {
+    right: 8px;
+    bottom: 8px;
+    width: 40px;
+    height: 40px;
+  }
+  .day > .first-task {
+    margin-top: 4px;
+    padding: 8px;
+    gap: 6px;
+  }
+  .first-task h2 {
+    display: none;
+  }
+}
+/* Short windows reserve their height for the four task lists. */
+@media (max-height: 600px) {
+  .wrap > header {
+    min-height: 48px;
+    padding-top: calc(4px + env(safe-area-inset-top, 0px));
+    padding-bottom: 4px;
+  }
+  .logo,
+  .axis-top {
+    display: none;
+  }
+  .day {
+    padding-top: 0;
+  }
+  .toolbar {
+    margin: 6px 0;
+  }
+  .toolbar .filters .search {
+    min-width: 0;
+    width: auto;
+    flex: 1;
+  }
+  .toolbar > .filter-summary {
+    grid-column: 1 / -1;
+  }
+  .qhead {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .qhead .qicon,
+  .qhead p,
+  .empty-art {
+    display: none;
+  }
+  .qhead {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+  .qhead > div {
+    grid-row: auto;
+  }
+  .empty {
+    padding: 4px;
+  }
+}
+@media (min-width: 761px) and (max-height: 600px) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-height: 450px) {
+  .day > .overview {
+    display: none;
+  }
+}
+
+/* Empty-board actions share the date row instead of taking a full panel. */
+.day > .first-task {
+  flex-basis: auto;
+  flex-shrink: 0;
+  margin: 0 0 0 auto;
+  padding: 0;
+  gap: 6px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.day > .first-task .btn {
+  min-height: 36px;
+  padding: 6px 10px;
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+}
+.settings-danger {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.settings-danger h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: calc(0.8125rem * var(--text-scale, 1));
+  font-weight: 600;
+}
+
+/* Tab selection changes color, not text width or the height left for the matrix. */
+.tabs button {
+  font-weight: 650;
+}

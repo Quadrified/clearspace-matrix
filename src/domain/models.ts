@@ -136,7 +136,7 @@ export const matrixSchema = z
     }),
   );
 export type Matrix = z.infer<typeof matrixSchema>;
-export const labelSchema = z.object({
+const labelSchema = z.object({
   title: z.string().check(z.trim(), z.minLength(1), z.maxLength(60)),
   subtitle: z.string().check(z.maxLength(180)),
   icon: z.optional(z.enum(iconNames)),

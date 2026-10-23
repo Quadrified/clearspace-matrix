@@ -1,9 +1,9 @@
-import { createSamples } from './features/dev/samples';
+import { createSamples } from '../features/dev/samples';
 import userEvent from '@testing-library/user-event';
 import { act, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import { vi, it, expect, beforeEach } from 'vitest';
 import App from './App';
-import { MATRIX_KEY } from './domain/matrix';
+import { MATRIX_KEY } from '../state/storage';
 beforeEach(() => {
   localStorage.setItem('clearspace.tutorial.v1', 'seen');
   vi.stubGlobal('fetch', vi.fn());

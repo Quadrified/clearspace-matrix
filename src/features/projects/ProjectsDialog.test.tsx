@@ -1,8 +1,8 @@
 import userEvent from '@testing-library/user-event';
 import { beforeEach, expect, it } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import App from '../../App';
-import { MATRIX_KEY } from '../../domain/matrix';
+import App from '../../app/App';
+import { MATRIX_KEY } from '../../state/storage';
 import type { Matrix, Task } from '../../domain/models';
 
 const task: Task = {

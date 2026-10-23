@@ -64,6 +64,9 @@ export const tutorialSteps = [
       'Review your matrix when priorities change. Search or filter by project, and use A+ in Settings if you want larger text. Open Settings, then Help, anytime to replay this walkthrough.',
     exampleTitle: 'Your tasks save in this browser.',
     example:
-      'Tasks and projects do not sync across devices. Use Export backup regularly and Import to restore them. Clearing browser data removes local tasks. Choose Start with example tasks to add one editable task to each quadrant, or choose Use my own tasks to continue with your current matrix.',
+      'Tasks and projects do not sync across devices. Use Export regularly and Import to restore them. Clearing browser data removes local tasks.',
+    // Shown only on an empty board, where the final step offers example tasks.
+    emptyBoardNote:
+      'Choose Start with example tasks to add one editable task to each quadrant, or choose Use my own tasks to begin with a blank matrix.',
   },
 ] as const;

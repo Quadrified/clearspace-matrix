@@ -10,6 +10,8 @@ import { Modal } from '../../components/Modal';
 import { Icon } from '../../components/Icon';
 import { localDate } from '../../domain/matrix';
 import { ProjectsDialog } from '../projects/ProjectsDialog';
+// Save stays disabled until the title has this many non-space characters.
+const MIN_TITLE_LENGTH = 2;
 export function TaskEditor({
   task,
   q,
@@ -224,7 +226,9 @@ export function TaskEditor({
             <button type="button" className="btn" onClick={onClose}>
               Cancel
             </button>
-            <button className="btn primary">Save task</button>
+            <button className="btn primary" disabled={draft.title.trim().length < MIN_TITLE_LENGTH}>
+              Save task
+            </button>
           </div>
         </form>
       </Modal>

@@ -335,6 +335,16 @@ header .filters-badge,
   margin-bottom: 4px;
   line-height: 1;
 }
+/* The handwritten side labels are wider than the default rail, so give them a gap from the cards. */
+@media (min-width: 761px) {
+  .matrix-shell {
+    margin-left: 46px;
+  }
+  .axis-rail {
+    left: -46px;
+    width: 32px;
+  }
+}
 .quad {
   --accent: #d2553f;
   --tint: #ffd8cd;
@@ -1199,13 +1209,8 @@ dialog .dialog-top h2 {
   font-size: calc(1.25rem * var(--text-scale, 1));
 }
 .tutorial-progress-header {
+  justify-content: flex-end;
   margin-top: 0;
-}
-.tutorial-step-label {
-  font-family: var(--hand);
-  font-size: calc(1.575rem * var(--text-scale, 1));
-  font-weight: 700;
-  text-transform: lowercase;
 }
 #tutorialSkip {
   font-family: var(--hand);

@@ -2,13 +2,13 @@
 import { test, expect } from '@playwright/test';
 import { open, openSettings, seedMatrix, MATRIX_KEY } from './helpers';
 
-test('Export backup hands back the original unreadable data instead of an empty board', async ({
+test('Export hands back the original unreadable data instead of an empty board', async ({
   page,
 }) => {
   await open(page, { rawMatrix: '{"tasks": broken', tutorialSeen: true });
   await openSettings(page);
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export backup' }).click();
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/^clearspace-recovery-\d{4}-\d{2}-\d{2}\.json$/);
   const path = await file.path();

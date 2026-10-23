@@ -106,12 +106,12 @@ test('date chips fill the due date', async ({ page }) => {
 
 test('exporting a backup records it in Settings', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
-  await expect(page.getByRole('button', { name: 'Export backup' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Export', exact: true })).toHaveCount(0);
   await openSettings(page);
   await expect(page.locator('.backup-state')).toHaveText('Last backup: never.');
   await expect(page.locator('.backup-state')).toHaveClass(/due/);
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export backup' }).click();
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
   await download;
   await expect(page.locator('.backup-state')).toHaveText('Last backup: today.');
   expect(

@@ -273,6 +273,7 @@ export default function App() {
           <TutorialDialog
             key="tutorial"
             labels={prefs.labels}
+            hasTasks={matrix.tasks.length > 0}
             onClose={closeTutorial}
             onExamples={() => {
               change(addExamples, 'Example tasks added.');

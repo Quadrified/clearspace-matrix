@@ -67,7 +67,7 @@ On an empty board, Add task and Examples take the place of progress in the top b
 
 Dragging a card on desktop lifts a tilted copy and marks the insertion point; the first drag also carries a "drag it to another quadrant" note. Phones move tasks with the editor's quadrant picker. Completing the last active task in a quadrant plays a short check-and-sparkle celebration.
 
-Settings is a popover with Edit labels, Help, the GitHub link, Appearance (Auto, Light, Dark), Text size (90% to 160%), Backups & data (Export and Import, with the last backup date), and a Danger zone (Clear completed, and Need a fresh start? to reset the board).
+Settings is a popover with Edit labels, Help, the GitHub link, Appearance (Light by default, Dark, or Auto to follow the system), Text size (90% to 160%), Backups & data (Export and Import, with the last backup date), and a Danger zone (Clear completed, and Need a fresh start? to reset the board).
 
 The seven-step Getting Started tutorial opens on a first visit and from Settings → Help. Dots show progress, and screen readers hear "Step N of 7". Back appears from the second step. On the last step, an empty board offers Start with example tasks or Use my own tasks; a board that already has tasks just shows Got it.
 
@@ -87,15 +87,15 @@ IDs stay stable through edits and moves. In All tasks, active tasks come first a
 
 All keys are defined in `state/storage.ts`. Their names are part of the saved format and must not change.
 
-| Key                        | Contents                                                        |
-| -------------------------- | --------------------------------------------------------------- |
-| `clearspace.matrix.v1`     | Version-2 tasks and projects. Legacy task arrays are accepted.  |
-| `clearspace.labels.v1`     | Quadrant titles, subtitles and icons.                           |
-| `clearspace.theme`         | `auto`, `light` or `night`. Missing means Auto (follow the OS). |
-| `clearspace.fontSize.v1`   | Text-size percentage, 90 to 160.                                |
-| `clearspace.tutorial.v1`   | Set once the tutorial has been seen.                            |
-| `clearspace.lastBackup.v1` | Timestamp of the last exported backup.                          |
-| `clearspace.dragHint.v1`   | Set once the first-drag hint has been shown.                    |
+| Key                        | Contents                                                       |
+| -------------------------- | -------------------------------------------------------------- |
+| `clearspace.matrix.v1`     | Version-2 tasks and projects. Legacy task arrays are accepted. |
+| `clearspace.labels.v1`     | Quadrant titles, subtitles and icons.                          |
+| `clearspace.theme`         | `auto`, `light` or `night`. Missing means Light.               |
+| `clearspace.fontSize.v1`   | Text-size percentage, 90 to 160.                               |
+| `clearspace.tutorial.v1`   | Set once the tutorial has been seen.                           |
+| `clearspace.lastBackup.v1` | Timestamp of the last exported backup.                         |
+| `clearspace.dragHint.v1`   | Set once the first-drag hint has been shown.                   |
 
 Older stock subtitles are upgraded to today's wording; custom labels are kept. Legacy owner fields are preserved. Version-1 (tasks only) and version-2 (tasks and projects) backups both import.
 

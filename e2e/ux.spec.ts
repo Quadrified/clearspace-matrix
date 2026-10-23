@@ -125,15 +125,17 @@ test('overdue tasks carry an icon as well as colour', async ({ page }) => {
   await expect(page.locator('.duedate.overdue svg')).toHaveCount(1);
 });
 
-test('the system dark setting is followed until a choice is saved', async ({ browser }) => {
+test('new visitors start in Light even when the system is dark', async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: 'dark', locale: 'en-US' });
   const page = await context.newPage();
   await page.addInitScript(() => localStorage.setItem('clearspace.tutorial.v1', 'seen'));
   await page.goto('/');
-  await expect(page.locator('body')).toHaveClass(/night/);
-  await chooseAppearance(page, 'Light');
-  await page.reload();
   await expect(page.locator('body')).not.toHaveClass(/night/);
+  await openSettings(page);
+  await expect(page.getByRole('button', { name: 'Light', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await context.close();
 });
 
@@ -142,6 +144,7 @@ test('Auto appearance switches live with the system and can be restored after a 
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await open(page, { matrix: seedMatrix });
+  await chooseAppearance(page, 'Auto');
   await expect(page.locator('body')).not.toHaveClass(/night/);
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('body')).toHaveClass(/night/);

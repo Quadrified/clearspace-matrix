@@ -4,7 +4,9 @@
   "private": true,
   "description": "A personal Eisenhower Matrix with browser storage and local development tools.",
   "scripts": {
+    "predev": "node scripts/check-node.mjs",
     "dev": "vite --host 127.0.0.1",
+    "prestart": "node scripts/check-node.mjs",
     "start": "vite --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && node --test tests/worker.mjs",
@@ -20,7 +22,7 @@
     "test:e2e": "playwright test"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": "^22.22.1 || ^24.0.0 || >=26.0.0"
   },
   "type": "module",
   "dependencies": {

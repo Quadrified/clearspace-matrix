@@ -37,8 +37,9 @@ import type { IconName } from '../domain/models';
 
 // Keep the persisted keys so existing quadrant customizations remain compatible.
 const icons = {
-  download: ArrowDownTrayIcon,
-  upload: ArrowUpTrayIcon,
+  // Export sends data out of the app; import brings it in.
+  export: ArrowUpTrayIcon,
+  import: ArrowDownTrayIcon,
   reset: ArrowPathIcon,
   search: MagnifyingGlassIcon,
   edit: PencilSquareIcon,

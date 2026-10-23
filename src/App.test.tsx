@@ -25,6 +25,18 @@ it('adds a Work task, saves it in the existing storage format, and undoes it', a
   expect(screen.queryAllByRole('button', { name: /^Add a task to / })).toHaveLength(0);
   expect(screen.queryByRole('button', { name: 'Quick add task' })).not.toBeInTheDocument();
 });
+it('keeps Save task disabled until the title has at least two non-space characters', () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
+  const save = screen.getByRole('button', { name: 'Save task' });
+  expect(save).toBeDisabled();
+  for (const value of ['a', '   ', ' a ']) {
+    fireEvent.change(screen.getByLabelText('Task'), { target: { value } });
+    expect(save).toBeDisabled();
+  }
+  fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'ab' } });
+  expect(save).toBeEnabled();
+});
 it('preserves a draft when creating its project', () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
@@ -145,7 +157,7 @@ it('keeps custom quadrant titles, icons and text size from the original app', ()
   expect(screen.getByRole('heading', { name: 'Make room for what matters.' })).toBeInTheDocument();
   expect(document.documentElement.style.getPropertyValue('--text-scale')).toBe('1.3');
 });
-it('only offers examples at the final tutorial step and does not duplicate them on replay', () => {
+it('offers examples only at the final step of an empty board, and ends with Got it once tasks exist', () => {
   render(<App />);
   function help() {
     fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
@@ -180,7 +192,13 @@ it('only offers examples at the final tutorial step and does not duplicate them 
     'aria-valuenow',
     '7',
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Start with example tasks' }));
+  // The board has tasks now, so the last step just closes instead of offering examples.
+  expect(
+    screen.queryByRole('button', { name: 'Start with example tasks' }),
+  ).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Use my own tasks' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Got it' }));
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!).tasks).toHaveLength(4);
 });
 it('local Dev generates samples without API calls and removes only marked tasks', async () => {

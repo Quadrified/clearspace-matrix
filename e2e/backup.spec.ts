@@ -1,4 +1,4 @@
-/* Export backup download and Import (valid, legacy v1, invalid) . */
+/* Export download and Import (valid, legacy v1, invalid) . */
 import { test, expect } from '@playwright/test';
 import { open, openSettings, seedMatrix, storedMatrix, toast } from './helpers';
 
@@ -14,12 +14,12 @@ const task = (o: Record<string, unknown>) => ({
   ...o,
 });
 
-test('Export backup downloads a v2 JSON file with the whole board', async ({ page }) => {
+test('Export downloads a v2 JSON file with the whole board', async ({ page }) => {
   await open(page, { matrix: seedMatrix });
   await openSettings(page);
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export backup' }).click(),
+    page.getByRole('button', { name: 'Export', exact: true }).click(),
   ]);
   expect(download.suggestedFilename()).toBe('clearspace-2026-10-15.json');
   const path = await download.path();

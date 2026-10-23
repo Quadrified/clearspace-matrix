@@ -33,11 +33,11 @@ export function BackupSettings({
       <h3 className="settings-label">Backups &amp; data</h3>
       <div className="settings-actions">
         <button className="iconbtn" onClick={onExport}>
-          <Icon name="download" />
-          Export backup
+          <Icon name="export" />
+          Export
         </button>
         <button className="iconbtn" onClick={() => importRef.current?.click()}>
-          <Icon name="upload" />
+          <Icon name="import" />
           Import
         </button>
         <input

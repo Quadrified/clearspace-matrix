@@ -1052,11 +1052,6 @@ div.field {
   gap: 4px 16px;
   margin-top: 12px;
 }
-.tutorial-step-label {
-  color: var(--muted);
-  font-size: calc(0.875rem * var(--text-scale, 1));
-  font-weight: 500;
-}
 .tutorial-progress {
   height: 6px;
   border-radius: 999px;

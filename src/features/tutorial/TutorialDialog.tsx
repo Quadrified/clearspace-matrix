@@ -7,26 +7,33 @@ import { Icon } from '../../components/Icon';
 import type { Labels } from '../../domain/models';
 export function TutorialDialog({
   labels,
+  hasTasks,
   onClose,
   onExamples,
 }: {
   labels: Labels;
+  /** A board that already has tasks ends with a plain "Got it" instead of offering examples. */
+  hasTasks: boolean;
   onClose: () => void;
   onExamples: () => void;
 }) {
   const { instant } = useMotionSettings();
   const [index, setIndex] = useState(0);
   const step = tutorialSteps[index]!,
-    last = index === tutorialSteps.length - 1;
+    last = index === tutorialSteps.length - 1,
+    offerExamples = last && !hasTasks;
   return (
     <Modal id="helpDialog" title="Getting Started" onClose={onClose}>
       <div className="tutorial-progress-header">
-        <span className="tutorial-step-label" aria-live="polite" aria-atomic="true">
+        {/* The dots below show progress; screen readers still hear each step change. */}
+        <span className="sr-only" aria-live="polite" aria-atomic="true">
           Step {index + 1} of {tutorialSteps.length}
         </span>
-        <button type="button" className="iconbtn" id="tutorialSkip" onClick={onClose}>
-          {last ? 'Use my own tasks' : 'Skip tutorial'}
-        </button>
+        {!(last && hasTasks) && (
+          <button type="button" className="iconbtn" id="tutorialSkip" onClick={onClose}>
+            {last ? 'Use my own tasks' : 'Skip tutorial'}
+          </button>
+        )}
       </div>
       <motion.div
         key={index}
@@ -47,6 +54,7 @@ export function TutorialDialog({
         <div className="tutorial-example">
           <strong>{step.exampleTitle}</strong>
           {step.example}
+          {offerExamples && 'emptyBoardNote' in step && <> {step.emptyBoardNote}</>}
         </div>
       </motion.div>
       <div className="tutorial-actions">
@@ -70,15 +78,17 @@ export function TutorialDialog({
             />
           ))}
         </div>
-        <button className="btn" disabled={index === 0} onClick={() => setIndex(index - 1)}>
-          Back
-        </button>
+        {index > 0 && (
+          <button className="btn" onClick={() => setIndex(index - 1)}>
+            Back
+          </button>
+        )}
         <button
           id="tutorialNext"
           className="btn primary"
-          onClick={() => (last ? onExamples() : setIndex(index + 1))}
+          onClick={() => (offerExamples ? onExamples() : last ? onClose() : setIndex(index + 1))}
         >
-          {last ? 'Start with example tasks' : 'Next'}
+          {offerExamples ? 'Start with example tasks' : last ? 'Got it' : 'Next'}
         </button>
       </div>
     </Modal>

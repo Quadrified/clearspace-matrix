@@ -105,14 +105,19 @@ test.describe('adding tasks', () => {
     await expect(q.locator('.duedate')).toHaveText('Oct 30');
   });
 
-  test('blank title is not saved and Cancel discards', async ({ page }) => {
+  test('Save needs a two-character title, and Cancel discards', async ({ page }) => {
     await open(page, { matrix: { tasks: [], projects: [] } });
     await page.getByRole('button', { name: 'Add your first task' }).click();
     const dialog = editorDialog(page);
-    await dialog.getByRole('button', { name: 'Save task' }).click();
+    const title = dialog.getByPlaceholder('What do you need to do?');
+    const save = dialog.getByRole('button', { name: 'Save task' });
+    await expect(save).toBeDisabled();
+    await title.fill('a');
+    await title.press('Enter');
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByPlaceholder('What do you need to do?')).toBeFocused();
-    await dialog.getByPlaceholder('What do you need to do?').fill('Will be discarded');
+    await expect(save).toBeDisabled();
+    await title.fill('Will be discarded');
+    await expect(save).toBeEnabled();
     await dialog.getByRole('button', { name: 'Cancel' }).click();
     await expect(dialog).toBeHidden();
     await expect(page.locator('.task')).toHaveCount(0);

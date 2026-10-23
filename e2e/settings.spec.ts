@@ -151,20 +151,25 @@ test.describe('tutorial', () => {
     const skipBox = (await dialog.getByRole('button', { name: 'Skip tutorial' }).boundingBox())!;
     const contentBox = (await dialog.locator('#tutorialContent').boundingBox())!;
     expect(skipBox.y + skipBox.height).toBeLessThanOrEqual(contentBox.y);
-    await expect(dialog.locator('.tutorial-actions button')).toHaveText(['Back', 'Next']);
+    await expect(dialog.locator('.tutorial-actions button')).toHaveText(['Next']);
     expect(total).toBe(7);
     await expect(dialog.locator('#tutorialTitle')).toHaveText('Decide what deserves your time.');
-    await expect(dialog.getByRole('button', { name: 'Back' })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: 'Back' })).toHaveCount(0);
     const seen: string[] = [];
     for (let i = 1; i < total; i++) {
       await dialog.getByRole('button', { name: 'Next' }).click();
       await expect(progress).toHaveAttribute('aria-valuenow', String(i + 1));
       await expect(progress).toHaveAttribute('aria-valuetext', `Step ${i + 1} of ${total}`);
+      await expect(dialog.locator('.tutorial-actions button')).toHaveText([
+        'Back',
+        i === total - 1 ? 'Got it' : 'Next',
+      ]);
       seen.push((await dialog.locator('#tutorialTitle').textContent())!);
     }
     expect(seen.slice(0, 4)).toEqual(['Do first', 'Schedule', 'Delegate', 'Let go']);
-    await expect(dialog.getByRole('button', { name: 'Use my own tasks' })).toBeVisible();
-    await expect(dialog.getByRole('button', { name: 'Start with example tasks' })).toBeVisible();
+    // This board already has tasks, so the last step closes instead of offering examples.
+    await expect(dialog.getByRole('button', { name: 'Use my own tasks' })).toHaveCount(0);
+    await expect(dialog.getByRole('button', { name: 'Start with example tasks' })).toHaveCount(0);
     await dialog.getByRole('button', { name: 'Back' }).click();
     await expect(progress).toHaveAttribute('aria-valuenow', String(total - 1));
     for (let i = total - 1; i > 3; i--) {

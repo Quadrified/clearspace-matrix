@@ -144,7 +144,7 @@ test.describe('tutorial', () => {
     await page.getByRole('button', { name: 'Help' }).click();
     const dialog = page.locator('#helpDialog');
     await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAccessibleName('Getting Started');
+    await expect(dialog).toHaveAccessibleName('Welcome to Clearspace');
     const progress = dialog.getByRole('progressbar', { name: 'Tutorial progress' });
     const total = Number(await progress.getAttribute('aria-valuemax'));
     await expect(progress).toHaveAttribute('aria-valuenow', '1');
@@ -229,6 +229,12 @@ test('reset board clears tasks and projects, then Undo from the toast restores t
   await expect(dialog.getByRole('button', { name: 'Reset board' })).toBeDisabled();
   await dialog.getByLabel('Type Reset to confirm').fill('Reset');
   await dialog.getByRole('button', { name: 'Reset board' }).click();
+  await expect(toast(page)).toContainText('Board reset. All tasks and projects cleared.');
+  // A fresh start opens the Getting Started tour again; the Undo toast waits behind it.
+  const tour = page.getByRole('dialog', { name: 'Welcome to Clearspace' });
+  await expect(tour).toBeVisible();
+  await tour.getByRole('button', { name: 'Skip tutorial' }).click();
+  await expect(tour).toBeHidden();
   await expect(toast(page)).toContainText('Board reset. All tasks and projects cleared.');
   await expect(page.locator('.task')).toHaveCount(0);
   await expect(page.locator('.task-fab, .add-floating')).toHaveCount(0);

@@ -7,7 +7,7 @@ export const STORAGE_KEYS = {
   matrix: 'clearspace.matrix.v1',
   /** Quadrant titles, subtitles and icons. */
   labels: 'clearspace.labels.v1',
-  /** 'auto', 'light' or 'night'. */
+  /** 'auto', 'light' or 'night'. Missing means Light. */
   theme: 'clearspace.theme',
   /** Text size percentage, 90 to 160. */
   fontSize: 'clearspace.fontSize.v1',

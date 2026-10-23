@@ -17,7 +17,7 @@ One quiet top bar holds today's date and progress, the Active / Completed / All 
 
 On an empty board, the top bar offers Add task and Examples in place of progress. Each quadrant's + button appears once a task exists. Cancelling the editor leaves the board empty; clearing every task brings the starter buttons back. Filtered-empty views keep the add controls. N opens a new task and P opens projects.
 
-Settings offers Auto, Light and Dark appearance, text sizes from 90% to 160%, quadrant labels and icons, Help, Export and Import, Clear completed and a guarded board reset. The seven-step tutorial shows progress as dots; on a board that is still empty, its last step offers example tasks.
+Settings offers Light (the default), Dark and Auto appearance, text sizes from 90% to 160%, quadrant labels and icons, Help, Export and Import, Clear completed and a guarded board reset. The seven-step tutorial shows progress as dots; on a board that is still empty, its last step offers example tasks.
 
 ## Tech stack
 

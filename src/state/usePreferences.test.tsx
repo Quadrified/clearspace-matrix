@@ -38,7 +38,23 @@ it('applies the saved theme and each switch between light and dark before layout
   expect(localStorage.getItem('clearspace.theme')).toBe('night');
 });
 
+it('starts in Light when nothing is saved, even if the system is dark', () => {
+  vi.stubGlobal('matchMedia', () => ({
+    matches: true,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }));
+  function Probe() {
+    const { theme } = usePreferences(vi.fn());
+    return <output>{theme}</output>;
+  }
+  render(<Probe />);
+  expect(screen.getByRole('status')).toHaveTextContent('light');
+  expect(document.body).not.toHaveClass('night');
+});
+
 it('follows the system theme live on Auto and stops once a choice is saved', () => {
+  localStorage.setItem('clearspace.theme', 'auto');
   const listeners = new Set<() => void>();
   const query = {
     matches: false,

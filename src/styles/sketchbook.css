@@ -641,6 +641,60 @@ mark.hl {
   font-family: var(--display);
   font-weight: 900;
 }
+/* Filter chips and the sort switch: outlined like the other controls, picked ones on sticky paper. */
+.filters-panel .opt {
+  border: 2px solid var(--outline);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--shade);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.filters-panel .opt:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--shade-strong);
+}
+.filters-panel .opt:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+.filters-seg {
+  padding: 0;
+  border: 2px solid var(--outline);
+  border-radius: 999px;
+  background: var(--card);
+  overflow: hidden;
+}
+.filters-seg button {
+  border-radius: 0;
+  font-family: var(--display);
+  font-weight: 700;
+}
+.filters-seg button + button {
+  border-left: 2px solid var(--outline);
+}
+.filters-panel .opt[aria-pressed='true'],
+.filters-seg button[aria-pressed='true'],
+.night .filters-panel .opt[aria-pressed='true'],
+.night .filters-seg button[aria-pressed='true'] {
+  background: var(--sticky);
+  border-color: var(--outline);
+  color: var(--sticky-ink);
+}
+.filters-panel .opt[aria-pressed='true'] {
+  box-shadow: 2px 2px 0 var(--shade-strong);
+}
+@media (prefers-reduced-motion: reduce) {
+  .filters-panel .opt {
+    transition: none;
+  }
+  .filters-panel .opt:hover {
+    transform: none;
+  }
+}
 .font-controls {
   border: 2px solid var(--outline);
   border-radius: 999px;

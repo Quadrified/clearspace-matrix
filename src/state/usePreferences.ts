@@ -38,8 +38,8 @@ function systemPrefersDark() {
 }
 function readTheme(): ThemeChoice {
   const saved = get(STORAGE_KEYS.theme, '');
-  // No saved choice (or an unknown one) follows the operating system.
-  return saved === 'light' || saved === 'night' ? saved : 'auto';
+  // No saved choice (or an unknown one) starts in Light; Auto is opt-in.
+  return saved === 'auto' || saved === 'night' ? saved : 'light';
 }
 export type Preferences = ReturnType<typeof usePreferences>;
 

@@ -65,7 +65,7 @@ The top bar holds, from left to right, the logo with today's date and progress (
 
 On an empty board, Add task and Examples take the place of progress in the top bar, and each quadrant shows its illustration and a short prompt. Each quadrant's + button appears once the board has a task, with a short reveal that is skipped for keyboard input and reduced motion. (A floating quick-add button is still rendered, but the current layout keeps it hidden at every width.) Cancelling the editor does not reveal them; clearing the last task hides them again. Filtered-empty views keep them.
 
-Dragging a card on desktop lifts a tilted copy and marks the insertion point; the first drag also carries a "drag it to another quadrant" note. Phones move tasks with the editor's quadrant picker. Completing the last active task in a quadrant plays a short check-and-sparkle celebration.
+Dragging a card with a mouse or trackpad lifts a tilted copy that follows the pointer (pointer events rather than native drag and drop, so the drawn cursor stays on) and marks the insertion point; Escape cancels; the first drag also carries a "drag it to another quadrant" note. Phones move tasks with the editor's quadrant picker. Completing the last active task in a quadrant plays a short check-and-sparkle celebration.
 
 Settings is a popover with Edit labels, Help, the GitHub link, Appearance (Light by default, Dark, or Auto to follow the system), Text size (90% to 160%), Backups & data (Export and Import, with the last backup date), and a Danger zone (Clear completed, and Need a fresh start? to reset the board).
 

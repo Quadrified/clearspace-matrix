@@ -203,7 +203,7 @@
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 8px;
-  cursor: grab;
+  cursor: var(--cursor-pointer);
   min-width: 0;
 }
 .task-main {

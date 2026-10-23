@@ -85,6 +85,32 @@ html,
 body {
   background-color: var(--bg);
 }
+
+/* Drawn cursors: a paper arrow, and a sticky-yellow one with action lines over anything clickable.
+   Only for mouse and trackpad; text fields keep the I-beam and drags keep the hand. */
+@media (pointer: fine) {
+  :root {
+    --cursor-default: url('../assets/cursors/arrow.svg') 7 6, default;
+    --cursor-pointer: url('../assets/cursors/pointer.svg') 7 6, pointer;
+  }
+  .night {
+    --cursor-pointer: url('../assets/cursors/pointer-night.svg') 7 6, pointer;
+  }
+  html {
+    cursor: var(--cursor-default);
+  }
+  a[href],
+  summary,
+  label:has(> input[type='checkbox']),
+  label:has(> input[type='radio']) {
+    cursor: var(--cursor-pointer);
+  }
+  input:not([type='checkbox'], [type='radio'], [type='range'], [type='button']),
+  textarea,
+  [contenteditable='true'] {
+    cursor: text;
+  }
+}
 body {
   background-image: radial-gradient(var(--dots) 1.2px, transparent 1.3px);
   background-size: 22px 22px;
@@ -797,7 +823,7 @@ dialog .dialog-top h2 {
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .pen-link:hover {
   text-decoration-thickness: 2.5px;
@@ -893,7 +919,7 @@ dialog .dialog-top h2 {
   font-family: var(--display);
   font-weight: 700;
   font-size: calc(0.9375rem * var(--text-scale, 1));
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition:
     transform 0.12s,
     box-shadow 0.12s,
@@ -906,7 +932,7 @@ dialog .dialog-top h2 {
   height: 100%;
   margin: 0;
   opacity: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .quadrant-tile .swatch {
   width: 16px;
@@ -1010,7 +1036,7 @@ dialog .dialog-top h2 {
   background: none;
   color: var(--muted);
   font: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .add-step-box {
   display: grid;
@@ -1201,7 +1227,7 @@ dialog .dialog-top h2 {
   border-radius: 12px;
   background: var(--tint);
   color: var(--accent);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .icon-picker-trigger svg {
   width: 22px;

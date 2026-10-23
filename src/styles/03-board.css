@@ -213,7 +213,7 @@
   background: transparent;
   padding: 1px 0;
   text-align: left;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   color: var(--ink);
 }
 .task-title {
@@ -250,7 +250,7 @@
   margin: 3px 0 0;
   border: 1.5px solid var(--check-border);
   border-radius: 50%;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   background: transparent;
 }
 

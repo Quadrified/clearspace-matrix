@@ -47,7 +47,7 @@ Vitest and React Testing Library exercise actual React components. A separate No
 
 ## Run locally
 
-Use Node.js 22.12 or newer. Node.js 24 is used in CI.
+Use Node.js 24 (22.22.1 or newer also works). Node 24 is pinned in `.nvmrc`, which CI also reads, so with nvm run `nvm install && nvm use` in the project folder. `.npmrc` sets `engine-strict`, so `npm ci` refuses an unsupported Node, and `npm run dev` or `npm start` stops with a clear message instead of a Vite import error.
 
 ```sh
 npm ci
@@ -155,7 +155,7 @@ npm run check
 
 ### Commit and pull request checks
 
-`npm ci` installs Husky hooks through the `prepare` script. Before a Git commit, lint-staged formats staged files and runs ESLint on staged JavaScript and TypeScript. The hook then runs the full type check and test suite. Use Node 24 in your terminal and Git client. Hook failures stop the commit. Git clients must support hooks; CI repeats the checks independently.
+`npm ci` installs Husky hooks through the `prepare` script. Before a Git commit, lint-staged formats staged files and runs ESLint on staged JavaScript and TypeScript. The hook then runs the full type check and test suite. Use the Node version from `.nvmrc` (Node 24) in your terminal and Git client. Hook failures stop the commit. Git clients must support hooks; CI repeats the checks independently.
 
 ESLint checks React rendering rules, Hooks, JSX accessibility, and unhandled or misused promises. TypeScript validates component props. Native modal dialogs intentionally set initial focus, so the blanket autofocus restriction is disabled. Accessibility linting does not replace keyboard or screen-reader testing.
 

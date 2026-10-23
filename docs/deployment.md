@@ -14,7 +14,7 @@ The sections below give the detail for each step.
 
 ## Select source and verify
 
-Use Node.js 22.12 or newer, with Node.js 24 used in CI. Select the exact GitHub commit requested for publication and check its CI result. If publishing a merged PR, confirm that the selected main source matches the reviewed changes. Do not include unrelated workspace edits or an older snapshot branch.
+Use Node.js 24 (22.22.1 or newer also works). Node.js 24 is pinned in `.nvmrc` and used by CI. Select the exact GitHub commit requested for publication and check its CI result. If publishing a merged PR, confirm that the selected main source matches the reviewed changes. Do not include unrelated workspace edits or an older snapshot branch.
 
 The Checks workflow runs formatting, ESLint, TypeScript, unit/component tests, Worker tests, production build validation and the Playwright suite. Separate jobs audit dependencies and scan Git history for secrets. The current owner workflow leaves tests to GitHub CI; do not run local tests merely to publish a version already checked there.
 

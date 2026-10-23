@@ -405,9 +405,20 @@ Recorded source time: 2026-10-22T21:10:52-04:00. Tag: `site-v43`. Deployment suc
 
 Sites source: `9601f8cc55f18a450e388ab64d3cbeb1b239f588`. GitHub target: `a5641bada0954b742053987d9ffe278cb62cb26d`. Reconstructed: False.
 
-## Available GitHub history through a5641ba
+## Hosted version 44: Sketchbook cursors, Light default and Node setup
 
-This is the reachable Git history through `a5641ba`, the main commit deployed as hosted version 43, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-22T22:23:28-04:00. Tag: `site-v44`. Deployment succeeded; record updated 2026-10-22T22:23:54.581189-04:00 (America/Toronto).
+
+- Add drawn sketchbook arrow and pointer cursors, including a dark-appearance pointer asset.
+- Start in Light when no appearance choice is saved; retain saved appearance choices and keep Auto available as an opt-in.
+- Give applied filter chips the sketchbook styling.
+- Pin local development and CI to Node 24 and fail early with a readable message on unsupported Node versions.
+
+Sites source: `7e7c7b430cfc9690078e3182360f0f4d41dd430f`. GitHub target: `7af77b7b1da9a1e63c98b34454ba83d09ee509fc`. Reconstructed: False.
+
+## Available GitHub history through 7af77b7
+
+This is the reachable Git history through `7af77b7`, the main commit deployed as hosted version 44, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -495,3 +506,7 @@ This is the reachable Git history through `a5641ba`, the main commit deployed as
 - 2026-10-22T15:13:33-04:00 [6833c96](https://github.com/Quadrified/clearspace-matrix/commit/6833c966ae30657791aeb38287b35c2f1369e4ca): Record hosted release 42 and deployed typography source
 - 2026-10-22T21:04:28-04:00 [de14f7f](https://github.com/Quadrified/clearspace-matrix/commit/de14f7f0343298250c8720617e7cda4330ae1c5f): Polish Export/Import, tutorial navigation, axis spacing and task saving (#34)
 - 2026-10-22T21:07:18-04:00 [a5641ba](https://github.com/Quadrified/clearspace-matrix/commit/a5641bada0954b742053987d9ffe278cb62cb26d): Organize the codebase into clear layers and refresh the docs (#35)
+- 2026-10-22T21:12:01-04:00 [11109bf](https://github.com/Quadrified/clearspace-matrix/commit/11109bf6fb5f9ed2736470abe9459f50d02143d2): Record hosted release 43 and deployed architecture source
+- 2026-10-22T21:47:21-04:00 [8cb6de6](https://github.com/Quadrified/clearspace-matrix/commit/8cb6de665cb8e74927a5af1134ae6b36f630c46f): Pin Node 24 and fail clearly on unsupported Node
+- 2026-10-22T22:21:12-04:00 [4ecd870](https://github.com/Quadrified/clearspace-matrix/commit/4ecd8703ccb61551de1b53aef747aa136fb35936): Start in Light by default and give filter chips the sketchbook look
+- 2026-10-22T22:21:12-04:00 [7af77b7](https://github.com/Quadrified/clearspace-matrix/commit/7af77b7b1da9a1e63c98b34454ba83d09ee509fc): Add drawn sketchbook cursors

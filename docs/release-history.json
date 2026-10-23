@@ -645,5 +645,22 @@
       "Shorten Export backup to Export, align export/import icons with their direction, and improve tutorial navigation and endings for populated versus empty boards.",
       "Give side axis labels more space and disable task saving until the trimmed title has at least two characters, including keyboard submission."
     ]
+  },
+  {
+    "n": 44,
+    "title": "Sketchbook cursors, Light default and Node setup",
+    "tag": "site-v44",
+    "sha": "7e7c7b430cfc9690078e3182360f0f4d41dd430f",
+    "target": "7af77b7b1da9a1e63c98b34454ba83d09ee509fc",
+    "recorded_at": "2026-10-22T22:23:28-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-22T22:23:54.581189-04:00",
+    "changes": [
+      "Add drawn sketchbook arrow and pointer cursors, including a dark-appearance pointer asset.",
+      "Start in Light when no appearance choice is saved; retain saved appearance choices and keep Auto available as an opt-in.",
+      "Give applied filter chips the sketchbook styling.",
+      "Pin local development and CI to Node 24 and fail early with a readable message on unsupported Node versions."
+    ]
   }
 ]

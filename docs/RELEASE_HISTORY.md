@@ -416,9 +416,19 @@ Recorded source time: 2026-10-22T22:23:28-04:00. Tag: `site-v44`. Deployment suc
 
 Sites source: `7e7c7b430cfc9690078e3182360f0f4d41dd430f`. GitHub target: `7af77b7b1da9a1e63c98b34454ba83d09ee509fc`. Reconstructed: False.
 
-## Available GitHub history through 7af77b7
+## Hosted version 45: Visible Clearspace branding and drawn drag hand
 
-This is the reachable Git history through `7af77b7`, the main commit deployed as hosted version 44, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-10-23T09:13:21-04:00. Tag: `site-v45`. Deployment succeeded; record updated 2026-10-23T09:13:47.754559-04:00 (America/Toronto).
+
+- Show the Clearspace wordmark in the top bar and introduce the tutorial with Welcome to Clearspace.
+- Replace the pointing cursor with a drawn hand and retain it while dragging task cards.
+- Use pointer-driven desktop task dragging with the lifted card preview, while retaining editor-based moves on touch devices.
+
+Sites source: `b3eda94bd12260d6861dc22cb1882eaadd8fddcf`. GitHub target: `65ae7c82fe783d1ea122265a0761a06fba735087`. Reconstructed: False.
+
+## Available GitHub history through 65ae7c8
+
+This is the reachable Git history through `65ae7c8`, the main commit deployed as hosted version 45, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -510,3 +520,6 @@ This is the reachable Git history through `7af77b7`, the main commit deployed as
 - 2026-10-22T21:47:21-04:00 [8cb6de6](https://github.com/Quadrified/clearspace-matrix/commit/8cb6de665cb8e74927a5af1134ae6b36f630c46f): Pin Node 24 and fail clearly on unsupported Node
 - 2026-10-22T22:21:12-04:00 [4ecd870](https://github.com/Quadrified/clearspace-matrix/commit/4ecd8703ccb61551de1b53aef747aa136fb35936): Start in Light by default and give filter chips the sketchbook look
 - 2026-10-22T22:21:12-04:00 [7af77b7](https://github.com/Quadrified/clearspace-matrix/commit/7af77b7b1da9a1e63c98b34454ba83d09ee509fc): Add drawn sketchbook cursors
+- 2026-10-22T22:24:36-04:00 [37b9d17](https://github.com/Quadrified/clearspace-matrix/commit/37b9d17ed9c3d985c95ed15879cf5ec3b66d4bdf): Record hosted release 44 and deployed cursor source
+- 2026-10-22T22:40:07-04:00 [4e575f1](https://github.com/Quadrified/clearspace-matrix/commit/4e575f19239466c2c06dd0991ac10ac57f033012): Use a drawn pointing hand and keep it on while dragging cards
+- 2026-10-23T09:11:18-04:00 [65ae7c8](https://github.com/Quadrified/clearspace-matrix/commit/65ae7c82fe783d1ea122265a0761a06fba735087): Show the Clearspace name in the top bar and Getting Started

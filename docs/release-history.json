@@ -662,5 +662,21 @@
       "Give applied filter chips the sketchbook styling.",
       "Pin local development and CI to Node 24 and fail early with a readable message on unsupported Node versions."
     ]
+  },
+  {
+    "n": 45,
+    "title": "Visible Clearspace branding and drawn drag hand",
+    "tag": "site-v45",
+    "sha": "b3eda94bd12260d6861dc22cb1882eaadd8fddcf",
+    "target": "65ae7c82fe783d1ea122265a0761a06fba735087",
+    "recorded_at": "2026-10-23T09:13:21-04:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-10-23T09:13:47.754559-04:00",
+    "changes": [
+      "Show the Clearspace wordmark in the top bar and introduce the tutorial with Welcome to Clearspace.",
+      "Replace the pointing cursor with a drawn hand and retain it while dragging task cards.",
+      "Use pointer-driven desktop task dragging with the lifted card preview, while retaining editor-based moves on touch devices."
+    ]
   }
 ]

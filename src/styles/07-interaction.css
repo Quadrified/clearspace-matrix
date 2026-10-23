@@ -159,7 +159,7 @@
   font-size: calc(0.9375rem * var(--text-scale, 1));
   line-height: 1.4;
   overflow-wrap: anywhere;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .select-item[data-highlighted] {
   background: var(--selected);

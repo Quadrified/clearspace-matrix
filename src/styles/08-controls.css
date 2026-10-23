@@ -109,7 +109,7 @@
   min-height: 30px;
   font: inherit;
   font-size: calc(0.8125rem * var(--text-scale, 1));
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .chip:hover {
   color: var(--ink);
@@ -316,7 +316,7 @@
   color: var(--ink);
   font: inherit;
   font-size: calc(0.875rem * var(--text-scale, 1));
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .opt[aria-pressed='true'],
 .filters-seg [aria-pressed='true'] {
@@ -340,7 +340,7 @@
   color: var(--muted);
   font: inherit;
   font-size: calc(0.875rem * var(--text-scale, 1));
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .filters-foot {
   display: flex;
@@ -359,7 +359,7 @@
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .applied-chip {
   display: inline-flex;
@@ -385,7 +385,7 @@
   border-radius: 50%;
   background: transparent;
   color: var(--muted);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .applied-chip svg {
   width: 14px;
@@ -515,7 +515,7 @@
   gap: 10px;
   min-height: 44px;
   padding: 5px 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   font-size: calc(0.875rem * var(--text-scale, 1));
   line-height: 1.5;
 }
@@ -567,7 +567,7 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .subtask-check-target .check {
   margin: 0;
@@ -626,7 +626,7 @@
   margin: 0;
   padding: 0;
   opacity: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 .due-date-calendar input::-webkit-datetime-edit {
   display: none;
@@ -638,5 +638,5 @@
   height: 100%;
   margin: 0;
   padding: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }

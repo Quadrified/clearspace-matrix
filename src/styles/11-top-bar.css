@@ -173,7 +173,7 @@ header .search {
   border: 1px solid transparent;
   border-radius: 9px;
   background: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   overflow: hidden;
   transition: width 180ms var(--out);
 }
@@ -190,7 +190,7 @@ header .search input {
   min-width: 0;
   padding: 0;
   opacity: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 header .search:hover {
   background: var(--soft);

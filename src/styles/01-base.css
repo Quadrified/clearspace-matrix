@@ -1,5 +1,8 @@
 /* Design tokens, element resets, typography and focus rings. */
 :root {
+  /* Sketchbook swaps these for drawn cursors on mouse and trackpad devices. */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
   --header-height-fallback: calc(88px + env(safe-area-inset-top, 0px));
   --matrix-axis-height: calc(36px * var(--text-scale, 1));
   --bg: #f4f6ef;
@@ -58,14 +61,14 @@ textarea {
   color: inherit;
 }
 button {
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 button:disabled {
   opacity: 0.4;
-  cursor: default;
+  cursor: var(--cursor-default);
 }
 input,
 textarea {

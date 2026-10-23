@@ -32,6 +32,20 @@ header .logo i {
   width: 7px;
   height: 7px;
 }
+/* The product name beside the logo, kept small so the date still leads. */
+header .wordmark {
+  flex-shrink: 0;
+  margin-left: -4px;
+  color: var(--ink);
+  font-size: calc(1.05rem * var(--text-scale, 1));
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+header .wordmark + .day {
+  padding-left: 12px;
+  border-left: 1.5px solid var(--line);
+}
 header .day {
   display: flex;
   align-items: center;
@@ -230,6 +244,57 @@ header .settings-actions .repo-link {
   padding-top: 8px;
 }
 /* Phones: date, progress and tools on one row, the status tabs on a second. */
+/* Below 1200px the name stands in for the date, so the day summary still clears the tabs. */
+@media (max-width: 1200px) {
+  header .wordmark + .day .date {
+    display: none;
+  }
+}
+@media (max-width: 960px) {
+  header .completion-word {
+    display: none;
+  }
+}
+/* Narrow screens keep the name and drop the logo beside it, as phones do. An empty board hides
+   the name instead (above), so it keeps the logo. */
+@media (max-width: 900px) {
+  header .logo:has(+ .wordmark + .day:not(.day-empty)) {
+    display: none;
+  }
+  header .wordmark {
+    margin-left: 0;
+  }
+}
+/* On an empty board the first-task buttons must clear the centred tabs: drop the date first, then
+   the Examples label, then the name (the Getting Started tour shows it on a first visit). */
+@media (max-width: 1360px) {
+  header .day-empty .date {
+    display: none;
+  }
+}
+@media (max-width: 1200px) {
+  header .day-empty .first-task-label {
+    display: none;
+  }
+}
+@media (max-width: 1060px) {
+  header .wordmark:has(+ .day-empty) {
+    display: none;
+  }
+  header .wordmark + .day-empty {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+@media (max-width: 860px) {
+  .wrap > header:has(.day-empty) {
+    gap: 8px;
+  }
+  header .day > .first-task .btn {
+    padding: 4px 8px;
+    gap: 4px;
+  }
+}
 @media (max-width: 760px) {
   .wrap > header {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -300,6 +365,13 @@ header .settings-actions .repo-link {
   header .day-empty .date,
   header .first-task-label {
     display: none;
+  }
+  header .wordmark {
+    margin-left: 0;
+  }
+  header .wordmark + .day {
+    padding-left: 0;
+    border-left: 0;
   }
   header .day > .first-task .btn {
     min-height: 32px;

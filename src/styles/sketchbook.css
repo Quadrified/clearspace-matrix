@@ -270,6 +270,11 @@ header .logo i:nth-child(3) {
 header .logo i:nth-child(4) {
   background: #8a78d6;
 }
+header .wordmark {
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 header .day .date {
   color: var(--ink);
   font-family: var(--display);
@@ -1286,7 +1291,7 @@ dialog .dialog-top h2 {
   );
 }
 #helpDialog .dialog-top h2 {
-  font-size: calc(1.25rem * var(--text-scale, 1));
+  font-size: calc(1.5rem * var(--text-scale, 1));
 }
 .tutorial-progress-header {
   justify-content: flex-end;

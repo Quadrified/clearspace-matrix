@@ -43,7 +43,9 @@ type EditorState = { q: QuadrantId; task?: Task } | null;
 
 export default function App() {
   // State: notifications, the board itself, and appearance preferences.
-  const { toast, show, dismiss, setPaused } = useToast();
+  // The open dialog is declared first so the reset toast can wait behind the tour it opens.
+  const [dialog, setDialog] = useState<Dialog>(null);
+  const { toast, show, dismiss, setPaused } = useToast(dialog === 'tutorial');
   const { matrix, change, undo, canUndo, storageError, rawStored } = useMatrix(show);
   const prefs = usePreferences(show);
   const actions = useBoardActions(change);
@@ -54,7 +56,6 @@ export default function App() {
   // Screen state: what is open right now.
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [editor, setEditor] = useState<EditorState>(null);
-  const [dialog, setDialog] = useState<Dialog>(null);
 
   // Derived numbers for the top bar.
   const hasTasks = matrix.tasks.length > 0;
@@ -208,7 +209,8 @@ export default function App() {
             onReset={() => {
               actions.resetBoard();
               board.resetFilters();
-              closeDialog();
+              // A fresh start begins like a first visit, with the Getting Started tour.
+              setDialog('tutorial');
             }}
           />
         )}

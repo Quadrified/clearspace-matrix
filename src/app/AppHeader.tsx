@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useHeaderHeight } from '../lib/useHeaderHeight';
 
 /**
- * The one quiet top bar. It only arranges its slots: logo and day summary on the left, status
+ * The one quiet top bar. It only arranges its slots: logo, name and day summary on the left, status
  * tabs in the middle, then tools and Settings on the right.
  */
 export function AppHeader({
@@ -35,7 +35,7 @@ export function AppHeader({
           <i />
           <i />
         </span>
-        <span className="sr-only">clearspace</span>
+        <span className="wordmark">Clearspace</span>
         {day}
       </div>
       <div className="header-tabs">{tabs}</div>

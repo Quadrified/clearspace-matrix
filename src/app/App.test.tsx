@@ -95,6 +95,7 @@ it('reset confirms and clears tasks and projects, and Undo restores both', () =>
       ],
     }),
   );
+  vi.useFakeTimers();
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
   fireEvent.click(screen.getByRole('button', { name: 'Need a fresh start?' }));
@@ -108,6 +109,14 @@ it('reset confirms and clears tasks and projects, and Undo restores both', () =>
   fireEvent.change(screen.getByLabelText('Type Reset to confirm'), { target: { value: 'Reset' } });
   expect(confirm).toBeEnabled();
   fireEvent.click(confirm);
+  // A fresh start opens the Getting Started tour again.
+  expect(screen.getByRole('dialog', { name: 'Welcome to Clearspace' })).toBeInTheDocument();
+  // The Undo toast does not time out while the tour covers it.
+  act(() => {
+    vi.advanceTimersByTime(15000);
+  });
+  expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Skip tutorial' }));
   expect(screen.queryByText('Task to clear')).not.toBeInTheDocument();
   expect(screen.queryByRole('option', { name: 'Keep me' })).not.toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem(MATRIX_KEY)!)).toMatchObject({ tasks: [], projects: [] });

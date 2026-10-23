@@ -23,7 +23,7 @@ export function TutorialDialog({
     last = index === tutorialSteps.length - 1,
     offerExamples = last && !hasTasks;
   return (
-    <Modal id="helpDialog" title="Getting Started" onClose={onClose}>
+    <Modal id="helpDialog" title="Welcome to Clearspace" kicker="getting started" onClose={onClose}>
       <div className="tutorial-progress-header">
         {/* The dots below show progress; screen readers still hear each step change. */}
         <span className="sr-only" aria-live="polite" aria-atomic="true">

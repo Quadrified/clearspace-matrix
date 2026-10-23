@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-export function useToast() {
+/** `hold` keeps the current toast from timing out, e.g. while a dialog covers it. */
+export function useToast(hold = false) {
   const [toast, setToast] = useState<{ text: string; undo: boolean; id: number } | null>(null);
   const [paused, setPaused] = useState(false);
   const show = useCallback(
@@ -7,10 +8,10 @@ export function useToast() {
     [],
   );
   useEffect(() => {
-    if (!toast || paused) return;
+    if (!toast || paused || hold) return;
     const timeout = setTimeout(() => setToast(null), 10000);
     return () => clearTimeout(timeout);
-  }, [toast, paused]);
+  }, [toast, paused, hold]);
   const dismiss = useCallback(() => setToast(null), []);
   return { toast, show, dismiss, setPaused };
 }

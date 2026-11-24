@@ -678,5 +678,21 @@
       "Replace the pointing cursor with a drawn hand and retain it while dragging task cards.",
       "Use pointer-driven desktop task dragging with the lifted card preview, while retaining editor-based moves on touch devices."
     ]
+  },
+  {
+    "n": 46,
+    "title": "Compact task cards and adaptive matrix rows",
+    "tag": "site-v46",
+    "sha": "bee8fdc7b13c129a71cb6c7812fcc276f47da7e0",
+    "target": "fc3ef519b229dac95d162c2a80cf4e21522e3a4d",
+    "recorded_at": "2026-11-24T11:26:46-05:00",
+    "reconstructed": false,
+    "deployment_status": "succeeded",
+    "deployment_record_updated_at": "2026-11-24T11:28:15.975865-05:00",
+    "changes": [
+      "Collapse subtasks by default and let users open the checklist from its progress button.",
+      "Limit board titles to two lines and keep the full title in the editor.",
+      "Give the top row more height when it has a longer task list, while keeping every quadrant available."
+    ]
   }
 ]

@@ -426,9 +426,19 @@ Recorded source time: 2026-10-23T09:13:21-04:00. Tag: `site-v45`. Deployment suc
 
 Sites source: `b3eda94bd12260d6861dc22cb1882eaadd8fddcf`. GitHub target: `65ae7c82fe783d1ea122265a0761a06fba735087`. Reconstructed: False.
 
-## Available GitHub history through 65ae7c8
+## Hosted version 46: Compact task cards and adaptive matrix rows
 
-This is the reachable Git history through `65ae7c8`, the main commit deployed as hosted version 45, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
+Recorded source time: 2026-11-24T11:26:46-05:00. Tag: `site-v46`. Deployment succeeded; record updated 2026-11-24T11:28:15.975865-05:00 (America/Toronto).
+
+- Collapse subtasks by default and let users open the checklist from its progress button.
+- Limit board titles to two lines and keep the full title in the editor.
+- Give the top row more height when it has a longer task list, while keeping every quadrant available.
+
+Sites source: `bee8fdc7b13c129a71cb6c7812fcc276f47da7e0`. GitHub target: `fc3ef519b229dac95d162c2a80cf4e21522e3a4d`. Reconstructed: False.
+
+## Available GitHub history through fc3ef51
+
+This is the reachable Git history through `fc3ef51`, the main commit deployed as hosted version 46, including merges. Release-log bookkeeping commits after that source commit are outside this snapshot. Original commits are unchanged.
 
 - 2026-10-15T13:15:50-04:00 [b834d50](https://github.com/Quadrified/clearspace-matrix/commit/b834d50abce47beecd4849c28ce42fe38f067073): Add Clearspace app and project documentation
 - 2026-10-15T13:26:25-04:00 [1e9c1f3](https://github.com/Quadrified/clearspace-matrix/commit/1e9c1f3fdbfe9806e3e61d73a598cdea03acf840): Add owner-authorized Dev mode with test task generator
@@ -523,3 +533,5 @@ This is the reachable Git history through `65ae7c8`, the main commit deployed as
 - 2026-10-22T22:24:36-04:00 [37b9d17](https://github.com/Quadrified/clearspace-matrix/commit/37b9d17ed9c3d985c95ed15879cf5ec3b66d4bdf): Record hosted release 44 and deployed cursor source
 - 2026-10-22T22:40:07-04:00 [4e575f1](https://github.com/Quadrified/clearspace-matrix/commit/4e575f19239466c2c06dd0991ac10ac57f033012): Use a drawn pointing hand and keep it on while dragging cards
 - 2026-10-23T09:11:18-04:00 [65ae7c8](https://github.com/Quadrified/clearspace-matrix/commit/65ae7c82fe783d1ea122265a0761a06fba735087): Show the Clearspace name in the top bar and Getting Started
+- 2026-10-23T09:14:26-04:00 [779b2d2](https://github.com/Quadrified/clearspace-matrix/commit/779b2d29e1c8fa59da21ea770ee531880ee0aeb4): Record hosted release 45 and deployed branding source
+- 2026-11-24T11:25:04-05:00 [fc3ef51](https://github.com/Quadrified/clearspace-matrix/commit/fc3ef519b229dac95d162c2a80cf4e21522e3a4d): Make the Clearspace matrix easier to scan (#50)

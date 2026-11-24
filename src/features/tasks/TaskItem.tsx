@@ -1,4 +1,4 @@
-import { forwardRef, memo, useId } from 'react';
+import { forwardRef, memo, useId, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { Icon } from '../../components/Icon';
 import { TaskCardMotion } from './TaskCardMotion';
@@ -43,6 +43,7 @@ export const TaskItem = memo(
     ref,
   ) {
     const detailId = useId();
+    const [subtasksOpen, setSubtasksOpen] = useState(false);
     const overdue = task.due < today && !task.done;
     return (
       <TaskCardMotion ref={ref} id={task.id} dragging={dragging}>
@@ -72,7 +73,7 @@ export const TaskItem = memo(
           <button
             className="task-main"
             aria-label={`Edit ${task.title}`}
-            aria-describedby={`${detailId}-notes ${detailId}-meta${task.subtasks?.length ? ` ${detailId}-subtasks` : ''}`}
+            aria-describedby={`${detailId}-notes ${detailId}-meta`}
             onClick={() => onEdit(task)}
           >
             <span className="task-title">{task.title}</span>
@@ -82,12 +83,6 @@ export const TaskItem = memo(
               </span>
             )}
 
-            {!!task.subtasks?.length && (
-              <span className="subtask-progress" id={`${detailId}-subtasks`}>
-                {task.subtasks.filter((item) => item.done).length} of {task.subtasks.length}{' '}
-                subtasks done
-              </span>
-            )}
             <span className="meta" id={`${detailId}-meta`}>
               {task.isDevSample && <span className="tag">Dev</span>}
               {task.category && <span className="tag">{task.category}</span>}
@@ -104,22 +99,40 @@ export const TaskItem = memo(
             </span>
           </button>
           {!!task.subtasks?.length && (
-            <ul className="card-subtasks" aria-label={`Subtasks for ${task.title}`}>
-              {task.subtasks.map((item) => (
-                <li key={item.id}>
-                  <label className={`card-subtask${item.done ? ' is-done' : ''}`}>
-                    <input
-                      type="checkbox"
-                      className="check"
-                      checked={item.done}
-                      aria-label={`${item.done ? 'Reopen' : 'Complete'} subtask: ${item.title}`}
-                      onChange={() => onToggleSubtask(task.id, item.id)}
-                    />
-                    <span>{item.title}</span>
-                  </label>
-                </li>
-              ))}
-            </ul>
+            <>
+              <button
+                type="button"
+                className="subtask-progress"
+                aria-expanded={subtasksOpen}
+                aria-controls={`${detailId}-subtasks`}
+                onClick={() => setSubtasksOpen((open) => !open)}
+              >
+                {task.subtasks.filter((item) => item.done).length}/{task.subtasks.length} subtasks
+                <Icon name="chevron" />
+              </button>
+              <ul
+                id={`${detailId}-subtasks`}
+                className="card-subtasks"
+                aria-label={`Subtasks for ${task.title}`}
+                hidden={!subtasksOpen}
+              >
+                {subtasksOpen &&
+                  task.subtasks.map((item) => (
+                    <li key={item.id}>
+                      <label className={`card-subtask${item.done ? ' is-done' : ''}`}>
+                        <input
+                          type="checkbox"
+                          className="check"
+                          checked={item.done}
+                          aria-label={`${item.done ? 'Reopen' : 'Complete'} subtask: ${item.title}`}
+                          onChange={() => onToggleSubtask(task.id, item.id)}
+                        />
+                        <span>{item.title}</span>
+                      </label>
+                    </li>
+                  ))}
+              </ul>
+            </>
           )}
         </article>
       </TaskCardMotion>

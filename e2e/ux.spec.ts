@@ -259,6 +259,50 @@ test('the theme switch and GitHub link live in Settings, not the top bar', async
   await expect(page.getByRole('link', { name: /source on github/i })).toBeVisible();
 });
 
+test('a busier top row borrows height while both bottom quadrants remain usable', async ({
+  page,
+  isMobile,
+}) => {
+  await page.setViewportSize(isMobile ? { width: 390, height: 844 } : { width: 1280, height: 800 });
+  const base = seedMatrix.tasks[0]!;
+  const tasks = (
+    ['do', 'do', 'do', 'do', 'schedule', 'schedule', 'schedule', 'eliminate'] as const
+  ).map((q, index) => ({ ...base, id: `row-${index}`, title: `Task ${index + 1}`, q, notes: '' }));
+  await open(page, { matrix: { ...seedMatrix, tasks } });
+
+  const quadrants = page.locator('.quad');
+  const top = (await quadrants.nth(0).boundingBox())!;
+  const bottom = (await quadrants.nth(2).boundingBox())!;
+  expect(top.height).toBeGreaterThan(bottom.height);
+  expect(bottom.height).toBeGreaterThanOrEqual(220);
+  await expect(page.getByRole('button', { name: 'Add a task to Delegate' })).toBeInViewport();
+  await expect(page.getByRole('button', { name: 'Edit Task 8' })).toBeInViewport({ ratio: 1 });
+
+  await page.getByRole('button', { name: 'Completed', exact: true }).click();
+  const completedTop = (await quadrants.nth(0).boundingBox())!;
+  const completedBottom = (await quadrants.nth(2).boundingBox())!;
+  expect(completedTop.height).toBeCloseTo(completedBottom.height, 0);
+});
+
+test('a small task imbalance leaves room for two cards in the shorter row', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Exercise the desktop row heights');
+  await page.setViewportSize({ width: 1280, height: 800 });
+  const base = seedMatrix.tasks[0]!;
+  const tasks = (['do', 'do', 'do', 'delegate', 'delegate'] as const).map((q, index) => ({
+    ...base,
+    id: `row-${index}`,
+    title: `Task ${index + 1}`,
+    q,
+    due: '',
+    notes: '',
+  }));
+  await open(page, { matrix: { ...seedMatrix, tasks } });
+  await expect(page.getByRole('article', { name: 'Task 5' })).toBeInViewport({ ratio: 1 });
+});
+
 for (const [width, height] of [
   [320, 568],
   [390, 844],

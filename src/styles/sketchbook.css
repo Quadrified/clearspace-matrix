@@ -598,7 +598,6 @@ header .filters-badge,
   font-family: var(--hand);
   font-size: calc(1.275rem * var(--text-scale, 1));
   font-weight: 700;
-  color: var(--muted);
 }
 .card-subtasks {
   border-color: var(--line);

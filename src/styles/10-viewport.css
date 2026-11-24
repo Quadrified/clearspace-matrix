@@ -49,6 +49,14 @@ body,
   grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+@media (min-height: 480px) {
+  .matrix.has-busier-top-row {
+    grid-template-rows: minmax(0, var(--matrix-top-track)) minmax(min(220px, 45%), 1fr);
+  }
+  .matrix.has-busier-top-row .quad:nth-child(n + 3) .empty-art {
+    display: none;
+  }
+}
 .quad {
   min-height: 0;
   padding-bottom: 0;

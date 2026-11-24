@@ -217,7 +217,11 @@
   color: var(--ink);
 }
 .task-title {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   font-size: calc(0.9375rem * var(--text-scale, 1));
   font-weight: 500;
   line-height: 1.5;

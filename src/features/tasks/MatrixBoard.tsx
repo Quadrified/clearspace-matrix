@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { LayoutGroup, motion } from 'motion/react';
 import { TaskPresence } from './TaskCardMotion';
 import { TaskItem } from './TaskItem';
@@ -114,7 +114,7 @@ export function MatrixBoard({
   const onPointerDownTask = useCallback(
     (e: ReactPointerEvent<HTMLElement>, id: string) => {
       if (e.pointerType === 'touch' || e.button !== 0) return;
-      if ((e.target as Element).closest('input, label, .card-subtasks')) return;
+      if ((e.target as Element).closest('input, label, .subtask-progress, .card-subtasks')) return;
       const card = e.currentTarget;
       const startX = e.clientX,
         startY = e.clientY;
@@ -185,6 +185,12 @@ export function MatrixBoard({
     () => quadrants.map((q) => visibleTasks(matrix, q.id, filters)),
     [matrix, filters],
   );
+  const [doFirst, schedule, delegate, future] = columns;
+  // The longest list sets each row's demand because its two quadrants sit side by side.
+  const topCount = Math.max(doFirst!.length, schedule!.length);
+  const bottomCount = Math.max(delegate!.length, future!.length);
+  const busierTopRow = topCount > bottomCount;
+  const topTrack = bottomCount === 0 ? 2 : Math.min(2, topCount / bottomCount);
   const filtered = !!(filters.search || filters.category || filters.project);
   const hasTasks = (q: QuadrantId) => matrix.tasks.some((t) => t.q === q);
   const activeCount = useMemo(() => {
@@ -199,7 +205,13 @@ export function MatrixBoard({
           <span>Urgent</span>
           <span>Not urgent</span>
         </div>
-        <div className="matrix" id="matrix">
+        <div
+          className={`matrix${busierTopRow ? ' has-busier-top-row' : ''}`}
+          id="matrix"
+          style={
+            busierTopRow ? ({ '--matrix-top-track': `${topTrack}fr` } as CSSProperties) : undefined
+          }
+        >
           {quadrants.map((q, index) => {
             const tasks = columns[index]!,
               label = labels[q.id];

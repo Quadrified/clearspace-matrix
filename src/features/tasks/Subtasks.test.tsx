@@ -7,7 +7,7 @@ import { parseStoredMatrix } from '../../domain/serialization';
 beforeEach(() => localStorage.setItem('clearspace.tutorial.v1', 'seen'));
 const stored = () => parseStoredMatrix(localStorage.getItem(MATRIX_KEY));
 
-it('adds subtasks, shows them on the card, persists independent completion and supports Undo', () => {
+it('collapses subtasks by default and persists independent completion and Undo', () => {
   const view = render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Add your first task' }));
   fireEvent.change(screen.getByLabelText('Task'), { target: { value: 'Launch website' } });
@@ -19,9 +19,17 @@ it('adds subtasks, shows them on the card, persists independent completion and s
   fireEvent.change(screen.getByLabelText('Subtask 2'), { target: { value: 'Review design' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save task' }));
   let card = screen.getByRole('article', { name: 'Launch website' });
-  expect(within(card).getByText('0 of 2 subtasks done')).toBeInTheDocument();
+  const disclosure = within(card).getByRole('button', { name: '0/2 subtasks' });
+  expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+  expect(within(card).queryByRole('list')).not.toBeInTheDocument();
+  fireEvent.click(disclosure);
+  expect(disclosure).toHaveAttribute('aria-expanded', 'true');
   expect(within(card).getByText('Write copy')).toBeInTheDocument();
   expect(within(card).getByText('Review design')).toBeInTheDocument();
+  fireEvent.click(disclosure);
+  expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+  expect(within(card).queryByRole('checkbox', { name: 'Complete subtask: Write copy' })).toBeNull();
+  fireEvent.click(disclosure);
   fireEvent.click(within(card).getByRole('checkbox', { name: 'Complete subtask: Write copy' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(stored().tasks[0]?.subtasks?.[0]?.done).toBe(true);
@@ -32,12 +40,16 @@ it('adds subtasks, shows them on the card, persists independent completion and s
   view.unmount();
   render(<App />);
   card = screen.getByRole('article', { name: 'Launch website' });
+  const restored = within(card).getByRole('button', { name: '1/2 subtasks' });
+  expect(restored).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(restored);
   expect(within(card).getByRole('checkbox', { name: 'Reopen subtask: Write copy' })).toBeChecked();
-  expect(within(card).getByText('1 of 2 subtasks done')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('checkbox', { name: 'Complete subtask: Review design' }));
   expect(stored().tasks[0]?.done).toBe(false);
   fireEvent.click(screen.getByRole('checkbox', { name: 'Complete Launch website' }));
   fireEvent.click(screen.getByRole('button', { name: 'All tasks' }));
+  const completed = screen.getByRole('button', { name: '2/2 subtasks' });
+  if (completed.getAttribute('aria-expanded') === 'false') fireEvent.click(completed);
   expect(screen.getByRole('checkbox', { name: 'Reopen subtask: Write copy' })).toBeChecked();
   expect(stored().tasks[0]?.subtasks?.every((item) => item.done)).toBe(true);
 });
